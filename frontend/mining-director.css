@@ -1,0 +1,21 @@
+/* Competition teams, the Director's report (mining-director.js): the Report sub-tab. Tones (--hq-*) come from mining-work.css. */
+.md-head { display: flex; gap: 12px; align-items: center; flex-wrap: wrap; }
+.md-state { display: flex; gap: 6px; align-items: center; flex: 1 1 260px; margin: 0; color: var(--text-2); }
+.md-report { display: grid; gap: 10px; margin-top: 12px; }
+.md-report.is-new { border-color: color-mix(in srgb, var(--accent) 45%, var(--line)); }
+.md-report-h { display: flex; gap: 10px; align-items: flex-start; }
+.md-report-h > span:nth-child(2) { display: grid; gap: 2px; flex: 1; min-width: 0; }
+.md-report-h b { font-size: 15px; overflow-wrap: anywhere; }
+.md-settled { display: flex; gap: 6px; align-items: center; margin: 0; }
+.md-body { overflow-wrap: anywhere; }
+.md-h { display: flex; gap: 6px; align-items: center; margin: 4px 0 0; font-size: 13.5px; }
+.md-asks { display: grid; gap: 8px; margin: 0; padding-left: 22px; }
+.md-ask { display: grid; gap: 4px; padding: 8px 10px; border: 1px solid var(--line); border-radius: 10px; background: var(--surface-2); }
+.md-ask-top { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+.md-ask-t { display: flex; gap: 4px; align-items: center; flex-wrap: wrap; }
+.md-none { margin: 0; display: flex; gap: 6px; align-items: center; color: var(--good); }
+.md-reply { display: flex; gap: 6px; margin: 0; padding: 8px 10px; border-radius: 10px; background: var(--accent-soft); overflow-wrap: anywhere; }
+.md-form { display: grid; gap: 8px; }
+.md-older { margin-top: 12px; }
+.md-older > summary { cursor: pointer; color: var(--text-2); }
+@media (max-width: 640px) { .md-asks { padding-left: 18px; } .md-head .row { width: 100%; } }

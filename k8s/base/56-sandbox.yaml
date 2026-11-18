@@ -1,0 +1,92 @@
+# The sandbox (backend/app/sandbox.py): Mining HQ's agents run code here, one throwaway pod per run.
+# - baseline Pod Security: the PostgreSQL and ClickHouse sidecars start as root and drop to their own users; the runner
+#   itself is non-root with every capability dropped (sandbox.py sets it)
+# - a quota and default limits; no NodePorts, load balancers, volumes claims or KVM
+# - in: nothing. out: cluster DNS and AXoR's model proxy (port 8091 on the web pod), and nothing else: no internet, no
+#   AXoR API, no other namespace (the sidecars are on the pod's own localhost); runs of a team with internet on also reach
+#   the egress proxy (57-egress.yaml) and through it the public internet, under gVisor
+# - AXoR (axor/web) may create and delete pods and ConfigMaps here and read their logs, nothing more
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: axor-sandbox
+  labels:
+    axor.dev/tier: workloads
+    pod-security.kubernetes.io/enforce: baseline
+    pod-security.kubernetes.io/enforce-version: latest
+    pod-security.kubernetes.io/warn: restricted
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata: { name: default, namespace: axor-sandbox }
+automountServiceAccountToken: false
+---
+apiVersion: v1
+kind: ResourceQuota
+metadata: { name: sandbox, namespace: axor-sandbox }
+spec:
+  hard:
+    requests.axor.dev/kvm: "0"
+    limits.cpu: "16"
+    limits.memory: 32Gi
+    limits.ephemeral-storage: 64Gi
+    persistentvolumeclaims: "0"
+    pods: "12"
+    configmaps: "30"
+    services.nodeports: "0"
+    services.loadbalancers: "0"
+---
+apiVersion: v1
+kind: LimitRange
+metadata: { name: sandbox, namespace: axor-sandbox }
+spec:
+  limits:
+    - type: Container
+      default: { cpu: "1", memory: 1Gi, ephemeral-storage: 2Gi }
+      defaultRequest: { cpu: 100m, memory: 128Mi }
+      max: { cpu: "4", memory: 8Gi }
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata: { name: sandbox, namespace: axor-sandbox }
+spec:
+  podSelector: {}
+  policyTypes: [Ingress, Egress]
+  ingress: []
+  egress:
+    - to: [{ namespaceSelector: { matchLabels: { kubernetes.io/metadata.name: kube-system } }, podSelector: { matchLabels: { k8s-app: kube-dns } } }]
+      ports: [{ port: 53, protocol: UDP }, { port: 53, protocol: TCP }]
+    - to: [{ namespaceSelector: { matchLabels: { kubernetes.io/metadata.name: axor } }, podSelector: { matchLabels: { app: web } } }]
+      ports: [{ port: 8091, protocol: TCP }]
+---
+# runs whose team has internet on (label set by sandbox.py): also the egress proxy (57-egress.yaml), and through it the
+# internet; still nothing else of the cluster's or the host's
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata: { name: sandbox-internet, namespace: axor-sandbox }
+spec:
+  podSelector: { matchLabels: { axor.dev/internet: "on" } }
+  policyTypes: [Egress]
+  egress:
+    - to: [{ namespaceSelector: { matchLabels: { kubernetes.io/metadata.name: axor-egress } }, podSelector: { matchLabels: { app: egress } } }]
+      ports: [{ port: 3128, protocol: TCP }]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata: { name: axor-sandbox, namespace: axor-sandbox }
+rules:
+  - apiGroups: [""]
+    resources: [pods, configmaps]
+    verbs: [get, list, watch, create, delete]
+  - apiGroups: [""]
+    resources: [pods/log]
+    verbs: [get]
+  - apiGroups: [""]                # G5-2: the readiness probe reads the KVM quota (mission_ops._vm); read only
+    resources: [resourcequotas]
+    verbs: [get]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata: { name: axor-sandbox, namespace: axor-sandbox }
+roleRef: { apiGroup: rbac.authorization.k8s.io, kind: Role, name: axor-sandbox }
+subjects: [{ kind: ServiceAccount, name: web, namespace: axor }]

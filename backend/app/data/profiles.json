@@ -1,0 +1,642 @@
+{
+ "1": {
+  "task": "General-intelligence competition platform run by Macrocosmos.",
+  "miners": "Submit solutions to Apex competitions through the Apex CLI; agentic mining is the recommended route (AGENTS.md).",
+  "conditions": "Registered hotkey + Apex CLI; README defers incentive details to the miner docs."
+ },
+ "2": {
+  "task": "Distributed accelerated neural intelligence (on-chain description only).",
+  "miners": "Not documented: the listed repo is not public.",
+  "conditions": "Unknown (no public repo)."
+ },
+ "3": {
+  "task": "Coordinated model training.",
+  "miners": "Each hotkey submits one model through the Teutonic miner CLI.",
+  "conditions": "Ed25519 hotkey required (validator encrypts upload credentials to it); one model per hotkey."
+ },
+ "4": {
+  "task": "Decentralised compute marketplace on the Targon Virtual Machine (TVM).",
+  "miners": "Provide GPU nodes running TargonOS that attest to the network, and report node IPs in the miner config.",
+  "conditions": "Hardware must pass TargonOS profile verification (tower.targon.com) or install is refused; dedicated machines for TargonOS."
+ },
+ "5": {
+  "task": "RLVR: verifiable software-engineering tasks graded in Docker, producing RL training data.",
+  "miners": "Solve leased tasks: repo patches as git diffs and terminal tasks as bash scripts, with full signed trajectories.",
+  "conditions": "Your own LLM backend (demo uses Amazon Bedrock key), Docker + sandbox image for local grading, disk for workspaces; only deterministic passing checks pay."
+ },
+ "6": {
+  "task": "Forecasting protocol aggregating agents into superhuman LLM forecasters.",
+  "miners": "Write forecasting agents that re-forecast every live event in a validator sandbox; scored against the market price 7 days later.",
+  "conditions": "Python 3.11+, numi CLI, paid API keys for allowed gateways (OpenAI/OpenRouter etc.); 240s sandbox timeout; under 85% coverage earns nothing."
+ },
+ "7": {
+  "task": "Cross-chain swap/settlement layer (SOL, TAO, BTC, ETH, alphas...) without custodians or bridges.",
+  "miners": "Fill swaps: post quotes, deliver the destination asset, and get both legs verified on-chain by validators.",
+  "conditions": "Collateral bond (SOL- or TAO-backed, plus a 0.1 SOL deposit), private keys and RPCs for each chain served, Docker, Python 3.10+; slashing risk."
+ },
+ "8": {
+  "task": "Decentralised prop-trading / liquidity network (formerly Proprietary Trading Network).",
+  "miners": "Act as traders: open LONG/SHORT leveraged positions on trade pairs through the Vanta system.",
+  "conditions": "Deposited collateral sets account size; paid weekly on the previous week's USD PnL with drawdown/risk/min-collateral penalties."
+ },
+ "9": {
+  "task": "Distributed (pipeline-parallel) LLM training orchestrated across miners.",
+  "miners": "Process activations for an assigned model layer, upload weights, and merge via Butterfly All-Reduce; validators spot-check.",
+  "conditions": "CUDA GPU with at least 16 GB VRAM (e.g. RTX 4090), Ubuntu 22.04."
+ },
+ "10": {
+  "task": "AI inference optimisation: faster serving engines benchmarked against a pinned baseline.",
+  "miners": "Write git patches to the inference engine for a campaign and commit the patch hash/URL on-chain; the best speedup in a round takes the crown.",
+  "conditions": "Patch must apply hermetically to the pinned baseline/allowed paths; winner-take-crown per round (on-chain scoring was still design-only)."
+ },
+ "11": {
+  "task": "Agentic RL as a service: making agent trajectories cheaper, safer and more reliable.",
+  "miners": "Ship a SKILL.md plus a 'fusion policy' that routes an agent's requests across open-weight models; scored by pytest verifiers on Terminal-Bench-style scenarios.",
+  "conditions": "No GPU/daemon needed; Python 3.10+; 50 \u03b1 submission fee (recycled) per submission; per-scenario model-cost cap ($0.30)."
+ },
+ "12": {
+  "task": "Trusted GPU compute for Bittensor validators (ComputeHorde).",
+  "miners": "Accept validator jobs and run them on managed executors (GPU), returning results; organic jobs score highest.",
+  "conditions": "Ubuntu server with GPU executors, reachable ports; hardware-class weights; collateral deposit needed for organic jobs; optional DDoS shield."
+ },
+ "13": {
+  "task": "Decentralised social-media data scraping (X, Reddit, YouTube transcripts).",
+  "miners": "Scrape data from defined DataSources, store it locally, and serve it to validators on request.",
+  "conditions": "Storage for scraped data, scraping access/credentials for sources; must follow Macrocosmos data-compliance policy (UK GDPR, prohibited content)."
+ },
+ "14": {
+  "task": "Inference-speed competition: optimised kernels/engine changes for target models.",
+  "miners": "Submit one source delta that makes the validator-owned inference engine faster without changing outputs; a fully qualified win becomes the crown.",
+  "conditions": "Validator measures everything itself; behaviour must match reference; rewards follow the operator's announced policy, winner-take-crown."
+ },
+ "15": {
+  "task": "AI shopping/commerce agents benchmarked on ORO Bench.",
+  "miners": "Write Python agents (agent_main) that search listings, ask the shopper questions and place correct orders in a sandbox.",
+  "conditions": "Docker for local testing; an order missing any requirement scores 0; challengers must beat a decaying threshold to take the top spot."
+ },
+ "16": {
+  "task": "Robot task-disruption and recovery demonstrations for VLA (vision-language-action) training.",
+  "miners": "Design short episodes with an ordinary goal, an unexpected complication and a sensible recovery.",
+  "conditions": "README describes the plan in conditional terms (\"would\"); mechanism appears early-stage."
+ },
+ "17": {
+  "task": "Decentralised 3D content generation competition.",
+  "miners": "Build an image-to-procedural-Three.js pipeline: one JS module per prompt image, judged pairwise by a VLM against other miners.",
+  "conditions": "Outputs uploaded to a CDN and solution packaged as a Docker image that validators re-run to verify; failed prompts are automatic losses; quality over speed."
+ },
+ "18": {
+  "task": "Environmental/weather forecasting on ERA5 data (temperature, 100 m wind, solar radiation).",
+  "miners": "Produce global-grid forecasts for validator challenges; scored by (RMSE+MAE)/2 against ERA5 once ground truth arrives.",
+  "conditions": "Your own forecasting model and compute; scoring is delayed until ERA5 covers the whole window."
+ },
+ "19": {
+  "task": "Decentralised RPC and archive-node infrastructure for Bittensor and Ethereum.",
+  "miners": "Run nodes and serve RPC requests; every response is verified with Merkle proofs.",
+  "conditions": "Node infrastructure (archive storage, bandwidth); setup lives in the separate blockmachine-miner repo."
+ },
+ "20": {
+  "task": "Video-understanding models.",
+  "miners": "Serve one immutable model per hotkey from a small CPU model server; validators download the weights and evaluate them in GPU duels.",
+  "conditions": "No miner GPU needed to serve; a fixed model per hotkey, delivered over pinned TLS."
+ },
+ "21": {
+  "task": "Verifiable prediction market for Google Ads campaign outcomes (counterfactual ad impact).",
+  "miners": "Ship a digest-pinned model container that outputs P10/P50/P90 predictions for 7/14/28-day campaign deltas on daily baskets.",
+  "conditions": "Container must follow the model I/O spec; scores settle 15-36 days later into a 12-day half-life standing; alpha-hold staking ladder."
+ },
+ "22": {
+  "task": "Decentralised search engine: building Desearch's web index.",
+  "miners": "Crawl tasks (fetch up to 1,000 URLs via own proxies, upload text within 3 min) and embed tasks (embed texts on own GPU within 5 min).",
+  "conditions": "Own proxies for crawling and a GPU for embedding; Python 3.10+, PM2; no open port needed; 50% of emission is burned."
+ },
+ "23": {
+  "task": "AI alignment / red-teaming protocol.",
+  "miners": "Submit jailbreak prompt templates (one {{objective}} placeholder, at most 2,000 chars) for the active challenge via the miner CLI.",
+  "conditions": "Docker + Compose, Node 18+, PM2, Python 3.12; submission must match the challenge format."
+ },
+ "24": {
+  "task": "Long-context model training (Quasar).",
+  "miners": "Pull assigned training jobs, train Quasar, serve live weight fragments, and upload signed receipts; paid on validator-accepted merge events.",
+  "conditions": "ED25519 hotkey, GPU(s) (multi-GPU supported), latest miner release; self-reported speed/loss is ignored."
+ },
+ "25": {
+  "task": "Privacy protocol: decentralised VPN/relay supply.",
+  "miners": "Provide VPN exit providers, either inside a node operator's pool (paid by Merkle claim) or as a top-level fleet with its own UID.",
+  "conditions": "Scored on liveness/latency and routable IP-prefix breadth; at most 200 head fleets; pool tier needs no UID or burn."
+ },
+ "26": {
+  "task": "Adversarial robustness: attacks on ImageNet image classifiers.",
+  "miners": "Poll the task API, run PGD-style attacks to create perturbed images, upload them; optionally fine-tune and publish an EfficientNetV2-L model.",
+  "conditions": "Min 4 vCPU/16 GB RAM/50 GB SSD; recommended 8 vCPU/32 GB + NVIDIA GPU (8 GB+ VRAM); storage bucket (Hippius/R2); no axon needed."
+ },
+ "27": {
+  "task": "LLM training-data discovery, generation and curation (coding, maths, technical, general).",
+  "miners": "Process assigned data batches using the hosted judge and a locally-run Quasar model, then upload one signed dataset snapshot.",
+  "conditions": "Must run Quasar locally (GPU); scored on verified quality x useful token volume x availability history; invalid or duplicate work scores 0."
+ },
+ "28": {
+  "task": "Drop-in gateway for Claude, GPT and Gemini APIs running inside a TEE.",
+  "miners": "Supply upstream LLM API capacity using their own provider keys and earn the spread.",
+  "conditions": "Your own provider API keys (Anthropic/OpenAI/Google...) and a funded Phala Cloud account (Intel TDX CVM, deployed via gmcli)."
+ },
+ "29": {
+  "task": "LLM inference optimisation.",
+  "miners": "Build a faster inference server for Qwen2.5-72B-Instruct (OpenAI-compatible, streaming + logprobs) as a Docker image and commit it on-chain.",
+  "conditions": "Public registry, image at most 20 GB, submission fee from coldkey; correctness gate; winner gets 80%, runner-up 20%, challengers need +1%. README text references Cacheon/SN14, so the repo appears to be a fork."
+ },
+ "30": {
+  "task": "Risk-intelligence network: Alpha Risk tiers (A-E) for Bittensor alpha tokens.",
+  "miners": "Commit then reveal risk-assessment bundles covering each round's universe; scored on resolved outcomes over a 5-day horizon.",
+  "conditions": "Hotkey registration only (no extra stake); full coverage is the main earnings lever, since skipped coordinates score 0."
+ },
+ "31": {
+  "task": "Decentralised retrieval-augmented generation (RAG).",
+  "miners": "Serve embedding models, vector search and LLM inference; validators evaluate retrieval accuracy and answer quality (from on-chain description).",
+  "conditions": "Unknown (no repo listed)."
+ },
+ "32": {
+  "task": "AI-generated text detection.",
+  "miners": "Run a classifier that labels validator-supplied texts as human or AI (per sentence for deep scan).",
+  "conditions": "Compute to run detection models; reward = mean of F1, false-positive score and AP on a 1:1 human/AI mix."
+ },
+ "33": {
+  "task": "Low-cost data structuring and semantic tagging pipeline.",
+  "miners": "Tag and structure data (e.g. conversations) for validators using an LLM.",
+  "conditions": "OpenAI API key, CPU with 8 GB RAM and 20 GB disk, Python 3.8-3.11; publicly reachable axon port."
+ },
+ "34": {
+  "task": "Deepfake / synthetic-media detection run as a generator-vs-detector adversarial loop (GAS).",
+  "miners": "Discriminative track: submit image/video/audio provenance classifiers. Generative track: serve on-demand synthetic media that must fool detectors.",
+  "conditions": "Detector models in Safetensors only (no ONNX), so no GPU hosting is needed for that track; generative miners need GPUs; submission limits apply; datasets refresh weekly."
+ },
+ "35": {
+  "task": "No on-chain identity set.",
+  "miners": "Unknown.",
+  "conditions": "Unknown (no identity or repo)."
+ },
+ "36": {
+  "task": "Open deep-research model (king-of-the-hill on a Tongyi-DeepResearch-30B-A3B lineage).",
+  "miners": "Fine-tune a challenger checkpoint (same architecture, weights only) that beats the reigning king by a statistically significant margin in paired duels.",
+  "conditions": "A single consumer GPU is enough to fine-tune/duel (~3.3B active params); copies of the king can't win; crowning needs a validator stake quorum."
+ },
+ "37": {
+  "task": "AI alignment / interpretability tools (first lane: sparse autoencoders).",
+  "miners": "Train and submit interpretability tools such as SAEs per lane, served from an endpoint and evaluated scientifically.",
+  "conditions": "Pay evaluation with work-tokens bought with alpha; rewards scale with SN37 alpha held; open beta, rules change often."
+ },
+ "38": {
+  "task": "Chronologically consistent LLMs (models that know only up to their cutoff year).",
+  "miners": "Train one model per year (2013-2024), upload to HuggingFace, and submit the mapping on-chain; leak test gate, then LLM-judged duels.",
+  "conditions": "GPU for training, HF write token; HF AutoModelForCausalLM, Safetensors, at most 2.2B params, no remote code; top 10 paid (#1 about 52%)."
+ },
+ "39": {
+  "task": "Marked deprecated in its on-chain identity.",
+  "miners": "None documented.",
+  "conditions": "Subnet identity says deprecated."
+ },
+ "40": {
+  "task": "Model compression: frontier models squeezed into small GGUFs that run on phones.",
+  "miners": "Compress the pinned Qwen3-8B parent into lower-bit weights (binary, ternary, sub2, sub4 tiers); scored on downstream-effect retention.",
+  "conditions": "Must keep the parent architecture; one crown per tier; method is private, only the artifact is judged."
+ },
+ "41": {
+  "task": "Prediction-market research and forecasting intelligence.",
+  "miners": "Track 1: trade on almanac.market (1% fee funds the pool). Track 2: submit forecasting agents that validators execute.",
+  "conditions": "Market track needs a linked account plus trading capital; forecasting track needs funded portal credits; no GPU."
+ },
+ "42": {
+  "task": "No identity description set.",
+  "miners": "Unknown.",
+  "conditions": "Unknown (no repo listed)."
+ },
+ "43": {
+  "task": "Graph optimisation problems (TSP-style), plus a TaoTrader trading track.",
+  "miners": "Run a neuron that solves validator-issued graph problems within a time limit; scored against the cohort's best and a greedy benchmark.",
+  "conditions": "Reachable axon port; must beat the greedy-heuristic benchmark or be penalised; TaoTrader track needs a leader profile."
+ },
+ "44": {
+  "task": "Computer vision for sports video ('making every camera intelligent').",
+  "miners": "Return action predictions (football or cricket) for video challenges from a Docker-deployed model.",
+  "conditions": "Docker image in a private GHCR repo (Score needs read access), commit the element_id on-chain, reachable axon; one private element per deployment."
+ },
+ "45": {
+  "task": "Real-time market intelligence: news/X/Telegram posts scored into sentiment, impact and outlook signals.",
+  "miners": "Run a four-stage analysis pipeline (NER, LLM extract/classify, LLM summarise, embeddings) on article/tweet/Telegram batches.",
+  "conditions": "GPU with at least 8 GB VRAM (24 GB+ comfortable), 16-32 GB RAM, 8-16 CPU cores, about 60 GB disk; OpenRouter API key; paid on throughput."
+ },
+ "46": {
+  "task": "Fast uncensored LLM inference.",
+  "miners": "Not described in the repo (it is validator-only).",
+  "conditions": "Validator minimum: 1 vCPU, 2 GB RAM, 50 GB SSD, no GPU; miner requirements not published."
+ },
+ "47": {
+  "task": "Verifiable GPU training on H100s.",
+  "miners": "Execute signed, immutable training workloads; validators verify correctness, attestation and throughput.",
+  "conditions": "Eligible NVIDIA H100; README says the code is NOT ready for miners yet."
+ },
+ "48": {
+  "task": "Quantum computing jobs routed through Open Quantum providers.",
+  "miners": "Receive circuit jobs from validators, submit them via a provider adapter, and return results (miner marked 'coming soon').",
+  "conditions": "At least 5,000 alpha staked on the hotkey to get jobs; public axon; Python 3.12+; 20 GB disk."
+ },
+ "49": {
+  "task": "Simulation-first robotics: winner-takes-all navigation-policy tournaments in Isaac Lab.",
+  "miners": "Train a navigation policy for the tournament task repo and submit it; validators evaluate in standard environments.",
+  "conditions": "NVIDIA GPU with 24 GB+ VRAM for training, Isaac Sim 6.1 / Isaac Lab 3.0, Nepher API key; only the single top miner earns."
+ },
+ "50": {
+  "task": "Probabilistic price forecasting (synthetic price paths) for crypto, equities and commodities.",
+  "miners": "Submit ensembles of simulated price paths for 24h and 1h horizons; scored by CRPS over rolling windows.",
+  "conditions": "Your own forecasting models; three competitions split emissions equally; softmax allocation favours consistent accuracy."
+ },
+ "51": {
+  "task": "Agent-first GPU cloud: decentralised NVIDIA GPU rental marketplace.",
+  "miners": "List NVIDIA GPU nodes for hourly rental; validators check hardware/network every 15 min; providers earn rental fees plus emission (including idle pay).",
+  "conditions": "Supported NVIDIA GPU, Ubuntu 24.04 (or 22.04 HWE, kernel 5.19+ for Sysbox), Docker, public IP with 100+ Mbps, 8 GB RAM, 140 GB disk; idle pay needs disk at least 1.5x VRAM and a price at or below the soft limit."
+ },
+ "52": {
+  "task": "Decentralised GAN-style human-feedback / generation work (Dojo V2).",
+  "miners": "Act as generators and discriminators on tasks received through the Dojo web app; outputs must beat a high-quality baseline.",
+  "conditions": "No server needed: register and load the hotkey into a browser wallet (e.g. Talisman)."
+ },
+ "53": {
+  "task": "Verified inference for frontier open models.",
+  "miners": "Serve buyer requests on a local sglang server and return a TOPLOC proof with each completion that the claimed model produced it.",
+  "conditions": "GPUs able to host the model (reference: 4x RTX 4090 for Qwen3.6-35B-A3B FP8), sglang, miner key from provider.engy.ai."
+ },
+ "54": {
+  "task": "Synthetic identities to challenge humanhood/liveness/uniqueness detection models (KYC red-teaming).",
+  "miners": "Generate six identity-preserving FLUX face-image variations per request (incl. screen-replay attacks), encrypt and upload them to S3.",
+  "conditions": "GPU with 8 GB+ VRAM, 16-32 GB RAM, 80 GB disk, HF token, open port 8091; image generation is the only scored task."
+ },
+ "55": {
+  "task": "Privacy-safe synthetic genomics: synthetic CRISPR experiment datasets for the HBB gene.",
+  "miners": "Generate lists of CRISPR experiments (guide RNA, coordinates, mutation, Cas system, cell type) to spec.",
+  "conditions": "Ubuntu, Python 3.12, 16 vCPU, 16 GB RAM, a GPU; must NOT include predicted outcomes/labels."
+ },
+ "56": {
+  "task": "AutoML training platform (Gradients on Demand tournaments).",
+  "miners": "Submit training-code repositories; validators build and run them on their own GPUs for text, image and environment tournaments.",
+  "conditions": "No training compute needed, but a running miner endpoint; winning code is open-sourced publicly; nothing is burned."
+ },
+ "57": {
+  "task": "No on-chain identity set.",
+  "miners": "Unknown.",
+  "conditions": "Unknown (no identity or repo)."
+ },
+ "58": {
+  "task": "Robot foundation models (Vector competition: one-shot task imitation in a new scene).",
+  "miners": "Submit vector_v1.1 policy weights (model.safetensors on HF) and commit on-chain; king-of-the-hill duels in simulation.",
+  "conditions": "Must match the pinned tensor architecture; one submission per hotkey; must beat the king by 3+ points; 4 most recent champions split 40/30/20/10."
+ },
+ "59": {
+  "task": "No on-chain identity set.",
+  "miners": "Unknown.",
+  "conditions": "Unknown (no identity or repo)."
+ },
+ "60": {
+  "task": "Finding and fixing exploits in codebases (security auditing agents).",
+  "miners": "Build an agent (agent_main in miner/agent.py) that returns a JSON vulnerabilities report on benchmark projects, then submit it.",
+  "conditions": "Docker, Python 3.11+, uv; a Chutes or OpenRouter key for inference (you supply the execution API key validators use)."
+ },
+ "61": {
+  "task": "Cybersecurity programming challenges (RedTeam by Innerworks).",
+  "miners": "Pick a challenge, build the solution as a Docker image, publish it to Docker Hub and submit the commit.",
+  "conditions": "Docker Hub account; rewards decay over time so solutions must be refreshed; duplicate submissions are penalised."
+ },
+ "62": {
+  "task": "Autonomous software-engineering agents.",
+  "miners": "Write an agent.py that solves Harbor coding tasks, test it locally with the ridges CLI, then submit it.",
+  "conditions": "An inference provider configured for local testing; agent must follow the Ridges agent contract."
+ },
+ "63": {
+  "task": "Bounty-based research challenges (e.g. RSA-factoring milestones).",
+  "miners": "Solve challenges, test on the workbench, upload a zip and pay a TAO fee; prizes come from a treasury.",
+  "conditions": "Lightweight: no GPU, 1 CPU core, 8 GB RAM; no ongoing emissions, payouts need a validator vote (60% threshold, 50% quorum)."
+ },
+ "64": {
+  "task": "Serverless AI compute at scale.",
+  "miners": "Provide GPU servers that run deployed 'chutes' (AI models/apps) for users (README has no miner detail; based on project description).",
+  "conditions": "GPU servers; README gives no specifics."
+ },
+ "65": {
+  "task": "Distributed AI model compression and optimisation.",
+  "miners": "Submit optimised/compressed models via HuggingFace for benchmarking by the leader validator.",
+  "conditions": "Bittensor wallet and a HuggingFace account with write access."
+ },
+ "66": {
+  "task": "Machine-verified breakthroughs on open maths conjectures (Erd\u0151s problems etc.) in Lean 4.",
+  "miners": "Submit Lean proofs (or counterexamples) for targets in the task pool; verified proofs get paid.",
+  "conditions": "Lean 4 toolchain pinned to the task pool; a submission requires a confirmed transfer (fee), so check locally first."
+ },
+ "67": {
+  "task": "Deep research as a commodity: fast, cheap, traceable research.",
+  "miners": "Submit research agent artifacts; 10 qualifying tasks, then 20 main tasks decide the champion.",
+  "conditions": "At most 30 main participants; ranked by score, then cost, then runtime; champion gets up to 50%, the rest is shared with novelty multipliers."
+ },
+ "68": {
+  "task": "Drug discovery: molecules (SMILES) and nanobodies scored against target proteins.",
+  "miners": "Submit candidate molecules and nanobody sequences each epoch; validators score them with Boltz/Boltzgen.",
+  "conditions": "Your own search/generation compute; the GPU requirements listed (2x >48 GB) are for validators; invalid items score worst."
+ },
+ "69": {
+  "task": "Incentivising mainstream-media coverage via PR firms.",
+  "miners": "PR contributors pick a brief, upload article text before publishing, then add the live link; validators verify the outlet and content.",
+  "conditions": "No miner server (old miner neuron is deprecated); register via the Herald website with Google + wallet extension; pay vests over 30 days while the article stays live."
+ },
+ "70": {
+  "task": "Satirical identity ('Consted 2.0'); no technical description.",
+  "miners": "Unknown.",
+  "conditions": "Unknown (no repo listed)."
+ },
+ "71": {
+  "task": "AI sales intelligence / intent-driven lead generation (Arena competition).",
+  "miners": "Submit lead-finding models to the Arena, scored on ideal-customer-profile (ICP) intent criteria.",
+  "conditions": "README focuses on validators (75k stake for scoring jobs); miner specifics are in the Arena docs."
+ },
+ "72": {
+  "task": "Street-level image classification/object detection for autonomous driving and mapping (NATIX cameras).",
+  "miners": "Run models that classify construction sites in images, on organic and known-outcome tasks.",
+  "conditions": "Must publish at least one model on a public HuggingFace repo; planned reward decay after 45 days unless an improved model is submitted."
+ },
+ "73": {
+  "task": "Parked (no description).",
+  "miners": "Unknown.",
+  "conditions": "Unknown (no repo listed)."
+ },
+ "74": {
+  "task": "Rewarding open-source software contributions (autonomous software development).",
+  "miners": "Make real pull requests to whitelisted OSS repos; merged PRs are scored on quality, repo allocation and language.",
+  "conditions": "No miner neuron; register a fine-grained GitHub PAT with validators via the CLI."
+ },
+ "75": {
+  "task": "Blockchain-backed cloud: decentralised file storage (IPFS) and compute.",
+  "miners": "Run storage-miner nodes that pin and serve files; weight is 80% storage share, 20% pin success.",
+  "conditions": "Only StorageMiner nodes earn weight; needs storage capacity and a node profile for the pin component."
+ },
+ "76": {
+  "task": "Outcomes API for coding work (in development).",
+  "miners": "Quote a firm price for a coding change that passes a client's test, then deliver a branch; paid only when validators accept it.",
+  "conditions": "Must pass capability qualification and slot approval; Protected tier needs your own confidential VM; terms still in draft."
+ },
+ "77": {
+  "task": "Liquidity provision on external chains (Uniswap), directed by alpha-holder votes.",
+  "miners": "Provide liquidity to voted pools from an EVM address linked to the hotkey.",
+  "conditions": "EVM private key plus your own liquidity capital; stake on subnet 77; weights come from the vote server."
+ },
+ "78": {
+  "task": "Universal motion to meaning (sign language / motion translation).",
+  "miners": "Currently: keep an HTTPS endpoint healthy (temporary bridge rewards); later, serve a translation model endpoint.",
+  "conditions": "Public IP/port on chain, /healthz returns 200 within 5 s, TLS cert valid for the IP (no self-signed), no validator permit; rewards split equally per coldkey/IP group."
+ },
+ "79": {
+  "task": "Market simulation and exchange for dTAO (\u03c4aos simulation + GenTRX training).",
+  "miners": "Host trading agents in a distributed market simulation (~95% pool: maker spread + skill); optionally train the GenTRX model and upload gradients (~5% pool).",
+  "conditions": "Must keep sufficient trading activity; GenTRX needs a personal S3 bucket and compute; Exchange mechanism not yet live."
+ },
+ "80": {
+  "task": "Robotics models (VLA) and egocentric data collection, in seasons.",
+  "miners": "Fine-tune LingBot-VLA 2.0 / \u03c00.5 checkpoints for simulation or real-robot (xArm 6) tracks, or contribute egocentric data.",
+  "conditions": "GPU for training; full checkpoints on HuggingFace (not bare LoRA); pay an evaluation burn; openroboto CLI 1.1.0+; models must stay public during payout."
+ },
+ "81": {
+  "task": "Decentralised GRPO reinforcement-learning training (the RL layer of Bittensor).",
+  "miners": "Spend own GPU compute finding prompts at the policy's learning frontier and submit verified rollout groups (Math, Code and/or Logic).",
+  "conditions": "GPU, pinned miner image, follow the advertised checkpoint (Qwen3-4B base lineage); pause when readiness check fails; paid for usable groups, not volume."
+ },
+ "82": {
+  "task": "Noah: stake-contribution 'Ark' mechanism (no compute task).",
+  "miners": "Contribute 10 NOAH for entry, then about 50% of eligible earnings, via signed transactions to the Ark.",
+  "conditions": "No daemon or axon; contributions transfer ownership and are not withdrawable."
+ },
+ "83": {
+  "task": "Maximum-clique graph problem solving.",
+  "miners": "Solve maximum-clique problems sent by validators; scored on optimality and algorithmic diversity.",
+  "conditions": "CPU solver; problem frequency scales with difficulty; README gives no hardware minimums."
+ },
+ "84": {
+  "task": "No on-chain identity set.",
+  "miners": "Unknown.",
+  "conditions": "Unknown (no identity or repo)."
+ },
+ "85": {
+  "task": "AI video processing: upscaling and compression.",
+  "miners": "Process upscaling (Video2X/FFmpeg) and compression requests from validators and users via containerised services.",
+  "conditions": "Recommended NVIDIA RTX 4090+ (16 GB+ VRAM per GPU), Ubuntu 24.04, Docker + nvidia-container-toolkit, Python 3.10+."
+ },
+ "86": {
+  "task": "Listed for sale; no technical purpose.",
+  "miners": "Unknown.",
+  "conditions": "Unknown (identity says the subnet is for sale)."
+ },
+ "87": {
+  "task": "Verified execution of agentic workflows for enterprise ('Proof of Assurance').",
+  "miners": "Not documented (no repo listed).",
+  "conditions": "Unknown."
+ },
+ "88": {
+  "task": "Decentralised AUM: investment strategies (Tao/Alpha and US stocks).",
+  "miners": "File portfolio allocation strategies that are auto-submitted and rebalanced; scored on return, volatility, drawdown and slippage.",
+  "conditions": "No GPU; US-stock changes must be submitted before 09:28/15:50 ET; rebalancing incurs simulated fees/slippage; emissions partitioned by asset class."
+ },
+ "89": {
+  "task": "Trading signals ('Proof of Edge').",
+  "miners": "Post trades/signals; scored on a decaying reputation and recent wins (capped at 20).",
+  "conditions": "8-day warmup earns dust weight only; wins decay over 30 days; emissions burn if no qualified miner has recent wins."
+ },
+ "90": {
+  "task": "Confidential-computing AI factory: TEE multi-cluster Kubernetes for inference, agents and batch jobs.",
+  "miners": "Operate GPU/CPU Kubernetes clusters whose nodes run Kata/CoCo confidential containers, serving AI services and batch jobs.",
+  "conditions": "TEE-capable hardware (Intel TDX, NVIDIA confidential GPUs), RKE2 Kubernetes, attestation via CoCo Trustee."
+ },
+ "91": {
+  "task": "Time-series foundation models.",
+  "miners": "Submit a deterministic synthetic-data generator; the operator trains a fixed Toto2-4M forecaster on it and duels the king every 12 h.",
+  "conditions": "No own GPU, but you pay your training leg via a Lium account (~4-6 GPU-hours); one submission per hotkey, at most 3 per coldkey per era, similarity-checked."
+ },
+ "92": {
+  "task": "Verified decision-model inference.",
+  "miners": "Serve pinned models (s1-fast: plumb-4b; s1-pro: rune-26b-a4b) and answer validator rounds that are checked against reference runtimes.",
+  "conditions": "GPU to run the committed model exactly per manifest; on-chain commitment must match the release; changing it resets the score."
+ },
+ "93": {
+  "task": "Decentralised creator economy: brands paying for YouTube content.",
+  "miners": "Creators publish YouTube videos that meet brand briefs and serve OAuth tokens so validators can read analytics.",
+  "conditions": "Your own YouTube channel(s) with real engagement; scored in USD value; unallocated emission is burned."
+ },
+ "94": {
+  "task": "CPU sandboxes for reinforcement learning.",
+  "miners": "Run attested CPU machines behind an HTTPS endpoint; validators send bounded SAT tasks to each verified machine.",
+  "conditions": "Attestable CPU hosts (TEE evidence such as TDX), live TLS key, unique hardware; duplicates are zeroed; uptime alone earns nothing."
+ },
+ "95": {
+  "task": "Heterogeneous inference network (Actual Computer).",
+  "miners": "Not documented: the listed repo is not public.",
+  "conditions": "Unknown."
+ },
+ "96": {
+  "task": "Verifiable inference serving layer (moving to Verathos Decide, 2026-10-15).",
+  "miners": "Serve exact published models through vLLM with proofs, competing on speed, capacity, reliability and price.",
+  "conditions": "GPU + supported inference/proof environment via the guided installer; miner setup is changing with the Decide migration."
+ },
+ "97": {
+  "task": "Open models, cast small (model distillation/compression).",
+  "miners": "Submit small models evaluated on the validator's 8-GPU eval box with a dedup bank (README is validator-focused).",
+  "conditions": "Not detailed in the README."
+ },
+ "98": {
+  "task": "AI companions: round-based Minecraft agent evaluation.",
+  "miners": "Submit open-source Minecraft agents evaluated in sandboxed servers each round.",
+  "conditions": "Winner-take-all per round; a challenger must beat the champion by a margin; all agents are public."
+ },
+ "99": {
+  "task": "No description set (Thirty Spokes).",
+  "miners": "Unknown.",
+  "conditions": "Unknown (no repo listed)."
+ },
+ "100": {
+  "task": "Autonomous research network (open alternative to frontier AI).",
+  "miners": "Proof challenge (70%): discover topics and submit research. Bounty challenge (up to 30%): report reproducible Cortex product/backend bugs.",
+  "conditions": "Experimental software; only bug reports published as valid earn; unused bounty share burns."
+ },
+ "101": {
+  "task": "Decentralised semantic tagging of X (Twitter) posts.",
+  "miners": "Return a small set of tags per post; scored on signal (consensus cluster), validity and utility.",
+  "conditions": "An LLM/tagger of your choice; tags must be grounded, non-redundant and well-formed."
+ },
+ "102": {
+  "task": "Mixture-of-experts: contributors train specialised expert modules aggregated into larger models.",
+  "miners": "Train residual expert modules for the owner-assigned task (e.g. exp_pmc_residual) and commit them on-chain.",
+  "conditions": "GPU training; must commit under the active task's group_id; only the top 3 above the base model score; c4 regression cutoff; identical scores both get 0."
+ },
+ "103": {
+  "task": "No on-chain identity set.",
+  "miners": "Unknown.",
+  "conditions": "Unknown (no identity or repo)."
+ },
+ "104": {
+  "task": "Decentralised supply of LLM API access for agent pipelines.",
+  "miners": "Keep one working LLM API credential and, when asked, return it encrypted to the protocol key.",
+  "conditions": "Your own paid LLM API key for an allowed provider/model; most emission is reserved by a fixed burn."
+ },
+ "105": {
+  "task": "Decentralised bandwidth network (Beam).",
+  "miners": "Not documented: the repo link is a GitHub org page.",
+  "conditions": "Unknown."
+ },
+ "106": {
+  "task": "Tokenised AI compute (GPU rental with ZK proofs).",
+  "miners": "Offer GPU hosts for rental; prove work with the ZkGEMM proof extension.",
+  "conditions": "Supported NVIDIA GPU, Ubuntu/Debian, Docker + Sysbox, 4+ cores, 16 GB+ RAM, 40 GB+ Docker storage, open port 8091 and rental ports 20000-20100, synced clock."
+ },
+ "107": {
+  "task": "Genomics: variant calling on sequencing data.",
+  "miners": "Run a variant-calling pipeline (GATK, DeepVariant, BCFtools) on BAM files each round; scored with hap.py against truth.",
+  "conditions": "4+ cores, 8-16 GB RAM (16 GB for DeepVariant), 60 GB+ disk, Docker 20.10+, Bittensor SDK 10.3.1 (11.x unsupported); demo/practice modes available."
+ },
+ "108": {
+  "task": "Decentralised silicon (chip) design for AI accelerators.",
+  "miners": "Download rotating challenges and submit Verilog/SystemVerilog designs; scored on functionality, area, delay and power via EDA tools.",
+  "conditions": "Docker or Python 3.12; must pass functional + overall gates; record ladder pays after a probation window."
+ },
+ "109": {
+  "task": "Personal investment intelligence: portfolio-aware signals from news and filings (Canada-focused).",
+  "miners": "Not documented (no repo listed).",
+  "conditions": "Unknown."
+ },
+ "110": {
+  "task": "Enterprise inference hardware on 100% green energy.",
+  "miners": "Not documented (no repo listed).",
+  "conditions": "Unknown."
+ },
+ "111": {
+  "task": "Turning scientific literature into a structured claim-evidence graph.",
+  "miners": "Run an agent pipeline that compiles papers (PDF/text) into structured claim-evidence JSON.",
+  "conditions": "4 cores/16 GB RAM min (8/32 recommended), 50 GB disk, Python 3.11+; an LLM backend for the agent harness (Claude/Codex/Hermes CLI etc.)."
+ },
+ "112": {
+  "task": "Open-source robotics (THOR).",
+  "miners": "Not documented (no repo listed).",
+  "conditions": "Unknown."
+ },
+ "113": {
+  "task": "No identity description set.",
+  "miners": "Unknown.",
+  "conditions": "Unknown (no repo listed)."
+ },
+ "114": {
+  "task": "Context compression for AI agents, delivered through MCP.",
+  "miners": "Build compression algorithms/models that cut the tokens an agent processes while keeping SWE-bench-style task success.",
+  "conditions": "A compatible compression solution uploaded to the SOMA platform; top entries get code/integrity review."
+ },
+ "115": {
+  "task": "Evolving AIGC harness for creators and agents (idea to finished video/content).",
+  "miners": "README describes the product only; no miner instructions.",
+  "conditions": "Not documented."
+ },
+ "116": {
+  "task": "ML for engineering simulations.",
+  "miners": "Serve a research interface (Miner MCP) for simulation tasks; spec is ratified but not production-qualified.",
+  "conditions": "Early-stage: design docs only, nothing production-qualified yet."
+ },
+ "117": {
+  "task": "AI video/media generation studio.",
+  "miners": "Run an attested cloud worker (via everycli) that takes coordinator jobs, calls your configured generation providers and returns signed receipts.",
+  "conditions": "No GPU; your own generation-provider credentials/offers; Linux glibc 2.35+ or macOS."
+ },
+ "118": {
+  "task": "Open-source Claude Cowork alternative.",
+  "miners": "Not documented: the repo link is a GitHub org page.",
+  "conditions": "Unknown."
+ },
+ "119": {
+  "task": "Training-data improvements for learning-oriented (educational) AI.",
+  "miners": "Generate bounded synthetic or licensed data patches with provenance, tested against a frozen baseline.",
+  "conditions": "Data must pass rights/privacy/contamination checks; rewards are for measured capability gains, not dataset size."
+ },
+ "120": {
+  "task": "Reason mining: reinforcement learning on reasoning tasks (math etc.).",
+  "miners": "Generate verifiable rollouts/models for signed epoch tasks on a GPU and upload them to R2.",
+  "conditions": "GPU; operator-signed epoch capabilities; protocol is complex and versioned (K2/L2 cutover pending)."
+ },
+ "121": {
+  "task": "Enterprise AI skills built against real business demand (sundae_bar).",
+  "miners": "Submit skill bundles (SKILL.md at most 10 KB plus up to 30 reference files) for challenges; benchmarked autonomously.",
+  "conditions": "Skill-first format limits; best skills can be integrated commercially."
+ },
+ "122": {
+  "task": "Democratising Bittensor mining (CookingTAO).",
+  "miners": "Not documented: the repo link is a GitHub org page.",
+  "conditions": "Unknown."
+ },
+ "123": {
+  "task": "Cooperative financial prediction (signals combined into a meta-model).",
+  "miners": "Submit prediction embeddings for challenges (binary, LBFGS, hit-first, breakout, cross-section, flow); paid on their importance in the meta-model.",
+  "conditions": "Your own models and data; uniqueness penalty for over 85% overlap; walk-forward out-of-sample scoring."
+ },
+ "124": {
+  "task": "Autonomous drone flight AI.",
+  "miners": "Train a drone pilot policy (depth camera to flight commands) and submit it; benchmarked across 1,000 generated worlds in five missions.",
+  "conditions": "Light miner process (commits the model digest); training compute is your own; king-of-the-hill pays the last five champions."
+ },
+ "125": {
+  "task": "Improving pretraining algorithms (optimizers and data refiners).",
+  "miners": "Implement an optimizer or data refiner, serve its source, fund evaluation credits, commit then reveal; paid on confirmed improvements.",
+  "conditions": "Evaluation credits funded by the miner; no GPU to serve, but local experiments need compute; unearned share burns."
+ },
+ "126": {
+  "task": "Decentralised generative video platform.",
+  "miners": "Not documented: the listed repo is not public.",
+  "conditions": "Unknown."
+ },
+ "127": {
+  "task": "AI trading-agent competitions (Astrid Arena).",
+  "miners": "Run AI agents that trade in miner competitions on Astrid; ranked on replayed PnL.",
+  "conditions": "Must meet eligibility (trade activity + execution-run correlation); only the top 3 per competition are paid (60/30/10)."
+ },
+ "128": {
+  "task": "Distributed cloud compute network (ByteLeap).",
+  "miners": "Aggregate worker machines (up to 100) and earn mainly from active compute leases, plus challenges on idle workers.",
+  "conditions": "Python 3.8+, separate worker software; idle workers score 0 on lease revenue; availability multiplier over 169 h."
+ }
+}

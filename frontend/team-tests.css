@@ -1,0 +1,45 @@
+/* Team tests (team-tests.js; prefix tt-): the test library, a run's graded results and the history of runs. */
+.tt-body { margin-top: 12px; }
+.tt-tools { margin: 0 0 10px; }
+.tt-tools p { display: flex; align-items: center; gap: 6px; margin: 0; }
+.tt-tools svg, .tt-sub svg, .tt-err svg { width: 14px; height: 14px; flex: none; }
+.tt-lib td, .tt-runs td, .tt-res td { vertical-align: top; }
+.tt-pick { width: 28px; }
+.tt-pick input { width: 16px; height: 16px; margin: 2px 0 0; accent-color: var(--accent); }
+.tt-title { display: inline-flex; align-items: center; gap: 4px; text-align: left; font-weight: 600; color: var(--text); }
+.tt-title svg { width: 13px; height: 13px; color: var(--text-3); }
+.tt-lib small, .tt-res td > small, .tt-runs td > small { display: block; margin-top: 2px; }
+.tt-runbar { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 10px; margin-top: 12px; padding: 10px 12px;
+  border-radius: 10px; background: var(--surface-2); font-size: 13px; color: var(--text-2); }
+.tt-runbar b { color: var(--text); }
+.tt-score { font-size: 14px; }
+.tt-good { color: var(--good); }
+.tt-mid { color: var(--warn); }
+.tt-bad { color: var(--crit); }
+.tt-head { display: flex; flex-wrap: wrap; align-items: flex-start; justify-content: space-between; gap: 10px; margin: 0 0 12px; }
+.tt-head h3 { margin: 0 0 4px; font-size: 16px; color: var(--text); }
+.tt-head p { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; margin: 0; }
+.tt-kpis { margin-bottom: 12px; }
+.tt-err { display: flex; align-items: center; gap: 6px; color: var(--crit); font-size: 13px; }
+.tt-open td { border-bottom-color: transparent; }
+.tt-detail td { background: var(--surface-2); padding-top: 4px; }
+.tt-sub { display: flex; align-items: center; gap: 6px; margin: 8px 0 6px; font-size: 12px; font-weight: 600; letter-spacing: .04em; text-transform: uppercase; color: var(--text-3); }
+.tt-checks { list-style: none; margin: 0 0 8px; padding: 0; display: grid; gap: 6px; }
+.tt-checks li { display: grid; grid-template-columns: 92px 1fr; gap: 8px; align-items: start; font-size: 13px; }
+.tt-checks li .occ-pill { justify-self: start; }
+.tt-checks li > span:last-child { display: grid; gap: 2px; min-width: 0; color: var(--text); }
+.tt-checks small { overflow-wrap: anywhere; }
+.tt-wrong { margin: 0 0 8px; padding-left: 18px; font-size: 13px; color: var(--text-2); display: grid; gap: 3px; }
+.tt-dialog { width: min(760px, calc(100vw - 32px)); }
+.tt-dialog form { display: grid; gap: 10px; }
+.tt-dh h3 { margin: 0 0 4px; }
+.tt-dh p { display: flex; align-items: center; gap: 6px; margin: 0; }
+.tt-dh svg { width: 14px; height: 14px; flex: none; }
+.tt-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 10px; }
+.tt-dialog textarea { width: 100%; font-family: var(--mono, ui-monospace, monospace); font-size: 12.5px; line-height: 1.45; resize: vertical; }
+.tt-dialog textarea[readonly], .tt-dialog input[readonly] { background: var(--surface-2); }
+@media (max-width: 760px) {
+  .tt-runbar { flex-direction: column; align-items: stretch; }
+  .tt-runbar .row { justify-content: flex-end; flex-wrap: wrap; }
+  .tt-checks li { grid-template-columns: 1fr; }
+}

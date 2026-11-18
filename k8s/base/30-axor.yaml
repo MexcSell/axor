@@ -1,0 +1,186 @@
+# AXoR itself: the web app (service account "web": the Kubernetes rights in 10-rbac.yaml), Scout Drive and AXoR Push.
+# Settings come from the Secret axor-env (k8s/deploy.sh writes it from .env) and the shared secrets from the
+# Secret axor-secrets (deploy.sh makes them once). Each service keeps its data on its own volume; every service runs
+# one pod at a time (Recreate), as each has its own SQLite database.
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata: { name: web-data, namespace: axor }
+spec:
+  accessModes: [ReadWriteOnce]
+  resources: { requests: { storage: 10Gi } }
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata: { name: drive-data, namespace: axor }
+spec:
+  accessModes: [ReadWriteOnce]
+  resources: { requests: { storage: 50Gi } }
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata: { name: push-data, namespace: axor }
+spec:
+  accessModes: [ReadWriteOnce]
+  resources: { requests: { storage: 1Gi } }
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata: { name: web, namespace: axor, labels: { app: web } }
+spec:
+  # ONE replica, Recreate (never two at once, not even during a rollout). Required until multi-replica board execution is verified
+  # (Owner, G5-2, 2026-11-11): each web process's start-up resets every running board run, and Autoloop's queue caps and agent
+  # slots are per process. Board starts themselves are claimed in the database. k8s/deploy.sh refuses a manifest that asks for more.
+  replicas: 1
+  strategy: { type: Recreate }
+  selector: { matchLabels: { app: web } }
+  template:
+    metadata: { labels: { app: web } }
+    spec:
+      serviceAccountName: web
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1000
+        runAsGroup: 1000
+        fsGroup: 1000
+        seccompProfile: { type: RuntimeDefault }
+      containers:
+        - name: web
+          image: axor/web:${TAG}
+          imagePullPolicy: Never
+          envFrom: [{ secretRef: { name: axor-env } }]
+          env:
+            - { name: FORWARDED_ALLOW_IPS, value: "10.42.0.0/16" }  # the edge: client address and https from its headers
+            - { name: DRIVE_URL, value: "http://drive:8100" }
+            - { name: DRIVE_SECRET, valueFrom: { secretKeyRef: { name: axor-secrets, key: drive } } }
+            - { name: PUSH_URL, value: "http://push:8300" }
+            - { name: PUSH_SECRET, valueFrom: { secretKeyRef: { name: axor-secrets, key: push } } }
+            - { name: DNS_URL, value: "http://dns.axor-edge.svc.cluster.local:8400" }
+            - { name: DNS_SECRET, valueFrom: { secretKeyRef: { name: axor-secrets, key: dns } } }
+            - { name: RUNNER_URL, value: "http://runner.axor-host.svc.cluster.local:8200" }
+            - { name: RUNNER_SECRET, valueFrom: { secretKeyRef: { name: axor-secrets, key: runner } } }
+            - { name: DOCKER_URL, value: "http://docker-proxy.axor-host.svc.cluster.local:2375" }
+            - { name: WORKBENCH_URL, value: "http://10.42.0.1:8350" }  # the AXoR Workbench on the host (workbench/), the Workflow's agents
+            - { name: WORKBENCH_TOKEN, valueFrom: { secretKeyRef: { name: workbench, key: token, optional: true } } }  # made by workbench/install.sh
+            - { name: HOSTFILES_URL, value: "http://hostfiles.axor-host.svc.cluster.local:8500" }  # AXoR Host files: My Knowledge's linked folders (k8s/host/42-hostfiles.yaml)
+            - { name: HOSTFILES_SECRET, valueFrom: { secretKeyRef: { name: hostfiles, key: secret, optional: true } } }  # made by deploy.sh
+            - { name: SANDBOX_IMAGE, value: "axor/sandbox:${TAG}" }  # Mining HQ's sandbox runs (56-sandbox.yaml); its model proxy listens on 8091
+            - { name: EGRESS_SECRET, valueFrom: { secretKeyRef: { name: egress, key: secret, optional: true } } }  # sandbox internet (57-egress.yaml), made by deploy.sh
+          ports: [{ name: http, containerPort: 8000 }, { name: sandbox, containerPort: 8091 }]
+          # readiness: the database answers (no traffic while it doesn't); liveness and startup: the process answers, so a database
+          # outage never restarts a healthy process (it reconnects by itself)
+          readinessProbe: { httpGet: { path: /api/ready, port: http }, periodSeconds: 10, timeoutSeconds: 5, failureThreshold: 3 }
+          livenessProbe: { httpGet: { path: /api/live, port: http }, periodSeconds: 30, timeoutSeconds: 5, failureThreshold: 5 }
+          startupProbe: { httpGet: { path: /api/live, port: http }, periodSeconds: 5, failureThreshold: 60 }
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities: { drop: [ALL] }
+          resources:
+            requests: { cpu: 250m, memory: 512Mi }
+            limits: { cpu: "12", memory: 16Gi }  # each CLI run (Terminal/Codex) is a ~300 MB process in this pod: room for ~24 at once (cli_parallel.py)
+          volumeMounts: [{ name: data, mountPath: /data }]
+      volumes: [{ name: data, persistentVolumeClaim: { claimName: web-data } }]
+---
+apiVersion: v1
+kind: Service
+metadata: { name: web, namespace: axor }
+spec:
+  selector: { app: web }
+  ports: [{ name: http, port: 8000, targetPort: http }, { name: sandbox, port: 8091, targetPort: sandbox }]
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata: { name: drive, namespace: axor, labels: { app: drive } }
+spec:
+  replicas: 1
+  strategy: { type: Recreate }
+  selector: { matchLabels: { app: drive } }
+  template:
+    metadata: { labels: { app: drive } }
+    spec:
+      automountServiceAccountToken: false
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1000
+        runAsGroup: 1000
+        fsGroup: 1000
+        seccompProfile: { type: RuntimeDefault }
+      containers:
+        - name: drive
+          image: axor/drive:${TAG}
+          imagePullPolicy: Never
+          envFrom: [{ configMapRef: { name: axor-drive-env, optional: true } }]
+          env: [{ name: DRIVE_SECRET, valueFrom: { secretKeyRef: { name: axor-secrets, key: drive } } }]
+          ports: [{ name: http, containerPort: 8100 }]
+          readinessProbe: { httpGet: { path: /health, port: http }, periodSeconds: 10 }
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities: { drop: [ALL] }
+          resources:
+            requests: { cpu: 50m, memory: 64Mi }
+            limits: { cpu: "2", memory: 1Gi }
+          volumeMounts: [{ name: data, mountPath: /data }]
+      volumes: [{ name: data, persistentVolumeClaim: { claimName: drive-data } }]
+---
+apiVersion: v1
+kind: Service
+metadata: { name: drive, namespace: axor }
+spec:
+  selector: { app: drive }
+  ports: [{ name: http, port: 8100, targetPort: http }]
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata: { name: push, namespace: axor, labels: { app: push } }
+spec:
+  replicas: 1
+  strategy: { type: Recreate }
+  selector: { matchLabels: { app: push } }
+  template:
+    metadata: { labels: { app: push } }
+    spec:
+      automountServiceAccountToken: false
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1000
+        runAsGroup: 1000
+        fsGroup: 1000
+        seccompProfile: { type: RuntimeDefault }
+      containers:
+        - name: push
+          image: axor/push:${TAG}
+          imagePullPolicy: Never
+          envFrom: [{ configMapRef: { name: axor-push-env, optional: true } }]
+          env: [{ name: PUSH_SECRET, valueFrom: { secretKeyRef: { name: axor-secrets, key: push } } }]
+          ports: [{ name: http, containerPort: 8300 }]
+          readinessProbe: { httpGet: { path: /health, port: http }, periodSeconds: 10 }
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities: { drop: [ALL] }
+          resources:
+            requests: { cpu: 50m, memory: 64Mi }
+            limits: { cpu: "1", memory: 256Mi }
+          volumeMounts: [{ name: data, mountPath: /data }]
+      volumes: [{ name: data, persistentVolumeClaim: { claimName: push-data } }]
+---
+apiVersion: v1
+kind: Service
+metadata: { name: push, namespace: axor }
+spec:
+  selector: { app: push }
+  ports: [{ name: http, port: 8300, targetPort: http }]
+---
+# only the edge reaches the web app (and sandbox runs its model proxy); drive and push answer AXoR alone
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata: { name: axor, namespace: axor }
+spec:
+  podSelector: {}
+  policyTypes: [Ingress]
+  ingress:
+    - from: [{ podSelector: { matchLabels: { app: web } } }]
+    - from:
+        - namespaceSelector: { matchLabels: { kubernetes.io/metadata.name: axor-edge } }
+          podSelector: { matchLabels: { app: edge } }
+      ports: [{ port: 8000 }]
+    - from: [{ namespaceSelector: { matchLabels: { kubernetes.io/metadata.name: axor-sandbox } } }]  # sandbox runs: the model proxy only
+      ports: [{ port: 8091 }]

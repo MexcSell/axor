@@ -1,0 +1,712 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>AXoR · Adaptive Agent Company OS</title>
+  <meta name="description" content="Live Bittensor subnet explorer and miner recommendations">
+  <link rel="icon" href="/static/brand/favicon.ico" sizes="48x48">
+  <link rel="icon" href="/static/brand/icon-32-light.png" type="image/png" sizes="32x32" media="(prefers-color-scheme: light)">
+  <link rel="icon" href="/static/brand/icon-32-dark.png" type="image/png" sizes="32x32" media="(prefers-color-scheme: dark)">
+  <link rel="icon" href="/static/brand/icon-192.png" type="image/png" sizes="192x192">
+  <link rel="apple-touch-icon" href="/static/brand/apple-touch-icon.png">
+  <link rel="manifest" href="/static/manifest.json">
+  <script src="/static/boot.js"></script>
+  <link rel="stylesheet" href="/static/styles.css">
+  <link rel="stylesheet" href="/static/auth-cert.css">
+  <link rel="stylesheet" href="/static/tech.css">
+  <link rel="stylesheet" href="/static/tech-analysis.css">
+  <link rel="stylesheet" href="/static/help.css">
+  <link rel="stylesheet" href="/static/hq.css">
+  <link rel="stylesheet" href="/static/mining.css">
+  <link rel="stylesheet" href="/static/mining-work.css">
+  <link rel="stylesheet" href="/static/mining-crew.css">
+  <link rel="stylesheet" href="/static/mining-status.css">
+  <link rel="stylesheet" href="/static/mining-web.css">
+  <link rel="stylesheet" href="/static/mining-release.css">
+  <link rel="stylesheet" href="/static/mining-autoloop.css">
+  <link rel="stylesheet" href="/static/mining-upgrade.css">
+  <link rel="stylesheet" href="/static/mining-topminer.css">
+  <link rel="stylesheet" href="/static/mining-director.css">
+  <link rel="stylesheet" href="/static/mining-import.css">
+  <link rel="stylesheet" href="/static/mining-sources.css">
+  <link rel="stylesheet" href="/static/mining-bench.css">
+  <link rel="stylesheet" href="/static/mining-stages.css">
+  <link rel="stylesheet" href="/static/file-catalog.css">
+  <link rel="stylesheet" href="/static/mining-loadout.css">
+  <link rel="stylesheet" href="/static/mining-lab.css">
+  <link rel="stylesheet" href="/static/mining-github.css">
+  <link rel="stylesheet" href="/static/mining-improve.css">
+  <link rel="stylesheet" href="/static/mining-files.css">
+  <link rel="stylesheet" href="/static/mining-look.css">
+  <link rel="stylesheet" href="/static/mining-command.css">
+  <link rel="stylesheet" href="/static/mining-shell.css">
+  <link rel="stylesheet" href="/static/mining-ops.css">
+  <link rel="stylesheet" href="/static/flex.css">
+  <link rel="stylesheet" href="/static/workforce.css">
+  <link rel="stylesheet" href="/static/infiagent.css">
+  <link rel="stylesheet" href="/static/portfolio.css">
+  <link rel="stylesheet" href="/static/company.css">
+  <link rel="stylesheet" href="/static/company-agents.css">
+  <link rel="stylesheet" href="/static/cli-accounts.css">
+  <link rel="stylesheet" href="/static/mcp.css">
+  <link rel="stylesheet" href="/static/guide.css">
+  <link rel="stylesheet" href="/static/writer.css">
+  <link rel="stylesheet" href="/static/overview.css">
+  <link rel="stylesheet" href="/static/platform.css">
+  <link rel="stylesheet" href="/static/command.css">
+  <link rel="stylesheet" href="/static/hubs.css">
+  <link rel="stylesheet" href="/static/hub-learning.css">
+  <link rel="stylesheet" href="/static/team-tests.css">
+  <link rel="stylesheet" href="/static/hub-layers.css">
+  <link rel="stylesheet" href="/static/swarm.css">
+  <link rel="stylesheet" href="/static/evolution.css">
+  <link rel="stylesheet" href="/static/topology.css">
+  <link rel="stylesheet" href="/static/organization.css">
+  <link rel="stylesheet" href="/static/agent-studio.css">
+  <link rel="stylesheet" href="/static/ecosystem.css">
+  <link rel="stylesheet" href="/static/knowledge.css">
+  <link rel="stylesheet" href="/static/knowledge-rag.css">
+  <link rel="stylesheet" href="/static/knowledge-linked.css">
+  <link rel="stylesheet" href="/static/marketplace.css">
+  <link rel="stylesheet" href="/static/mission.css">
+  <link rel="stylesheet" href="/static/command-map.css">
+  <link rel="stylesheet" href="/static/shell.css">
+  <link rel="stylesheet" href="/static/design.css">
+  <link rel="stylesheet" href="/static/control.css">
+  <link rel="stylesheet" href="/static/control-journey.css">
+  <link rel="stylesheet" href="/static/control-missions.css">
+  <link rel="stylesheet" href="/static/control-exec.css">
+  <link rel="stylesheet" href="/static/control-ops.css">
+  <link rel="stylesheet" href="/static/control-scene.css">
+  <link rel="stylesheet" href="/static/sidebar.css">
+  <link rel="stylesheet" href="/static/side-layout.css">
+  <link rel="stylesheet" href="/static/journey.css">
+  <link rel="stylesheet" href="/static/pagetip.css">
+  <link rel="stylesheet" href="/static/plan-usage.css">
+  <link rel="stylesheet" href="/static/dvp.css">
+  <link rel="stylesheet" href="/static/gm-chat.css">
+</head>
+<body>
+  <div class="progress" id="progress" aria-hidden="true"><i></i></div>
+  <!-- Sign in / register -->
+  <section class="auth" id="auth" hidden>
+    <div class="auth-card">
+      <div class="auth-brand"><span class="mark"><img class="logo-light" src="/static/brand/logo-light-96.png" alt=""><img class="logo-dark" src="/static/brand/logo-dark-96.png" alt=""></span><div><b>AXoR</b><small>Adaptive Agent Company OS</small></div></div>
+
+      <form class="auth-step" id="f-login" novalidate>
+        <label class="in"><span>Username or email</span><input name="login" type="text" autocomplete="username" autocapitalize="none" spellcheck="false" required></label>
+        <label class="in"><span>Password</span><div class="pw"><input name="password" type="password" autocomplete="current-password" required><button type="button" class="eye" aria-label="Show password"></button></div></label>
+        <p class="err" role="alert"></p>
+        <button class="btn primary wide" type="submit">Continue</button>
+        <p class="auth-alt" id="auth-to-register">No account? <button type="button" class="link" data-tab="register">Create account</button></p>
+      </form>
+
+      <form class="auth-step" id="f-register" hidden novalidate>
+        <label class="in"><span>Username</span><input name="username" type="text" autocomplete="username" autocapitalize="none" spellcheck="false" maxlength="32" placeholder="e.g. thomas" required><small class="hint">3–32 characters: a–z, 0–9, _ . -</small></label>
+        <label class="in"><span>Email <em class="opt">optional</em></span><input name="email" type="email" autocomplete="email"></label>
+        <label class="in"><span>Password</span><div class="pw"><input name="password" type="password" autocomplete="new-password" required minlength="12"><button type="button" class="eye" aria-label="Show password"></button></div></label>
+        <div class="meter" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
+        <ul class="rules"></ul>
+        <label class="in"><span>Confirm password</span><input name="confirm" type="password" autocomplete="new-password" required></label>
+        <p class="err" role="alert"></p>
+        <button class="btn primary wide" type="submit">Create account</button>
+        <p class="fine" id="reg-fine"></p>
+        <div class="auth-links"><button type="button" class="link" data-back>Back to sign in</button></div>
+      </form>
+
+      <form class="auth-step" id="f-pending" hidden novalidate>
+        <h2>Request sent</h2>
+        <p class="muted">Your account <b id="pending-name"></b> is waiting for an administrator's approval. As soon as it's approved, this page moves on by itself: you'll get AXoR's certificate to install, then press OK to sign in<span id="pending-2fa"> and set up your authenticator app</span>.</p>
+        <p class="pending-wait" id="pending-wait" role="status"><span class="spinner"></span><span>Waiting for approval… You can close this page: open AXoR again in this browser and it picks up here.</span></p>
+        <p class="err" role="alert"></p>
+        <button class="btn primary wide" type="button" data-back>Back to sign in</button>
+      </form>
+
+      <!-- After an administrator approves a sign-up: AXoR's root certificate (same file as System → Cluster → Domain).
+           auth-cert.js fills it; OK finishes the sign-in (auth.js claimApproval). -->
+      <div class="auth-step" id="f-cert" hidden>
+        <h2>Your account is approved</h2>
+        <p class="muted">Before you continue, install AXoR's certificate on this device. It speeds things up: AXoR's pages then open straight away, without a security warning to click through each time.</p>
+        <div class="acert" id="acert">
+          <a class="btn wide" id="acert-dl" href="/api/platform/ca.crt" download="axor-ca.crt"><span data-icon="download"></span>Download Certificate</a>
+          <h3 class="acert-h">How to install the certificate</h3>
+          <div id="acert-body"></div>
+        </div>
+        <p class="err" role="alert"></p>
+        <button class="btn primary wide" type="button" id="acert-ok">OK</button>
+      </div>
+
+      <form class="auth-step" id="f-setup" hidden novalidate>
+        <h2 id="setup-title">Set up two-factor authentication</h2>
+        <ol class="steps">
+          <li>Install an authenticator app (Google Authenticator, Microsoft Authenticator, Authy, 1Password…).</li>
+          <li>Scan this QR code with it.<div class="qr" id="qr"></div><details><summary>Can't scan? Enter the key manually</summary><code id="totp-secret"></code></details></li>
+          <li>Enter the 6-digit code the app shows.</li>
+        </ol>
+        <label class="in"><span>Authenticator code</span><input name="code" class="code" inputmode="numeric" autocomplete="one-time-code" maxlength="7" placeholder="123456" required></label>
+        <p class="err" role="alert"></p>
+        <button class="btn primary wide" type="submit">Verify and finish</button>
+      </form>
+
+      <form class="auth-step" id="f-mfa" hidden novalidate>
+        <h2>Two-factor verification</h2>
+        <p class="muted" id="mfa-hint">Enter the 6-digit code from your authenticator app.</p>
+        <label class="in"><span id="mfa-label">Authenticator code</span><input name="code" class="code" inputmode="numeric" autocomplete="one-time-code" maxlength="12" placeholder="123456" required></label>
+        <p class="err" role="alert"></p>
+        <button class="btn primary wide" type="submit">Verify</button>
+        <div class="auth-links"><button type="button" class="link" id="use-recovery">Use a recovery code</button><button type="button" class="link" data-back>Back to sign in</button></div>
+      </form>
+
+      <div class="auth-step" id="f-codes" hidden>
+        <h2>Save your recovery codes</h2>
+        <p class="muted">If you lose your phone, each code lets you sign in once. They won't be shown again.</p>
+        <div class="codes" id="codes"></div>
+        <div class="row"><button type="button" class="btn" id="codes-copy"><span data-icon="copy"></span>Copy</button><button type="button" class="btn" id="codes-dl"><span data-icon="download"></span>Download</button></div>
+        <label class="chk"><input type="checkbox" id="codes-ok"> I've stored these codes somewhere safe</label>
+        <button type="button" class="btn primary wide" id="codes-done" disabled>Continue to AXoR</button>
+      </div>
+    </div>
+  </section>
+
+  <div id="app" hidden>
+  <header class="top">
+    <button class="iconbtn menu-btn" id="menu-btn" aria-label="Open navigation" aria-controls="side" aria-expanded="false"><span data-icon="menu"></span></button>
+    <div class="brand"><span class="mark"><img class="logo-light" src="/static/brand/logo-light-96.png" alt=""><img class="logo-dark" src="/static/brand/logo-dark-96.png" alt=""></span><span>AXoR <small>Adaptive Agent Company OS</small></span></div>
+    <div class="top-right">
+      <button type="button" class="sys-chip" id="sys-chip" hidden aria-label="Server resources" aria-haspopup="dialog" aria-expanded="false"></button>
+      <div class="live" id="live" title="Bittensor ecosystem: live chain connection (not AXoR's own health: that's the status at the bottom)"><span class="dot"></span><span class="txt" id="live-txt">Connecting…</span></div>
+      <span class="pill" id="taoprice" title="Bittensor ecosystem: TAO price (CoinGecko)">τ —</span>
+      <div class="seg" id="unit" title="Show earnings in TAO or USD">
+        <button data-unit="tao" aria-pressed="true">τ</button><button data-unit="usd" aria-pressed="false">$</button>
+      </div>
+      <div class="seg mx-mode" id="mx-mode" role="group" aria-label="Interface mode" title="Simple: missions first. Advanced: every page, agent and setting." hidden><button type="button" data-axmode="simple" aria-pressed="true">Simple</button><button type="button" data-axmode="advanced" aria-pressed="false">Advanced</button></div>
+      <button class="iconbtn bell" id="bell" title="Notifications" aria-label="Notifications" hidden><span data-icon="bell"></span><span class="bell-n" id="bell-n" hidden></span></button>
+      <button class="iconbtn" id="theme" title="Theme and color" aria-label="Theme and color settings"></button>
+      <button class="avatar" id="account" title="Account" aria-label="Account menu"></button>
+    </div>
+  </header>
+
+  <div class="shell">
+  <nav class="side" id="side" aria-label="Main">
+    <div class="side-sec" data-sec="command"><button type="button" class="side-group" aria-expanded="true" title="Control Hub: company-wide command, notifications and approvals">Control Hub</button>
+      <button data-view="control" id="nav-command" title="Control Hub: the whole organization in one place: departments, teams, agents, missions, resources, approvals, alerts" hidden><span data-icon="home"></span><span class="lbl">Control Hub</span><span class="count alert" id="c-command" title="Urgent: critical alerts"></span></button>
+      <button data-view="topology" id="nav-topology" title="Unified Agent Control Panel: AXoR as one graph with seven projections (organization, missions, execution, infrastructure, network, knowledge, observability)" hidden><span data-icon="layers"></span><span class="lbl">Unified control panel</span></button>
+      <button data-view="layers" id="nav-layers" title="Intelligence layers: mission, workforce, execution and knowledge intelligence, evaluation and adaptive intelligence, each with its parts and live figures" hidden><span data-icon="layers"></span><span class="lbl">Intelligence layers</span></button>
+      <button data-view="notifications" id="nav-alerts" title="Activity and notifications" hidden><span data-icon="bell"></span><span class="lbl">Notifications</span><span class="count alert" id="c-alerts" title="Unread notifications"></span></button>
+      <button data-view="approvals" id="nav-approvals" title="Approval Center: every request waiting for your decision" hidden><span data-icon="inbox"></span><span class="lbl">Approval Center</span><span class="count alert" id="c-approvals" title="Requests waiting for your decision"></span></button>
+    </div>
+    <div class="side-sec" data-sec="eco"><button type="button" class="side-group" aria-expanded="true" title="Primary initiative: Bittensor, the network AXoR competes in. Each competition you take on is a predefined mission (Control Hub → Missions)">Primary initiative</button>
+      <div class="side-sub sdb-tree" data-sub="bittensor"><span class="side-subh sdb-tog" role="button" tabindex="0" aria-expanded="true" title="Bittensor: subnets, competitions, research and mining">Bittensor</span>
+        <div class="sdb-kids">
+          <button data-view="mining" id="nav-mining" title="My subnets (formerly Mining HQ): the subnets you mine, their competitions, your miners and the Captain's team" hidden><span data-icon="chip"></span><span class="lbl">My Subnets</span><span class="count alert" id="c-mining" title="Actions waiting for your approval and critical alerts"></span></button>
+          <button data-view="teams" id="nav-teams" title="Competition teams" hidden><span data-icon="trophy"></span><span class="lbl">Competition Teams</span><span class="count alert" id="c-teams" title="Tasks waiting for you"></span></button>
+          <button data-view="intel" id="nav-intel" title="Bittensor Research: market, competition, rewards, risk and opportunity" hidden><span data-icon="book"></span><span class="lbl">Bittensor Research</span></button>
+          <button data-view="explore" aria-current="page" title="Subnet Explorer"><span data-icon="compass"></span><span class="lbl">Subnet Explorer</span><span class="count" id="c-explore"></span></button>
+          <button type="button" class="plt-link axs-go sdb-mhq" data-of="nav-mining" data-axn='{"cmd":"dash"}' title="Mining HQ: the command center over your subnets: competitions, experiments, miners, rewards, approvals and monitoring" hidden><span data-icon="database"></span><span class="lbl">Mining HQ</span></button>
+          <button type="button" class="plt-link axs-go side-alias" data-of="nav-mining" data-axn='{"ops":"live"}' title="Live operations: every team run as it happens (My subnets)" hidden><span data-icon="radio"></span><span class="lbl">Live operations</span></button>
+          <button type="button" class="plt-link axs-go side-alias" data-of="nav-mining" data-axn='{"cmd":"perf"}' title="Performance Lab: ingest results and compare runs (My subnets)" hidden><span data-icon="chart"></span><span class="lbl">Performance lab</span></button>
+          <button type="button" class="plt-link axs-go side-alias" data-of="nav-mining" data-axn='{"cmd":"exp"}' title="Experiment center: isolated experiments and their results (My subnets)" hidden><span data-icon="bulb"></span><span class="lbl">Experiments</span></button>
+          <button type="button" class="plt-link axs-go side-alias" data-of="nav-mining" data-axn='{"cmd":"miners"}' title="Miners: rank, rewards and health of each miner (My subnets)" hidden><span data-icon="pickaxe"></span><span class="lbl">Miner performance</span></button>
+          <button type="button" class="plt-link axs-go side-alias" data-of="nav-mining" data-axn='{"cmd":"rewards"}' title="Rewards and costs (My subnets)" hidden><span data-icon="coins"></span><span class="lbl">Rewards &amp; costs</span></button>
+        </div>
+      </div>
+    </div>
+    <div class="side-sec" data-sec="projects"><button type="button" class="side-group" aria-expanded="true" title="Missions (what the company wants to achieve: predefined Bittensor competitions and custom goals) and the tasks agents do for them">Missions</button>
+      <button data-view="mos" id="nav-mos" title="Mission Control: custom missions: give only the goal (with any documents, pictures and links); AXoR sets the budget, timing and engine (Bittensor competitions are predefined missions: Control Hub → Missions)" hidden><span data-icon="target"></span><span class="lbl">Mission Control</span></button>
+      <button data-view="missions" id="nav-missions" title="Task board: every task of every system on one board" hidden><span data-icon="list"></span><span class="lbl">Task board</span></button>
+      <button data-view="projects" id="nav-projects" title="Projects: long-running initiatives and business objectives, their progress and dependencies" hidden><span data-icon="layers"></span><span class="lbl">Projects</span></button>
+      <button data-view="portfolio" id="nav-portfolio" title="Portfolio: your competition teams side by side, reviews, priorities and task forces (company knowledge is in the Knowledge Hub)" hidden><span data-icon="piechart"></span><span class="lbl">Portfolio</span><span class="count alert" id="c-portfolio" title="Findings waiting for your approval to share everywhere"></span></button>
+    </div>
+    <div class="side-sec ctl-side" data-sec="org"><button type="button" class="side-group" aria-expanded="true" title="Organization: the company overview and the tree of departments, teams and agents (control.js)">Organization</button>
+      <button data-view="org" id="nav-org" title="Organization HQ: executive office, divisions, departments, teams and squads, authority and budgets" hidden><span data-icon="building"></span><span class="lbl">Company Overview</span><span class="count alert" id="c-org" title="Requests and escalations waiting for you"></span></button>
+      <button data-view="company" id="nav-company" title="Company OS: agent contracts, projects and their approvals, inside the organization (the organization itself is Company Overview)" hidden><span data-icon="layers"></span><span class="lbl">Contracts &amp; approvals</span><span class="count alert" id="c-company" title="Approval requests waiting for you"></span></button>
+      <div class="ctl-tree" id="ctl-tree" role="tree" aria-label="Organization: departments, teams and agents"></div>
+    </div>
+    <div class="side-sec" data-sec="agents"><button type="button" class="side-group" aria-expanded="true" title="Workforce: agents, the keys they use, their systems and how they improve">Workforce</button>
+      <button data-view="agents" id="tab-agents" title="Agents: every agent in one directory, each with its profile, chat, versions and runs; create, test and manage them" hidden><span data-icon="users"></span><span class="lbl">Agents</span><span class="count alert" id="c-agents" title="Agents that need attention"></span></button>
+      <button data-view="connectors" id="tab-connectors" title="Keys: the model providers, API keys and connectors your agents use (formerly System → Models &amp; connectors)" hidden><span data-icon="key"></span><span class="lbl">Keys</span></button>
+      <button data-view="studio" id="tab-studio" class="side-alias" title="Agent operations: every agent's runs, live operations and approvals (part of Agents)" hidden><span data-icon="radio"></span><span class="lbl">Agent operations</span><span class="count" id="c-studio"></span></button>
+      <button data-view="workforce" id="nav-workforce" title="Workforce" hidden><span data-icon="group"></span><span class="lbl">Workforce</span><span class="count alert" id="c-workforce" title="Plans, proposals and improvements waiting for you"></span></button>
+      <button data-view="swarm" id="nav-swarm" title="Agent Swarm: a temporary team of your Workforce agents runs a mission as task contracts, with a Swarm Controller, a message bus, a blackboard, independent checks and replans" hidden><span data-icon="sparkle"></span><span class="lbl">Agent Swarm</span></button>
+      <button data-view="market" id="nav-market" title="Agent Marketplace: discover, evaluate, import and activate agents" hidden><span data-icon="apps"></span><span class="lbl">Agent Marketplace</span><span class="count alert" id="c-market" title="Agents waiting for your approval"></span></button>
+      <div class="side-sub" data-sub="agents"><span class="side-subh" id="grp-tools">Agent systems</span>
+        <button data-view="hq" id="tab-hq" title="Agent HQ" hidden><span data-icon="flag"></span><span class="lbl">Agent HQ</span><span class="count alert" id="c-hq" title="Fixes waiting for you and critical issues"></span></button>
+        <button data-view="infiagent" id="nav-infiagent" title="Long tasks" hidden><span data-icon="route"></span><span class="lbl">Long tasks</span></button>
+      </div>
+      <div class="side-sub" data-sub="improve"><span class="side-subh">Improvement</span>
+        <button data-view="evolution" id="nav-evolution" title="Evolution Lab: observe weak spots, propose changes, test them against the current version, promote only with evidence, roll back" hidden><span data-icon="cycle"></span><span class="lbl">Evolution Lab</span><span class="count alert" id="c-evolution" title="Verified changes waiting for your decision"></span></button>
+        <button data-view="learning" id="nav-learning" title="Learning: how agents get better from results (mission lessons, improvements, watches, upgrade sprints)" hidden><span data-icon="cycle"></span><span class="lbl">Learning</span></button>
+        <button data-view="evaluation" id="nav-evaluation" title="Agent evaluation: scores, benchmarks, models, long tasks, knowledge" hidden><span data-icon="trophy"></span><span class="lbl">Benchmarks &amp; evaluations</span></button>
+        <button data-view="teamtests" id="nav-teamtests" title="Team tests: a fixed library of problems (T01-T10 and your own) the whole agent team is tested on, graded against hidden checks" hidden><span data-icon="target"></span><span class="lbl">Team tests</span></button>
+      </div>
+    </div>
+    <div class="side-sec" data-sec="knowledge"><button type="button" class="side-group" aria-expanded="true" title="Knowledge: what AXoR knows, which its agents retrieve and use">Knowledge</button>
+      <button data-view="knowledge" id="nav-knowledge" title="Knowledge Hub: the agent company's shared knowledge: scopes, review and approval, what agents read and reuse" hidden><span data-icon="group"></span><span class="lbl">Knowledge Hub</span><span class="count alert" id="c-knowledge" title="Knowledge waiting for review, proposals and import previews"></span></button>
+      <button data-view="myknowledge" id="nav-myknowledge" title="My Knowledge: your private notes, files, sources, messages, ideas and connections" hidden><span data-icon="lock"></span><span class="lbl">My Knowledge</span><span class="count alert" id="c-myknowledge" title="Proposals and import previews waiting for you"></span></button>
+    </div>
+    <div class="side-sec" data-sec="intel"><button type="button" class="side-group" aria-expanded="true" title="Intelligence: research, recommendations, risk and analytics. What AXoR knows lives in Knowledge; this is analysis">Intelligence</button>
+      <button data-view="dashboard" id="nav-dash" title="Market Research: TAO, emission, flows and economic information" hidden><span data-icon="chart"></span><span class="lbl">Market Research</span></button>
+      <button data-view="tech" id="nav-tech" title="Technology Research: new models, frameworks, tools and architectures (the Tech Daily edition)"><span data-icon="news"></span><span class="lbl">Technology Research</span><span class="count" id="c-tech" title="A new edition you haven't opened"></span></button>
+      <button data-view="recommend" title="Recommendations: evidence-based opportunities, subnets ranked for your hardware, budget and risk"><span data-icon="target"></span><span class="lbl">Recommendations</span></button>
+      <button data-view="new" title="New Subnets: registered in the last four months"><span data-icon="sprout"></span><span class="lbl">New Subnets</span><span class="count" id="c-new"></span></button>
+      <button data-view="analytics" id="nav-analytics" title="Analytics: company, mission, workforce and financial performance (cost per validated deliverable)" hidden><span data-icon="piechart"></span><span class="lbl">Analytics</span></button>
+      <div class="side-sub" data-sub="risk"><span class="side-subh" title="Risk indicators with their evidence: warnings to verify, not verdicts">Risk intelligence</span>
+        <button data-view="caution" title="Avoid &amp; Caution"><span data-icon="alert"></span><span class="lbl">Avoid &amp; Caution</span><span class="count" id="c-caution"></span></button>
+        <button data-view="scam" title="Unverified &amp; high-risk signals: rule-based warning signs with their evidence, not proof of fraud (formerly Scam Signals)"><span data-icon="shield"></span><span class="lbl">High-risk signals</span><span class="count" id="c-scam"></span></button>
+      </div>
+    </div>
+    <div class="side-sec" data-sec="workspace"><button type="button" class="side-group" aria-expanded="true" title="Workspace: your own work, files and the tools connected to AXoR">Workspace</button>
+      <button data-view="home" id="nav-home" class="side-alias" title="My workspace → Home: notes, files, boards, study and shared work" hidden><span data-icon="inbox"></span><span class="lbl">Workspace home</span></button>
+      <button data-view="workspace" id="nav-ws" title="My workspace: Home, your subnets and notes, and all your files" hidden><span data-icon="pickaxe"></span><span class="lbl">My workspace</span><span class="count" id="c-ws"></span></button>
+      <button data-view="drive" id="nav-drive" title="Drive: your files, folders and shares" hidden><span data-icon="folder"></span><span class="lbl">File manager</span></button>
+      <button data-view="whiteboard" id="nav-board" title="Whiteboard" hidden><span data-icon="sticky"></span><span class="lbl">Whiteboard</span></button>
+      <button data-view="study" id="nav-study" title="Study" hidden><span data-icon="book"></span><span class="lbl">Study</span></button>
+      <button data-view="profile" id="nav-profile" class="side-alias" title="My profile (in the account menu, top right)" hidden><span data-icon="card"></span><span class="lbl">My profile</span></button>
+      <div class="side-sub" data-sub="connected"><span class="side-subh" title="Source control and messaging connected to AXoR; their messages feed My Knowledge">Connected tools</span>
+        <button data-view="source" id="nav-source" title="Source control: repositories, CI and pull requests" hidden><span data-icon="github"></span><span class="lbl" id="source-lbl">Source</span><span class="count alert" id="c-source" title="Repositories whose latest CI run failed"></span></button>
+        <button data-view="slack" id="nav-slack" title="Slack channel" hidden><span data-icon="hash"></span><span class="lbl" id="slack-lbl">Slack</span><span class="count" id="c-slack" title="New messages"></span></button>
+        <button type="button" id="nav-conn" class="plt-link" title="Discord and Telegram: connect a bot so their messages reach My Knowledge (Settings &amp; connectors)" hidden><span data-icon="send"></span><span class="lbl">Discord &amp; Telegram</span></button>
+      </div>
+    </div>
+    <div class="side-sec" data-sec="system"><button type="button" class="side-group" aria-expanded="true" title="System: governance, infrastructure, platform operations, security and audit (keys moved to Workforce → Keys)">System</button>
+      <button data-view="governance" id="nav-governance" title="Governance: autonomy levels, policies, budgets, approvals and rollback: what AXoR may do by itself" hidden><span data-icon="shield"></span><span class="lbl">Governance</span></button>
+      <div class="side-sub" data-sub="infra"><span class="side-subh" title="Where agents and miners run: the host, the cluster, machines and containers">Execution infrastructure</span>
+        <button data-view="system" id="tab-system" title="System" hidden><span data-icon="chip"></span><span class="lbl">System</span></button>
+        <button data-view="cluster" id="tab-cluster" title="Cluster" hidden><span data-icon="layers"></span><span class="lbl">Cluster</span></button>
+        <button data-view="machines" id="tab-machines" title="Machines" hidden><span data-icon="monitor"></span><span class="lbl">Machines</span></button>
+        <button data-view="docker" id="tab-docker" title="Docker" hidden><span data-icon="server"></span><span class="lbl">Docker</span></button>
+      </div>
+      <div class="side-sub" data-sub="developer"><span class="side-subh" title="The platform's own services: DNS, pipelines, apps and functions">Platform operations</span>
+        <button data-view="infra" id="nav-infra" title="Developer platform and infrastructure at a glance" hidden><span data-icon="server"></span><span class="lbl">Platform overview</span></button>
+        <button data-view="dns" id="tab-dns" title="DNS" hidden><span data-icon="globe"></span><span class="lbl">DNS</span></button>
+        <button data-view="devops" id="tab-devops" title="DevOps" hidden><span data-icon="rocket"></span><span class="lbl">DevOps</span></button>
+        <button data-view="apps" id="tab-apps" title="Apps" hidden><span data-icon="apps"></span><span class="lbl">Apps</span></button>
+        <button data-view="functions" id="tab-functions" title="Functions" hidden><span data-icon="zap"></span><span class="lbl">Functions</span></button>
+      </div>
+      <div class="side-sub" data-sub="admin"><span class="side-subh" title="Users, roles, wallets and credentials">Security &amp; administration</span>
+        <button data-view="admin" id="nav-admin" title="Users, roles and permissions" hidden><span data-icon="users"></span><span class="lbl">Users &amp; permissions</span></button>
+        <button data-view="wallet" id="nav-wallet" title="Wallets and security" hidden><span data-icon="wallet"></span><span class="lbl">Wallets &amp; security</span><span class="count" id="c-wallet"></span></button>
+      </div>
+      <div class="side-sub" data-sub="audit"><span class="side-subh" title="The activity history, configuration and appearance">Audit &amp; settings</span>
+        <button type="button" id="nav-audit" class="plt-link" title="Audit log" hidden><span data-icon="clock"></span><span class="lbl">Audit log</span></button>
+        <button data-view="settings" id="nav-settings" title="Settings: account security, notifications, users and system" hidden><span data-icon="gear"></span><span class="lbl">Settings</span></button>
+        <button type="button" id="nav-appearance" class="plt-link" title="Appearance: theme and accent color"><span data-icon="palette"></span><span class="lbl">Appearance</span></button>
+      </div>
+      <button type="button" data-view="help" id="nav-help" title="Help and docs"><span data-icon="help"></span><span class="lbl">Help &amp; docs</span></button>
+      <button type="button" data-view="sidelayout" id="nav-sidelayout" title="Sidebar layout: which sidebar items show, and in what order, in Simple mode and for users (administrators)" hidden><span data-icon="sliders"></span><span class="lbl">Sidebar layout</span></button>
+      <button type="button" data-view="developer" id="nav-developer" title="Developer: files, editor, terminals on the server and Claude Code, side by side (administrators)" hidden><span data-icon="code"></span><span class="lbl">Developer</span></button>
+    </div>
+    <div class="side-foot"><button type="button" id="side-collapse" title="Collapse sidebar" aria-label="Collapse sidebar"><span data-icon="sidebar"></span><span class="lbl">Collapse</span></button></div>
+  </nav>
+  <div class="side-scrim" id="side-scrim"></div>
+
+  <main>
+    <!-- AXoR 2.0 Command Center and Approval Center (command.js) -->
+    <section class="view" id="view-command" hidden><div id="occ"></div></section>
+    <section class="view" id="view-control" hidden><div id="ctl"></div></section>
+    <section class="view" id="view-approvals" hidden><div id="occ-ap"></div></section>
+    <!-- AXoR 2.0 hubs (hubs.js, hub-intel.js, hub-infra.js; ids axh-) -->
+    <section class="view" id="view-intel" hidden><div class="axh-root" id="axh-intel"></div></section>
+    <section class="view" id="view-org" hidden><div id="ogz"></div></section>
+    <section class="view" id="view-projects" hidden><div class="axh-root" id="axh-projects"></div></section>
+    <section class="view" id="view-missions" hidden><div class="axh-root" id="axh-missions"></div></section>
+    <section class="view" id="view-evaluation" hidden><div class="axh-root" id="axh-evaluation"></div></section>
+    <section class="view" id="view-learning" hidden><div class="axh-root" id="axh-learning"></div></section>
+    <section class="view" id="view-teamtests" hidden><div class="axh-root" id="axh-teamtests"></div></section>
+    <section class="view" id="view-layers" hidden><div class="axh-root" id="axh-layers"></div></section>
+    <!-- Agent Swarm (AXoR G5, swarm.js; ids swm-) -->
+    <section class="view" id="view-swarm" hidden><div id="swm-root"></div></section>
+    <section class="view" id="view-evolution" hidden><div id="evo-root"></div></section>
+    <section class="view" id="view-topology" hidden><div id="tpo-root"></div></section>
+    <section class="view" id="view-analytics" hidden><div class="axh-root" id="axh-analytics"></div></section>
+    <section class="view" id="view-governance" hidden><div class="axh-root" id="axh-governance"></div></section>
+    <section class="view" id="view-home" hidden><div class="axh-root" id="axh-home"></div></section>
+    <section class="view" id="view-infra" hidden><div class="axh-root" id="axh-infra"></div></section>
+    <section class="view" id="view-settings" hidden><div class="axh-root" id="axh-settings"></div></section>
+
+    <!-- Dashboard -->
+    <section class="view" id="view-dashboard" hidden><div id="dash"></div></section>
+
+    <!-- My profile: resume, CV and website -->
+    <section class="view" id="view-profile" hidden><div id="profile"></div></section>
+
+    <!-- Study -->
+    <section class="view" id="view-study" hidden>
+      <div class="ws st">
+        <aside class="ws-side" id="st-side" aria-label="Study"></aside>
+        <div class="ws-main" id="st-main"></div>
+        <div class="ws-chat" id="st-chat"></div>
+      </div>
+    </section>
+
+    <!-- Whiteboard -->
+    <section class="view" id="view-whiteboard" hidden><div id="wb"></div></section>
+
+    <!-- Wallets -->
+    <section class="view" id="view-wallet" hidden><div id="wallet"></div></section>
+
+    <!-- Slack channel -->
+    <section class="view" id="view-slack" hidden><div id="slack"></div></section>
+
+    <!-- Drive -->
+    <section class="view" id="view-drive" hidden><div id="drive"></div></section>
+
+    <!-- Source hub -->
+    <section class="view" id="view-source" hidden><div id="source"></div></section>
+
+    <!-- Explorer -->
+    <section class="view" id="view-explore">
+      <div class="stats" id="stats"></div>
+      <div class="toolbar">
+        <div class="search"><span data-icon="search"></span><input id="q" type="search" placeholder="Search name, task, hardware, software… (press /)" autocomplete="off"></div>
+        <select id="f-field" aria-label="Field"><option value="">All fields</option></select>
+        <select id="f-tier" aria-label="Hardware"><option value="">Any hardware</option></select>
+        <select id="f-risk" aria-label="Risk">
+          <option value="">Any risk</option><option value="clear">Clear only</option><option value="caution">Caution or better</option>
+          <option value="avoid">Avoid</option><option value="scam">High-risk signals</option>
+        </select>
+        <label class="chk"><input type="checkbox" id="f-uid"> UID available</label>
+        <label class="chk"><input type="checkbox" id="f-earn"> Has earners</label>
+        <button class="btn" id="cols-btn"><span data-icon="columns"></span>Columns</button>
+        <button class="btn" id="csv-btn" title="Download the filtered table as CSV"><span data-icon="download"></span>CSV</button>
+        <span class="result-count" id="rcount"></span>
+      </div>
+      <div class="tablewrap"><table class="grid" id="grid"><thead></thead><tbody></tbody></table></div>
+    </section>
+
+    <!-- Recommend -->
+    <section class="view" id="view-recommend" hidden>
+      <h1 class="page">Recommended subnets for you</h1>
+      <p class="lead">Every subnet is scored on six factors from live chain data. Tell it what you have, set how much each factor matters, and the ranking updates instantly.</p>
+      <div class="rec-layout">
+        <form class="panel" id="rec-form">
+          <div class="field"><span class="lbl">Quick presets</span>
+            <div class="presets">
+              <button type="button" class="chip" data-preset="beginner">Beginner, low budget</button>
+              <button type="button" class="chip" data-preset="gpu">Have a gaming GPU</button>
+              <button type="button" class="chip" data-preset="pro">Max profit, datacenter</button>
+              <button type="button" class="chip" data-preset="dev">Developer, no GPU</button>
+            </div>
+          </div>
+          <h3>Your setup</h3>
+          <div class="field"><span class="lbl">Hardware you have or will rent</span>
+            <div class="hw-grid" id="hw">
+              <button type="button" data-hw="none"><span data-icon="browser"></span>None</button>
+              <button type="button" data-hw="cpu"><span data-icon="server"></span>CPU</button>
+              <button type="button" data-hw="gpu1"><span data-icon="chip"></span>1 GPU</button>
+              <button type="button" data-hw="gpu2"><span data-icon="chips"></span>Pro GPU</button>
+              <button type="button" data-hw="gpu3"><span data-icon="rack"></span>Cluster</button>
+            </div>
+            <label class="chk"><input type="checkbox" name="own_hardware"> I already own this hardware (no rent)</label>
+          </div>
+          <div class="field"><label>Monthly budget <output id="o-budget"></output></label><input type="range" name="budget_usd" min="0" max="5000" step="50"></div>
+          <div class="field"><label>TAO available for registration <output id="o-capital"></output></label><input type="range" name="capital_tao" min="0" max="5" step="0.05"></div>
+          <div class="field"><span class="lbl">Fields you're good at / interested in</span><div class="chips" id="fields"></div></div>
+          <div class="field"><span class="lbl">Risk tolerance</span>
+            <div class="seg" id="risk"><button type="button" data-risk="low">Low</button><button type="button" data-risk="medium">Medium</button><button type="button" data-risk="high">High</button></div>
+          </div>
+          <h3>What matters to you</h3>
+          <div id="weights"></div>
+          <h3>Constraints</h3>
+          <label class="chk"><input type="checkbox" name="only_uid_available"> Only subnets with a UID available</label>
+          <label class="chk"><input type="checkbox" name="exclude_avoid"> Hide "avoid" subnets</label>
+          <label class="chk"><input type="checkbox" name="exclude_scam"> Hide scam-signal subnets</label>
+          <label class="chk"><input type="checkbox" name="exclude_winner_take_all"> Hide winner-take-all subnets</label>
+          <div class="field"><label>Minimum age <output id="o-age"></output></label><input type="range" name="min_age_days" min="0" max="365" step="5"></div>
+          <div class="field"><label>Number of results <output id="o-count"></output></label><input type="range" name="count" min="5" max="20" step="1"></div>
+          <button type="button" class="btn" id="rec-reset"><span data-icon="reset"></span>Reset to defaults</button>
+        </form>
+        <div>
+          <div class="toolbar"><span class="muted" id="rec-summary"></span></div>
+          <div class="rec-list" id="rec-list"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Avoid & caution -->
+    <section class="view" id="view-caution" hidden>
+      <h1 class="page">Avoid &amp; caution</h1>
+      <p class="lead">Subnets where you can't profitably get in right now (<b>avoid</b>), or that are workable but hide a specific trap (<b>caution</b>). Every flag shows the measurement behind it.</p>
+      <div id="caution-body"></div>
+    </section>
+
+    <!-- New -->
+    <section class="view" id="view-new" hidden>
+      <h1 class="page">New subnets</h1>
+      <p class="lead">Subnets registered in the last 4 months, newest first. Early subnets can pay well before competition arrives, but carry more rule-change and deregistration risk.</p>
+      <div class="card-grid" id="new-body"></div>
+    </section>
+
+    <!-- Scam -->
+    <section class="view" id="view-scam" hidden>
+      <h1 class="page">Unverified &amp; high-risk signals</h1>
+      <div class="notice"><span data-icon="info"></span><div>These are <b>rule-based warning signals</b> from on-chain data and published identity, not verified facts and not a verdict of fraud. Each card shows the reasons it was flagged; the data refreshes with the chain. A subnet lands here when it draws emission while being anonymous, abandoned or for sale, or when its owner or a single closed-source hotkey captures almost all miner rewards. Check the reasons and do your own research.</div></div>
+      <div class="card-grid" id="scam-body"></div>
+    </section>
+    <!-- Workspace -->
+    <section class="view" id="view-workspace" hidden>
+      <div class="ws">
+        <aside class="ws-side" id="ws-side" aria-label="Workspace"></aside>
+        <div class="ws-main" id="ws-main"></div>
+        <div class="ws-chat" id="ws-chat"></div>
+      </div>
+    </section>
+
+    <!-- Agents -->
+    <section class="view" id="view-agents" hidden>
+      <div class="hub">
+        <aside class="hub-side" aria-label="Agents">
+          <div class="hub-title">Agents</div>
+          <nav id="hub-nav">
+            <button type="button" class="hub-link" data-settings id="hub-settings" hidden><span data-icon="chip"></span>Models</button>
+            <button type="button" class="hub-link" data-ops-sec="directory"><span data-icon="users"></span>Directory</button>
+            <button type="button" class="hub-link" data-hub="home"><span data-icon="plus"></span>New agent</button>
+            <button type="button" class="hub-link" data-ops-sec="overview"><span data-icon="dash"></span>Operations</button>
+            <button type="button" class="hub-link" data-ops-sec="live"><span data-icon="radio"></span>Live runs<em class="hub-n" id="hub-live-n"></em></button>
+            <button type="button" class="hub-link" data-hub="directory"><span data-icon="globe"></span>Shared catalog</button>
+          </nav>
+          <div class="hub-title sub">Recents</div>
+          <div id="hub-recents" class="hub-recents"></div>
+          <div class="hub-foot">
+            <button type="button" class="hub-link" data-ops-sec="connected"><span data-icon="branch"></span>Connected systems</button>
+            <button type="button" class="hub-link" data-ops-sec="ecosystem"><span data-icon="layers"></span>Ecosystem</button>
+            <button type="button" class="hub-link" data-hub="tools"><span data-icon="server"></span>Tools &amp; MCP</button>
+            <button type="button" class="hub-link" data-skills><span data-icon="zap"></span>Skill hub</button>
+            <button type="button" class="hub-link" data-cli-logins><span data-icon="key"></span>My logins</button>
+          </div>
+        </aside>
+        <div class="hub-main" id="hub-main"></div>
+        <div class="hub-main" id="aos" hidden></div>
+      </div>
+    </section>
+
+    <!-- Admin -->
+    <section class="view" id="view-admin" hidden>
+      <h1 class="page">User administration</h1>
+      <p class="lead">Manage accounts, access and sign-up. Changes ask you to confirm it's you (authenticator code, or password if you don't use 2FA) once every 10 minutes.</p>
+      <div class="stats" id="adm-stats"></div>
+      <div class="card adm-reg"><div><b>Sign-in method</b><p class="muted" id="adm-method-text"></p></div>
+        <div class="seg" id="adm-method"><button type="button" data-method="basic">Username + password</button><button type="button" data-method="2fa">Password + 2FA</button></div></div>
+      <div class="card adm-reg"><div><b>Public registration</b><p class="muted" id="adm-reg-text"></p></div><label class="switch"><input type="checkbox" id="adm-reg"><span></span></label></div>
+      <div class="card adm-reg"><div><b>Approve new accounts</b><p class="muted" id="adm-appr-text"></p></div><label class="switch"><input type="checkbox" id="adm-appr"><span></span></label></div>
+      <div class="card adm-pending" id="adm-pending" hidden></div>
+      <h2 class="section-title"><span data-icon="users"></span>Users</h2>
+      <div class="toolbar"><div class="search"><span data-icon="search"></span><input id="adm-q" type="search" placeholder="Search username, email or IP"></div>
+        <select id="adm-filter" aria-label="Filter users"><option value="">All users</option><option value="pending">Awaiting approval</option><option value="admin">Admins</option><option value="disabled">Disabled</option><option value="locked">Locked</option><option value="no2fa">2FA not set up</option></select>
+        <span class="result-count" id="adm-sudo"></span></div>
+      <div class="tablewrap"><table class="grid adm-users"><thead><tr><th>User</th><th>Role</th><th>Status</th><th>Two-factor</th><th>Last sign-in</th><th class="r">Sessions</th><th>Joined</th><th></th></tr></thead><tbody id="adm-users"></tbody></table></div>
+      <h2 class="section-title"><span data-icon="clock"></span>Audit log</h2>
+      <div class="toolbar"><div class="search"><span data-icon="search"></span><input id="adm-aq" type="search" placeholder="Filter by email, action or IP"></div></div>
+      <div class="tablewrap"><table class="grid adm-audit"><thead><tr><th>Time</th><th>Event</th><th>By</th><th>Account</th><th>IP</th><th>Detail</th></tr></thead><tbody id="adm-audit"></tbody></table></div>
+    </section>
+
+    <!-- Docker -->
+    <section class="view" id="view-docker" hidden>
+      <h1 class="page">Docker</h1>
+      <p class="lead">Containers and images on this server, through AXoR's restricted Docker proxy. Changes ask you to confirm it's you once every 10 minutes and are recorded in the audit log.</p>
+      <div class="stats" id="dk-stats"></div>
+      <h2 class="section-title"><span data-icon="server"></span>Containers</h2>
+      <div class="toolbar"><div class="search"><span data-icon="search"></span><input id="dk-q" type="search" placeholder="Search name, image, project or ID"></div>
+        <select id="dk-filter" aria-label="Filter containers"><option value="">All containers</option><option value="running">Running</option><option value="stopped">Not running</option></select>
+        <button class="btn" id="dk-refresh"><span data-icon="reset"></span>Refresh</button>
+        <span class="result-count" id="dk-count"></span></div>
+      <div class="tablewrap"><table class="grid dk-table"><thead><tr><th>Container</th><th>State</th><th>Image</th><th>Ports</th><th class="r">CPU</th><th class="r">Memory</th><th>Created</th><th></th></tr></thead><tbody id="dk-containers"></tbody></table></div>
+      <h2 class="section-title"><span data-icon="chips"></span>Images</h2>
+      <div class="toolbar"><div class="search"><span data-icon="search"></span><input id="dk-iq" type="search" placeholder="Search tag or ID"></div>
+        <button class="btn primary" id="dk-pull"><span data-icon="download"></span>Pull image</button>
+        <button class="btn" id="dk-prune"><span data-icon="trash"></span>Prune</button>
+        <span class="result-count" id="dk-icount"></span></div>
+      <div class="tablewrap"><table class="grid dk-table"><thead><tr><th>Image</th><th>ID</th><th class="r">Size</th><th>Created</th><th class="r">Containers</th><th></th></tr></thead><tbody id="dk-images"></tbody></table></div>
+    </section>
+
+    <!-- DevOps: pipelines that build, test and deploy Source hub repositories (devops.js) -->
+    <section class="view" id="view-devops" hidden><div id="dv"></div></section>
+
+    <!-- Notifications: inbox, push devices, settings, push history; the push server for admins (notifications.js) -->
+    <section class="view" id="view-notifications" hidden><div id="ntp"></div></section>
+
+    <!-- System: server resources -->
+    <section class="view" id="view-system" hidden><div id="sys"></div></section>
+
+    <!-- Kubernetes: the cluster, its domain and HTTPS (cluster.js); apps and functions (paas.js); machines (machines.js); AXoR DNS (dnsadmin.js) -->
+    <section class="view" id="view-cluster" hidden><div id="k8s"></div></section>
+    <section class="view" id="view-apps" hidden><div id="apps"></div></section>
+    <section class="view" id="view-functions" hidden><div id="fns"></div></section>
+    <section class="view" id="view-machines" hidden><div id="machines"></div></section>
+    <section class="view" id="view-dns" hidden><div id="dnsp"></div></section>
+    <section class="view" id="view-connectors" hidden><div id="conn"></div></section>
+
+    <!-- Tech Daily: the day's new technology, told like ads (tech.js); Help: the docs and the API reference (help.js) -->
+    <section class="view" id="view-tech" hidden><div id="tech"></div></section>
+    <section class="view" id="view-help" hidden><div id="help"></div></section>
+    <section class="view" id="view-sidelayout" hidden><div id="sbl"></div></section>
+    <!-- Developer (administrators): explorer, editor, terminals, Claude Code; dvp-*.js, built once on first open -->
+    <section class="view" id="view-developer" aria-label="Developer" hidden></section>
+    <!-- Agent HQ (admins): field agents, their leads, the Team Boss's hourly reports and the Agents Manager's roster (hq.js) -->
+    <section class="view" id="view-hq" hidden><div id="hq"></div></section>
+    <section class="view" id="view-studio" hidden></section><!-- Agent operations lives in Agents (#aos); setView("studio") opens it there -->
+    <section class="view" id="view-knowledge" hidden><div id="knowledge"></div></section>
+    <section class="view" id="view-myknowledge" hidden><div id="myknowledge"></div></section>
+    <!-- Agent Marketplace (anyone who may use agents), AXoR 4.0: discover, evaluate, import, configure, test, approve, activate (marketplace.js) -->
+    <section class="view" id="view-market" hidden><div id="market"></div></section>
+    <!-- Mission Control (anyone who may use agents): AXoR 3.0's Simple Mode: a goal, a budget and a deadline in, a verified report out (mission.js) -->
+    <section class="view" id="view-mos" hidden><div id="mos"></div></section>
+    <!-- My subnets (anyone who may use agents): a team per subnet that watches the competition and tracks your miners (mining.js) -->
+    <section class="view" id="view-mining" hidden><div id="mining"></div></section>
+    <!-- Competition teams (anyone who may use agents): an agent team per competition, across subnets in My subnets (mining-work.js) -->
+    <section class="view" id="view-teams" hidden><div id="teams"></div></section>
+    <!-- Portfolio (anyone who may use agents): Global HQ over the competition teams, shared knowledge, task forces (portfolio.js) -->
+    <section class="view" id="view-portfolio" hidden><div id="portfolio"></div></section>
+    <!-- Company (anyone who may use agents): the AI agent company: divisions, projects, dynamic teams, agent registry, approvals, audit (company.js) -->
+    <section class="view" id="view-company" hidden><div id="company"></div></section>
+    <!-- Workforce (anyone who may use agents): a CEO, six teams, a red teamer and an independent evaluator run missions (workforce.js) -->
+    <section class="view" id="view-workforce" hidden><div id="workforce"></div></section>
+    <!-- Long tasks (anyone who may use agents): InfiAgent's file-centric agents with bounded context (infiagent.js) -->
+    <section class="view" id="view-infiagent" hidden><div id="infiagent"></div></section>
+  </main>
+  </div>
+  <footer class="statusbar" id="statusbar" hidden aria-label="Status"><div class="axs-sb" id="sb-app"></div><div class="axs-sb-sys" id="sb-sys" hidden></div></footer>
+  </div>
+
+  <div class="scrim" id="scrim"></div>
+  <dialog class="modal" id="modal"></dialog>
+  <dialog class="modal wide" id="agentdlg"></dialog>
+  <dialog class="modal sheet" id="skillhub"></dialog>
+  <aside class="drawer" id="drawer" aria-hidden="true"></aside>
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+  <script src="/static/icons.js"></script>
+  <script src="/static/ui.js"></script>
+  <script src="/static/faces.js"></script>
+  <script src="/static/backdrop.js"></script>
+  <script src="/static/auth.js"></script>
+  <script src="/static/auth-cert.js"></script>
+  <script src="/static/admin.js"></script>
+  <script src="/static/docker.js"></script>
+  <script src="/static/devops.js"></script>
+  <script src="/static/system.js"></script>
+  <script src="/static/cluster.js"></script>
+  <script src="/static/updates.js"></script>
+  <script src="/static/paas.js"></script>
+  <script src="/static/machines.js"></script>
+  <script src="/static/dnsadmin.js"></script>
+  <script src="/static/connectors.js"></script>
+  <script src="/static/chatkit.js"></script>
+  <script src="/static/plan-usage.js"></script>
+  <script src="/static/agents.js"></script>
+  <script src="/static/cli-accounts.js"></script>
+  <script src="/static/cli-invites.js"></script>
+  <script src="/static/mcp.js"></script>
+  <script src="/static/assist.js"></script>
+  <script src="/static/gm-chat.js"></script>
+  <script src="/static/notes.js"></script>
+  <script src="/static/doc.js"></script>
+  <script src="/static/team.js"></script>
+  <script src="/static/overview.js"></script>
+  <script src="/static/workspace.js"></script>
+  <script src="/static/notify.js"></script>
+  <script src="/static/notifications.js"></script>
+  <script src="/static/slack.js"></script>
+  <script src="/static/source.js"></script>
+  <script src="/static/drive.js"></script>
+  <script src="/static/qr.js"></script>
+  <script src="/static/wallettx.js"></script>
+  <script src="/static/wallet.js"></script>
+  <script src="/static/whiteboard.js"></script>
+  <script src="/static/lab.js"></script>
+  <script src="/static/practice.js"></script>
+  <script src="/static/study.js"></script>
+  <script src="/static/profile.js"></script>
+  <script src="/static/tech.js"></script>
+  <script src="/static/tech-analysis.js"></script>
+  <script src="/static/help.js"></script>
+  <script src="/static/hq.js"></script>
+  <script src="/static/mining-flow.js"></script>
+  <script src="/static/flex.js"></script>
+  <script src="/static/mining-crew.js"></script>
+  <script src="/static/mining-status.js"></script>
+  <script src="/static/mining-web.js"></script>
+  <script src="/static/mining-release.js"></script>
+  <script src="/static/mining-autoloop.js"></script>
+  <script src="/static/mining-upgrade.js"></script>
+  <script src="/static/mining-topminer.js"></script>
+  <script src="/static/mining-director.js"></script>
+  <script src="/static/mining-import.js"></script>
+  <script src="/static/mining-sources.js"></script>
+  <script src="/static/mining-improve.js"></script>
+  <script src="/static/mining-command.js"></script>
+  <script src="/static/mining-loadout.js"></script>
+  <script src="/static/mining-lab.js"></script>
+  <script src="/static/mining-github.js"></script>
+  <script src="/static/mining-files.js"></script>
+  <script src="/static/repo-new.js"></script>
+  <script src="/static/product-setup.js"></script>
+  <script src="/static/mining-stages.js"></script>
+  <script src="/static/mining-bench.js"></script>
+  <script src="/static/mining-work.js"></script>
+  <script src="/static/mining.js"></script>
+  <script src="/static/mining-ops.js"></script>
+  <script src="/static/mining-shell.js"></script>
+  <script src="/static/workforce.js"></script>
+  <script src="/static/swarm.js"></script>
+  <script src="/static/infiagent.js"></script>
+  <script src="/static/portfolio.js"></script>
+  <script src="/static/company.js"></script>
+  <script src="/static/company-agents.js"></script>
+  <script src="/static/dashboard.js"></script>
+  <script src="/static/guide-pages.js"></script>
+  <script src="/static/guide.js"></script>
+  <script src="/static/writer.js"></script>
+  <script src="/static/platform-discover.js"></script>
+  <script src="/static/platform-dash.js"></script>
+  <script src="/static/platform-tables.js"></script>
+  <script src="/static/command.js"></script>
+  <script src="/static/hubs.js"></script>
+  <script src="/static/organization.js"></script>
+  <script src="/static/hub-intel.js"></script>
+  <script src="/static/hub-learning.js"></script>
+  <script src="/static/team-tests.js"></script>
+  <script src="/static/hub-layers.js"></script>
+  <script src="/static/evolution.js"></script>
+  <script src="/static/vendor/cytoscape/cytoscape.min.js"></script>
+  <script src="/static/topology.js"></script>
+  <script src="/static/analytics.js"></script>
+  <script src="/static/governance.js"></script>
+  <script src="/static/hub-infra.js"></script>
+  <script src="/static/agent-studio.js"></script>
+  <script src="/static/ecosystem.js"></script>
+  <script src="/static/knowledge.js"></script>
+  <script src="/static/knowledge-company.js"></script>
+  <script src="/static/knowledge-graph.js"></script>
+  <script src="/static/knowledge-rag.js"></script>
+  <script src="/static/knowledge-linked.js"></script>
+  <script src="/static/marketplace.js"></script>
+  <script src="/static/mission.js"></script>
+  <script src="/static/command-map.js"></script>
+  <script src="/static/mission-team.js"></script>
+  <script src="/static/control.js"></script>
+  <script src="/static/control-journey.js"></script>
+  <script src="/static/control-missions.js"></script>
+  <script src="/static/control-exec.js"></script>
+  <script src="/static/control-ops.js"></script>
+  <script src="/static/control-scene.js"></script>
+  <script src="/static/platform.js"></script>
+  <script src="/static/shell.js"></script>
+  <script src="/static/sidebar.js"></script>
+  <script src="/static/journey.js"></script>
+  <script src="/static/side-layout.js"></script>
+  <script src="/static/app.js"></script>
+  <script src="/static/explore-presets.js"></script>
+  <script src="/static/side-links.js"></script>
+  <script src="/static/file-catalog.js"></script>
+  <script src="/static/workspace-tabs.js"></script>
+  <script src="/static/pagetip.js"></script>
+  <script src="/static/vendor/seti/seti.js"></script>
+  <script src="/static/dvp-host.js"></script>
+  <script src="/static/dvp-viewer.js"></script>
+  <script src="/static/dvp-console.js"></script>
+  <script src="/static/dvp-claude.js"></script>
+  <script src="/static/dvp-workspace.js"></script>
+</body>
+</html>

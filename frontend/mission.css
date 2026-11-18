@@ -1,0 +1,256 @@
+/* Mission Control (mission.js, prefix mx-) and Simple Mode's sidebar (body[data-axmode]). Colors come from the app's theme tokens;
+   emerald marks verified work, cyan what's running. */
+:root { --mx-ok: #10b981; --mx-run: #06b6d4; --mx-r: 12px; }
+
+/* ---------- Simple / Advanced ---------- */
+.mx-mode { display: inline-flex; }
+.mx-mode button { font-size: 12px; padding: 4px 10px; }
+.mx-side-mode, .mx-mode[hidden] { display: none; }
+@media (max-width: 640px) {
+  #mx-mode { display: none; }
+  .mx-side-mode { display: flex; margin: 8px 12px; }
+  .mx-side-mode button { flex: 1; }
+}
+body[data-axmode="simple"] #side .side-sec:not([data-sec="command"], [data-sec="projects"], [data-sec="eco"], [data-sec="system"]) { display: none; }  /* one :not(), so control.css still shows the Organization tree */
+/* since the Mission Control sidebar (sidebar.js): My subnets sits in Ecosystems → Bittensor, Help & docs at the end of System */
+body[data-axmode="simple"] #side #nav-company,
+body[data-axmode="simple"] #side .side-sec[data-sec="eco"] .sdb-kids > :not(#nav-mining),
+body[data-axmode="simple"] #side .side-sec[data-sec="system"] > :not(.side-group):not(#nav-help) { display: none; }
+body[data-axmode="simple"] #side .side-sec[data-sec="projects"] > :not(.side-group):not(#nav-mining):not(#nav-mos) { display: none; }  /* Mission Control sits in Missions since AXoR 5.0 */
+body[data-axmode="simple"] #side #nav-command,
+body[data-axmode="simple"] #side .side-sec[data-sec="command"] .axs-go { display: none; }
+body:not([data-axmode="simple"]) .mx-simple-only { display: none; }
+
+/* ---------- page ---------- */
+#mos { max-width: 1180px; margin: 0 auto; display: grid; grid-template-columns: minmax(0, 1fr); gap: 18px; }
+#mos > *, .mx-detail > * { min-width: 0; }
+.mx-detail { grid-template-columns: minmax(0, 1fr); }
+.mx-head .lead { max-width: 760px; }
+.mx-eyebrow { display: flex; align-items: center; gap: 6px; margin: 0 0 4px; font-size: 12px; font-weight: 600; letter-spacing: .04em; text-transform: uppercase; color: var(--mx-ok); }
+.mx-eyebrow .icon { width: 14px; height: 14px; }
+
+.mx-answers { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 10px; }
+.mx-q { display: grid; align-content: start; gap: 4px; padding: 12px 14px; border: 1px solid var(--line); border-radius: var(--mx-r); background: var(--surface); min-width: 0; }
+.mx-q b { font-size: 15px; line-height: 1.3; overflow-wrap: anywhere; }
+.mx-qq { font-size: 11.5px; color: var(--text-3); }
+.mx-qs { font-size: 12px; color: var(--text-2); overflow-wrap: anywhere; }
+.mx-q.t-run { border-color: color-mix(in srgb, var(--mx-run) 45%, var(--line)); }
+.mx-q.t-warn { border-color: color-mix(in srgb, var(--warn) 55%, var(--line)); }
+.mx-q.t-wait { border-color: color-mix(in srgb, var(--accent) 55%, var(--line)); }
+.mx-q.t-ok { border-color: color-mix(in srgb, var(--mx-ok) 45%, var(--line)); }
+
+.mx-new { display: grid; grid-template-columns: minmax(0, 1fr); gap: 12px; padding: 18px; border-radius: var(--mx-r); }
+.mx-new > *, .mx-needs > *, .mx-report > * { min-width: 0; }
+.mx-needs, .mx-report { grid-template-columns: minmax(0, 1fr); }
+.mx-goal textarea { font-size: 15px; min-height: 84px; }
+.mx-tmpl { display: flex; flex-wrap: wrap; gap: 6px; }
+.mx-tchip { display: inline-flex; align-items: center; gap: 6px; max-width: 100%; padding: 5px 10px; border: 1px solid var(--line); border-radius: 999px; background: var(--surface-2);
+  color: var(--text-2); font-size: 12.5px; cursor: pointer; text-align: left; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+.mx-tchip:hover { border-color: var(--accent); color: var(--text); }
+.mx-tchip .icon { width: 14px; height: 14px; flex: none; }
+.mx-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 12px; align-items: start; }
+.mx-money { display: flex; align-items: center; gap: 6px; }
+.mx-money span { color: var(--text-3); font-weight: 600; }
+.mx-money input { flex: 1; min-width: 0; }
+.mx-presets { display: flex; gap: 4px; margin-top: 6px; }
+.mx-presets button { padding: 2px 9px; border: 1px solid var(--line); border-radius: 999px; background: none; color: var(--text-2); font-size: 12px; cursor: pointer; }
+.mx-presets button:hover { border-color: var(--accent); color: var(--text); }
+.mx-more { display: inline-flex; align-items: center; gap: 6px; justify-self: start; padding: 0; border: 0; background: none; color: var(--text-2); font-size: 13px; cursor: pointer; }
+.mx-more .icon { width: 14px; height: 14px; }
+.mx-extra { display: grid; gap: 10px; }
+.mx-go { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+.mx-go p { display: flex; align-items: center; gap: 6px; margin: 0; font-size: 12.5px; }
+.mx-go .icon { width: 14px; height: 14px; color: var(--mx-ok); }
+
+.mx-sec h3 { display: flex; align-items: center; gap: 8px; margin: 4px 0 10px; }
+.mx-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 12px; }
+.mx-card { display: grid; gap: 8px; padding: 14px; border: 1px solid var(--line); border-radius: var(--mx-r); background: var(--surface); cursor: pointer; min-width: 0; }
+.mx-card:hover, .mx-card:focus-visible { border-color: var(--accent); outline: none; }
+.mx-ctop { display: flex; align-items: flex-start; justify-content: space-between; gap: 8px; }
+.mx-ctop h4 { margin: 0; font-size: 14.5px; line-height: 1.35; overflow-wrap: anywhere; }
+.mx-doing { display: flex; align-items: center; gap: 6px; margin: 0; font-size: 13px; color: var(--text-2); }
+.mx-doing .icon { width: 15px; height: 15px; flex: none; color: var(--mx-run); }
+.mx-doing.big { font-size: 14px; }
+.mx-sum { margin: 0; font-size: 13px; color: var(--text-2); }
+.mx-cfoot { display: flex; justify-content: space-between; gap: 8px; font-size: 12px; color: var(--text-3); }
+.mx-lessons { display: flex; align-items: center; gap: 6px; font-size: 12.5px; }
+.mx-lessons .icon { width: 14px; height: 14px; }
+.bad { color: var(--crit); }
+
+.mx-chip { display: inline-flex; align-items: center; gap: 4px; flex: none; padding: 2px 8px; border-radius: 999px; font-size: 11.5px; font-weight: 600; white-space: nowrap;
+  background: var(--surface-3); color: var(--text-2); }
+.mx-chip .icon { width: 12px; height: 12px; }
+.mx-chip.t-ok { background: color-mix(in srgb, var(--mx-ok) 16%, transparent); color: var(--mx-ok); }
+.mx-chip.t-run { background: color-mix(in srgb, var(--mx-run) 16%, transparent); color: var(--mx-run); }
+.mx-chip.t-warn { background: color-mix(in srgb, var(--warn) 18%, transparent); color: var(--warn); }
+.mx-chip.t-bad { background: color-mix(in srgb, var(--crit) 16%, transparent); color: var(--crit); }
+.mx-chip.t-wait { background: color-mix(in srgb, var(--accent) 16%, transparent); color: var(--accent); }
+
+/* the lifecycle: eight stages */
+.mx-steps { display: grid; grid-template-columns: repeat(8, 1fr); gap: 3px; }
+.mx-step { display: grid; gap: 4px; min-width: 0; }
+.mx-step i { height: 4px; border-radius: 2px; background: var(--surface-3); }
+.mx-step em { font-style: normal; font-size: 10.5px; color: var(--text-3); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.mx-step.s-done i { background: var(--mx-ok); }
+.mx-step.s-now i { background: var(--mx-run); animation: mx-pulse 1.6s ease-in-out infinite; }
+.mx-step.s-now em { color: var(--text); font-weight: 600; }
+.mx-step.s-wait i { background: var(--accent); }
+.mx-step.s-stuck i { background: var(--warn); }
+.mx-steps.sm em { display: none; }
+.mx-steps.sm { width: 100%; margin-top: 2px; }
+.mx-steps.lg { gap: 6px; }
+.mx-steps.lg i { height: 6px; }
+.mx-steps.lg em { font-size: 12px; }
+@keyframes mx-pulse { 50% { opacity: .45; } }
+@media (prefers-reduced-motion: reduce) { .mx-step.s-now i { animation: none; } }
+
+.mx-meter { height: 5px; border-radius: 3px; background: var(--surface-3); overflow: hidden; }
+.mx-meter span { display: block; height: 100%; background: var(--mx-ok); border-radius: 3px; }
+.mx-meter span.hot { background: var(--warn); }
+.mx-meter.lg { height: 8px; margin-bottom: 10px; }
+
+.mx-needs { display: grid; gap: 12px; border-color: color-mix(in srgb, var(--accent) 45%, var(--line)); }
+.mx-needs h3, .mx-detail .card h3 { display: flex; align-items: center; gap: 8px; margin: 0 0 4px; }
+.mx-needs h3 .icon, .mx-detail .card h3 .icon { width: 17px; height: 17px; color: var(--accent); }
+.mx-ask { display: grid; gap: 8px; padding-bottom: 12px; border-bottom: 1px solid var(--line); }
+.mx-ask:last-child { border-bottom: 0; padding-bottom: 0; }
+.mx-ask p { margin: 0; }
+.mx-acts { display: flex; flex-wrap: wrap; gap: 8px; }
+.mx-req { display: flex; justify-content: space-between; gap: 12px; align-items: center; flex-wrap: wrap; padding: 10px 0; border-top: 1px solid var(--line); }
+.mx-req:first-of-type { border-top: 0; }
+.mx-req p { margin: 4px 0; }
+.mx-req > div:first-child { min-width: 0; flex: 1 1 280px; }
+.mx-kind { display: inline-flex; align-items: center; gap: 5px; font-size: 12px; font-weight: 600; color: var(--warn); text-transform: capitalize; }
+.mx-kind .icon { width: 13px; height: 13px; }
+
+/* ---------- one mission ---------- */
+.mx-detail { display: grid; gap: 16px; }
+.mx-back { display: inline-flex; align-items: center; gap: 4px; justify-self: start; padding: 0; border: 0; background: none; color: var(--text-2); cursor: pointer; font-size: 13px; }
+.mx-back .icon { width: 15px; height: 15px; }
+.mx-dhead { display: flex; justify-content: space-between; gap: 12px; align-items: flex-start; flex-wrap: wrap; }
+.mx-dhead > div:first-child { min-width: 0; flex: 1 1 420px; }
+.mx-dhead h1 { overflow-wrap: anywhere; }
+.mx-dchips { display: flex; gap: 6px; flex-wrap: wrap; }
+.mx-cols { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 14px; }
+.mx-dl { display: grid; grid-template-columns: max-content 1fr; gap: 6px 14px; margin: 0; font-size: 13px; }
+.mx-dl dt { color: var(--text-3); }
+.mx-dl dd { margin: 0; overflow-wrap: anywhere; }
+.mx-inline { display: flex; align-items: flex-end; gap: 8px; margin-top: 12px; flex-wrap: wrap; }
+.mx-inline .in { flex: 1 1 160px; margin: 0; }
+.mx-crit { list-style: none; margin: 0; padding: 0; display: grid; gap: 10px; }
+.mx-crit li { display: flex; gap: 10px; align-items: flex-start; }
+.mx-crit li > div { min-width: 0; }
+.mx-crit p { margin: 3px 0 0; font-size: 12.5px; color: var(--text-2); }
+.mx-plan { margin: 0; padding-left: 20px; display: grid; gap: 8px; }
+.mx-plan p { margin: 2px 0 0; font-size: 12.5px; color: var(--text-2); }
+.mx-report { display: grid; gap: 12px; border-color: color-mix(in srgb, var(--mx-ok) 35%, var(--line)); }
+.mx-rsum { margin: 0; font-size: 14.5px; }
+.mx-rgrid { display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 10px; }
+.mx-kpi { display: grid; gap: 2px; padding: 10px 12px; border-radius: 10px; background: var(--surface-2); }
+.mx-kpi span { font-size: 11.5px; color: var(--text-3); }
+.mx-kpi b { font-size: 18px; }
+.mx-kpi em { font-style: normal; font-size: 12px; color: var(--text-3); }
+.mx-rcols { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 12px; }
+.mx-rcols h4 { display: flex; align-items: center; gap: 6px; margin: 0 0 4px; font-size: 13px; }
+.mx-rcols h4 .icon { width: 14px; height: 14px; color: var(--text-3); }
+.mx-rcols ul { margin: 0; padding-left: 18px; font-size: 13px; display: grid; gap: 4px; }
+.mx-md { max-height: 560px; overflow: auto; padding-right: 6px; overflow-wrap: anywhere; }
+.mx-tl { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; max-height: 420px; overflow: auto; }
+.mx-tl li { display: grid; grid-template-columns: 140px 76px 1fr; gap: 8px; font-size: 12.5px; padding-left: 8px; border-left: 2px solid var(--line); }
+.mx-tl time { color: var(--text-3); }
+.mx-tl p { margin: 0; overflow-wrap: anywhere; }
+.mx-tl .k-fail, .mx-tl .k-dead, .mx-tl .k-error { border-left-color: var(--crit); }
+.mx-tl .k-pause, .mx-tl .k-warn { border-left-color: var(--warn); }
+.mx-tl .k-wait, .mx-tl .k-decision { border-left-color: var(--accent); }
+.mx-tl .k-stage { border-left-color: var(--mx-ok); }
+.mx-st { color: var(--text-2); font-weight: 600; }
+.mx-hist { width: 100%; font-size: 12.5px; border-collapse: collapse; margin-top: 10px; }
+.mx-hist th, .mx-hist td { text-align: left; padding: 5px 6px; border-bottom: 1px solid var(--line); overflow-wrap: anywhere; }
+.mx-adv h4 { margin: 12px 0 4px; font-size: 13px; }
+.mx-adv ul { margin: 0; padding-left: 18px; font-size: 12.5px; }
+
+@media (max-width: 640px) {
+  .mx-answers { grid-template-columns: 1fr 1fr; }
+  .mx-grid, .mx-cols { grid-template-columns: 1fr; }
+  .mx-tl li { grid-template-columns: 1fr; gap: 2px; }
+  .mx-steps em { display: none; }
+  .mx-steps.lg em { display: none; }
+}
+
+/* Intelligence brief (mission_intel.py) */
+.mx-intel .mx-rcols { margin-top: 10px; }
+.mx-intel .mx-crit li { gap: 8px; }
+.mx-intel .mx-src { display: block; margin-top: 2px; font-size: 12px; color: var(--text-3); overflow-wrap: anywhere; }
+.mx-intel ul p { margin: 2px 0 0; font-size: 12.5px; color: var(--text-2); }
+.mx-intel > p.muted { margin: 10px 0 0; font-size: 12px; }
+.mx-intel ul.mx-crit { padding-left: 0; list-style: none; }
+
+/* autonomy per mission (mission.js autonomyField; mission_autonomy.py) */
+.mx-auto select { width: 100%; }
+.mx-auto-about { display: block; margin-top: 4px; line-height: 1.35; }
+.mx-auto-kinds { flex: 1 1 100%; margin-top: 2px; }
+.mx-auto-kinds > summary { cursor: pointer; font-size: 13px; color: var(--text-2); }
+.mx-auto-kinds[open] { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 220px), 1fr)); gap: 8px; }
+.mx-auto-kinds[open] > summary, .mx-auto-kinds > p { grid-column: 1 / -1; }
+.mx-auto-change { flex-wrap: wrap; align-items: flex-end; }
+.mx-auto-change .mx-auto { flex: 1 1 220px; }
+.mx-gatenote { margin-top: 8px; }
+.mx-gatenote input { width: 100%; }
+
+/* ---------- Goal first: attachments, detected repositories, Fine-tune (Advanced) ---------- */
+.mx-goalbox { display: grid; gap: 8px; padding: 10px; margin: -10px; border: 1px dashed transparent; border-radius: var(--mx-r); transition: border-color .15s, background .15s; }
+.mx-goalbox.drop { border-color: var(--accent); background: color-mix(in srgb, var(--accent) 6%, transparent); }
+.mx-attbar { display: flex; align-items: center; flex-wrap: wrap; gap: 6px; }
+.mx-attb { display: inline-flex; align-items: center; gap: 6px; padding: 5px 10px; border: 1px solid var(--line); border-radius: 8px; background: var(--surface-2); color: var(--text-2);
+  font: inherit; font-size: 12.5px; cursor: pointer; }
+.mx-attb:hover, .mx-attb:focus-visible { border-color: var(--accent); color: var(--text); }
+.mx-attb .icon { width: 15px; height: 15px; }
+.mx-atthint { margin-left: auto; color: var(--text-3); font-size: 12px; }
+.mx-att { display: flex; flex-wrap: wrap; gap: 6px; }
+.mx-att[hidden], .mx-linkin[hidden], .mx-detect[hidden] { display: none; }
+.mx-attc { display: inline-flex; align-items: center; gap: 6px; max-width: 100%; min-width: 0; padding: 4px 4px 4px 9px; border: 1px solid var(--line); border-radius: 999px;
+  background: var(--surface); font-size: 12.5px; }
+.mx-attc > .icon { width: 14px; height: 14px; flex: none; color: var(--text-2); }
+.mx-attc .mx-attn { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 260px; }
+.mx-attc em { flex: none; color: var(--text-3); font-style: normal; font-size: 11.5px; }
+.mx-attc.t-bad { border-color: color-mix(in srgb, var(--crit) 50%, var(--line)); }
+.mx-attc.t-bad em { color: var(--crit); flex: 0 1 auto; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 280px; }
+.mx-attc .spin { width: 12px; height: 12px; flex: none; border: 2px solid var(--line); border-top-color: var(--accent); border-radius: 50%; animation: spin .8s linear infinite; }
+.mx-attx { display: inline-grid; place-items: center; width: 22px; height: 22px; flex: none; padding: 0; border: 0; border-radius: 50%; background: none; color: var(--text-3); cursor: pointer; }
+.mx-attx:hover, .mx-attx:focus-visible { background: var(--surface-2); color: var(--text); }
+.mx-attx .icon { width: 12px; height: 12px; }
+.mx-linkin { display: flex; gap: 6px; }
+.mx-linkin input { flex: 1; min-width: 0; }
+.mx-detect { display: flex; align-items: flex-start; gap: 8px; margin: 0; padding: 8px 10px; border-radius: 8px; font-size: 12.5px; color: var(--text-2);
+  background: color-mix(in srgb, var(--mx-run) 9%, transparent); }
+.mx-detect .icon { width: 16px; height: 16px; flex: none; margin-top: 1px; color: var(--mx-run); }
+.mx-tune { border: 1px solid var(--line); border-radius: var(--mx-r); padding: 0 12px; }
+.mx-tune > summary { padding: 10px 0; cursor: pointer; font-size: 13px; font-weight: 600; color: var(--text-2); }
+.mx-tune[open] { display: grid; gap: 12px; padding-bottom: 12px; }
+.mx-attached .mx-attl { display: grid; gap: 10px; margin: 0; padding: 0; list-style: none; }
+.mx-attl li { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; gap: 10px; align-items: start; font-size: 13px; }
+.mx-attl li > .icon { width: 16px; height: 16px; margin-top: 2px; color: var(--text-2); }
+.mx-attl li div { display: grid; gap: 2px; min-width: 0; overflow-wrap: anywhere; }
+.mx-attl .muted { font-size: 12px; }
+.mx-atterr { margin: 0; color: var(--crit); font-size: 12px; }
+@media (max-width: 640px) {
+  .mx-atthint { flex-basis: 100%; margin-left: 0; }
+  .mx-attb span { display: inline; }
+  .mx-attc .mx-attn { max-width: 160px; }
+}
+.mx-tchipt { min-width: 0; overflow: hidden; text-overflow: ellipsis; }  /* a bare text node in the inline-flex chip can't take the ellipsis */
+/* Simple mode: only the goal box and Start mission (mission.js render/composer); the missions fold under it */
+.mx-go:not(:has(> p)) { justify-content: flex-end; }
+.mx-mine > summary { cursor: pointer; display: flex; align-items: center; gap: 8px; font-weight: 600; color: var(--muted, inherit); padding: 6px 0; }
+.mx-mine[open] > summary { margin-bottom: 6px; }
+.mx-mine > summary { list-style: none; }
+.mx-mine > summary::-webkit-details-marker { display: none; }
+.mx-mine > summary::before { content: "▸"; font-size: 12px; }
+.mx-mine[open] > summary::before { content: "▾"; }
+
+/* D-004 D4.3: a persistent mission's cycles */
+.mx-cyc li { grid-template-columns: 140px 64px 1fr; }
+.mx-cyc p { margin: 2px 0; }
+.mx-cycles .chk { white-space: normal; max-width: 100%; align-items: flex-start; }  /* the Director-note switch wraps on a phone */
+.mx-cycles .mx-warn { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; color: var(--warn, var(--accent)); }
+@media (max-width: 640px) { .mx-cyc li { grid-template-columns: 1fr; } }

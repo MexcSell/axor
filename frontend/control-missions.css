@@ -1,0 +1,118 @@
+/* Missions and tasks in the Control Hub (control-missions.js). Prefix ctlm-. Theme tokens only, so light and dark follow. */
+.ctlm { display: grid; gap: 14px; min-width: 0; }
+.ctlm-load { display: flex; gap: 8px; align-items: center; padding: 18px 0; }
+.ctlm-legend { display: flex; gap: 8px; align-items: flex-start; margin: 0; padding: 10px 12px; border-radius: 10px; background: var(--surface-2); color: var(--text-2); font-size: 12.5px; line-height: 1.5; }
+.ctlm-legend > .icon { width: 16px; height: 16px; flex: none; margin-top: 2px; color: var(--accent); }
+.ctlm-legend b { color: var(--text); }
+
+/* initiatives */
+.ctlm-init { display: grid; gap: 12px; padding: 16px; border: 1px solid var(--line); border-radius: 14px; background: var(--surface); min-width: 0; }
+.ctlm-init.primary { border-color: color-mix(in srgb, var(--accent) 45%, var(--line)); background: linear-gradient(180deg, var(--accent-soft), var(--surface) 140px); }
+.ctlm-ih { display: flex; gap: 12px; align-items: flex-start; flex-wrap: wrap; }
+.ctlm-ih > div:not(.ctlm-iacts) { flex: 1 1 260px; min-width: 0; }
+.ctlm-ih h3 { margin: 0; display: flex; gap: 8px; align-items: center; flex-wrap: wrap; font-size: 17px; }
+.ctlm-ih p { margin: 3px 0 0; }
+.ctlm-iic { display: grid; place-items: center; width: 38px; height: 38px; border-radius: 10px; background: var(--accent-soft); color: var(--accent); flex: none; }
+.ctlm-iic .icon { width: 20px; height: 20px; }
+.ctlm-iacts { display: flex; gap: 6px; flex-wrap: wrap; align-items: center; margin-left: auto; }
+.ctlm-facts { display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 8px; }
+.ctlm-fact { display: grid; gap: 1px; padding: 9px 12px; border: 1px solid var(--line); border-radius: 10px; background: var(--surface); min-width: 0; }
+.ctlm-fact small { font-size: 11px; color: var(--text-2); text-transform: uppercase; letter-spacing: .04em; font-weight: 600; }
+.ctlm-fact b { font-size: 19px; font-weight: 650; }
+.ctlm-fact em { font-style: normal; font-size: 12px; color: var(--text-2); }
+
+/* mission cards */
+.ctlm-cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 10px; }
+.ctlm-card { display: grid; gap: 5px; text-align: left; padding: 12px 14px; border: 1px solid var(--line); border-radius: 12px; background: var(--surface); color: var(--text); cursor: pointer; min-width: 0; font: inherit; }
+.ctlm-card:hover { border-color: color-mix(in srgb, var(--accent) 55%, var(--line)); }
+.ctlm-card:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.ctlm-ct { display: flex; gap: 6px; align-items: center; flex-wrap: wrap; margin: 0; }
+.ctlm-ct small { color: var(--text-2); font-size: 12px; }
+.ctlm-cn { font-size: 14.5px; font-weight: 650; overflow-wrap: anywhere; }
+.ctlm-cl { display: flex; gap: 6px; align-items: center; flex-wrap: wrap; font-size: 12.5px; color: var(--text-2); }
+.ctlm-cs { color: var(--text-2); font-size: 12px; }
+.ctlm-cs b { color: var(--warn); font-weight: 600; }
+.ctlm-prog { display: block; height: 5px; border-radius: 99px; background: var(--surface-2); overflow: hidden; }
+.ctlm-prog i { display: block; height: 100%; border-radius: inherit; background: var(--accent); }
+.ctlm-foot { margin: 0; }
+
+/* one mission */
+.ctlm-back { display: inline-flex; gap: 4px; align-items: center; justify-self: start; }
+.ctlm-dh { display: flex; gap: 14px; align-items: flex-start; flex-wrap: wrap; }
+.ctlm-dh > div:first-child { flex: 1 1 320px; min-width: 0; }
+.ctlm-dh h2 { margin: 6px 0 4px; font-size: 21px; overflow-wrap: anywhere; }
+.ctlm-dh p { margin: 2px 0; }
+.ctlm-gap { display: flex; gap: 6px; align-items: center; flex-wrap: wrap; color: var(--text-2); font-size: 13px; }
+.ctlm-ts, .ctlm-kids { list-style: none; margin: 0; padding: 0; display: grid; gap: 4px; }
+.ctlm-kids { margin: 4px 0 2px 18px; padding-left: 10px; border-left: 2px solid var(--line); }
+.ctlm-t { min-width: 0; }
+.ctlm-tr { display: flex; gap: 10px; align-items: flex-start; justify-content: space-between; padding: 7px 8px; border-radius: 8px; }
+.ctlm-tr:hover { background: var(--surface-2); }
+.ctlm-t.skipped .ctlm-tt, .ctlm-t.cancelled .ctlm-tt { color: var(--text-2); text-decoration: line-through; }
+.ctlm-t.proposed > .ctlm-tr { background: color-mix(in srgb, var(--accent) 7%, transparent); }
+.ctlm-tm { display: grid; grid-template-columns: auto 1fr; column-gap: 6px; min-width: 0; flex: 1 1 auto; }
+.ctlm-tm > small { grid-column: 2; color: var(--text-2); font-size: 12px; overflow-wrap: anywhere; }
+.ctlm-tm > .ctlm-tt { grid-column: 2; text-align: left; font-weight: 600; overflow-wrap: anywhere; }
+.ctlm-tm > .ctlm-prio { grid-row: 1; grid-column: 1; }
+.ctlm-tm > .ctlm-tt:first-child { grid-column: 1 / -1; }
+.ctlm-tm > .ctlm-tt:first-child ~ small { grid-column: 1 / -1; }
+.ctlm-why { font-style: italic; }
+.ctlm-prio { display: inline-grid; place-items: center; width: 16px; height: 18px; }
+.ctlm-prio .icon { width: 13px; height: 13px; }
+.ctlm-prio.hi { color: var(--crit); }
+.ctlm-prio.lo { color: var(--text-3); }
+.ctlm-ta { display: flex; gap: 4px; align-items: center; flex-wrap: wrap; justify-content: flex-end; flex: none; max-width: 55%; }
+.ctlm-plan { margin: 0; padding-left: 22px; display: grid; gap: 6px; }
+.ctlm-plan li small { display: block; color: var(--text-2); font-size: 12px; }
+.ctlm-intel { border-color: color-mix(in srgb, var(--accent) 35%, var(--line)); }
+.ctlm-last { display: grid; gap: 4px; padding-top: 6px; border-top: 1px solid var(--line); }
+.ctlm-last p { margin: 0; }
+.ctlm-items { list-style: none; margin: 4px 0 0; padding: 0; display: grid; gap: 6px; }
+.ctlm-items li { display: flex; gap: 8px; align-items: flex-start; }
+.ctlm-items li > span { display: grid; min-width: 0; }
+.ctlm-items small { color: var(--text-2); font-size: 12px; }
+
+/* the Tasks tab */
+.ctlm-bar { display: flex; gap: 10px; align-items: center; justify-content: space-between; flex-wrap: wrap; }
+.ctlm-chips { display: flex; gap: 6px; flex-wrap: wrap; }
+.ctlm-chip { display: inline-flex; gap: 6px; align-items: center; padding: 5px 11px; border: 1px solid var(--line); border-radius: 99px; background: var(--surface); color: var(--text); font: inherit; font-size: 13px; cursor: pointer; }
+.ctlm-chip b { font-weight: 600; color: var(--text-2); font-size: 12px; }
+.ctlm-chip.on { border-color: var(--accent); background: var(--accent-soft); }
+.ctlm-chip:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.ctlm-group h3 { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+
+/* the Overview's band */
+.ctlm-band { display: flex; gap: 12px; align-items: center; flex-wrap: wrap; padding: 10px 14px; margin-bottom: 14px; border: 1px solid color-mix(in srgb, var(--accent) 40%, var(--line));
+             border-radius: 12px; background: linear-gradient(90deg, var(--accent-soft), var(--surface) 70%); }
+.ctlm-band > div { display: grid; }
+.ctlm-band > div small { font-size: 11px; color: var(--text-2); text-transform: uppercase; letter-spacing: .05em; font-weight: 600; }
+.ctlm-band > div b { font-size: 16px; }
+.ctlm-band ul { list-style: none; display: flex; gap: 6px 16px; flex-wrap: wrap; margin: 0; padding: 0; flex: 1 1 300px; font-size: 13px; color: var(--text-2); }
+.ctlm-band ul b { color: var(--text); }
+.ctlm-band ul b.warn { color: var(--warn); }
+
+/* teams on a mission, the schedule, a team page's missions */
+.ctlm-teams { list-style: none; margin: 0; padding: 0; display: grid; gap: 4px; }
+.ctlm-teams li { display: flex; gap: 10px; align-items: center; justify-content: space-between; padding: 6px 8px; border-radius: 8px; }
+.ctlm-teams li:hover { background: var(--surface-2); }
+.ctlm-tm2 { display: flex; gap: 8px; align-items: baseline; flex-wrap: wrap; min-width: 0; }
+.ctlm-tm2 .linkbtn { font-weight: 600; text-align: left; }
+.ctlm-tm2 small { color: var(--text-2); font-size: 12px; }
+.ctlm-sched { display: flex; gap: 6px; align-items: flex-start; margin: 0; padding: 7px 10px; border-radius: 8px; background: var(--accent-soft); }
+.ctlm-sched.held { background: var(--warn-soft, var(--surface-2)); }
+.ctlm-sched .icon, .ctlm-serves .icon { width: 15px; height: 15px; flex: none; margin-top: 2px; }
+.ctlm-serves { display: flex; gap: 6px; align-items: flex-start; margin: 0 0 12px; font-size: 13px; color: var(--text-2); }
+.ctlm-serves .linkbtn { font-weight: 600; }
+
+@media (max-width: 640px) {
+  .ctlm-init { padding: 12px; }
+  .ctlm-tr, .ctlm-teams li { flex-direction: column; align-items: flex-start; }
+  .ctlm-ta { max-width: none; justify-content: flex-start; }
+  .ctlm-cards { grid-template-columns: minmax(0, 1fr); }
+}
+
+/* why an open task isn't moving (control_dispatch.why) */
+.ctlm-stall { display: flex; gap: .35rem; align-items: flex-start; margin-top: .2rem; color: var(--text-3); }
+.ctlm-stall svg { flex: none; width: .9rem; height: .9rem; margin-top: .1rem; }
+.ctlm-stall.s-stuck, .ctlm-stall.s-failed, .ctlm-stall.s-held { color: var(--crit); }
+.ctlm-stall.s-manual, .ctlm-stall.s-waiting { color: var(--warn); }

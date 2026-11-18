@@ -1,0 +1,30 @@
+# CANDIDATE, NOT APPLIED ANYWHERE: the runner namespace's policy without its DNS rule. For the Owner to decide, together with the
+# same change for sandbox runs (a k8s/base policy) and SANDBOX_BY_ADDRESS=1 on the web deployment.
+#
+# Why: 58-runner.yaml lets every runner pod reach the cluster's DNS. A job with network `registry` or `build` runs its VM on
+# QEMU's user-mode network, so code inside the VM can look up names of its choosing through the pod's resolver, and those names
+# reach the upstream resolver: a low-bandwidth way out that bypasses the egress proxy's host list. (A job with network `none`
+# can't: its VM reaches nothing.) Found by the AEF stream's cluster tests on 2026-11-13; local staging has no resolver.
+#
+# How it closes: with SANDBOX_BY_ADDRESS=1, AXoR resolves its run port and the egress proxy itself and gives a job's pod their
+# ADDRESSES (runner.Runner.endpoints -> sandbox.endpoints), so the pod needs no DNS at all. This file then replaces the `runner`
+# NetworkPolicy of 58-runner.yaml (same name, same namespace) by one without the kube-dns rule:
+#     kubectl apply -f k8s/runner/58-runner.yaml -f k8s/runner/58-runner-no-dns.candidate.yaml
+# Either half alone closes nothing or breaks jobs: without the switch a pod can't find AXoR once DNS is gone; with the switch
+# and DNS still allowed, the way out is still there.
+#
+# What stays open even then, to state with any result: the egress proxy itself resolves the names a job asks it for. The Owner's
+# package hosts are exact names. The registry hosts (docker.io, docker.com, ghcr.io, pkg-containers.githubusercontent.com) are
+# matched with their subdomains, so a job can still make the proxy look up any name under those four domains; such lookups go
+# to those domains' own name servers, and each connection is in the job's record. Listing the registries' exact hosts instead
+# would close that too; it is not done here.
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata: { name: runner, namespace: axor-runner }
+spec:
+  podSelector: {}
+  policyTypes: [Ingress, Egress]
+  ingress: []
+  egress:
+    - to: [{ namespaceSelector: { matchLabels: { kubernetes.io/metadata.name: axor } }, podSelector: { matchLabels: { app: web } } }]
+      ports: [{ port: 8091, protocol: TCP }]

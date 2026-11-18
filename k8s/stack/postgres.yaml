@@ -1,0 +1,55 @@
+# AXoR 5.1: PostgreSQL 16 with pgvector for AXoR's database (db_pg.py) and Temporal's. Not part of k8s/base: k8s/stack.sh up
+# applies it. Restricted Pod Security (namespace axor): runs as the image's postgres user (999), no privileges.
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata: { name: postgres-data, namespace: axor }
+spec:
+  accessModes: [ReadWriteOnce]
+  resources: { requests: { storage: 20Gi } }
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata: { name: postgres, namespace: axor, labels: { app: postgres } }
+spec:
+  serviceName: postgres
+  replicas: 1
+  selector: { matchLabels: { app: postgres } }
+  template:
+    metadata: { labels: { app: postgres } }
+    spec:
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 999
+        runAsGroup: 999
+        fsGroup: 999
+        seccompProfile: { type: RuntimeDefault }
+      containers:
+        - name: postgres
+          image: pgvector/pgvector:0.8.6-pg16
+          env:
+            - { name: POSTGRES_USER, value: axor }
+            - { name: POSTGRES_DB, value: axor }
+            - { name: POSTGRES_PASSWORD, valueFrom: { secretKeyRef: { name: axor-postgres, key: password } } }
+            - { name: PGDATA, value: /var/lib/postgresql/data/pgdata }
+          ports: [{ name: pg, containerPort: 5432 }]
+          readinessProbe: { exec: { command: [pg_isready, -U, axor, -d, axor] }, periodSeconds: 10 }
+          livenessProbe: { exec: { command: [pg_isready, -U, axor, -d, axor] }, periodSeconds: 30, failureThreshold: 5 }
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities: { drop: [ALL] }
+          resources:
+            requests: { cpu: 250m, memory: 512Mi }
+            limits: { cpu: "4", memory: 4Gi }
+          volumeMounts:
+            - { name: data, mountPath: /var/lib/postgresql/data }
+            - { name: run, mountPath: /var/run/postgresql }
+      volumes:
+        - { name: data, persistentVolumeClaim: { claimName: postgres-data } }
+        - { name: run, emptyDir: {} }
+---
+apiVersion: v1
+kind: Service
+metadata: { name: postgres, namespace: axor }
+spec:
+  selector: { app: postgres }
+  ports: [{ name: pg, port: 5432, targetPort: pg }]

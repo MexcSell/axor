@@ -1,0 +1,38 @@
+/* Sign-in screen "Create account" link; "Your account is approved" window (#f-cert): Download Certificate + install guide (auth-cert.js) */
+.auth-alt { margin: -4px 0 0; text-align: center; font-size: 13px; color: var(--text-3); }
+#f-cert > .muted { margin: 0; line-height: 1.5; }
+.acert { display: grid; gap: 12px; }
+.acert .btn.wide { gap: 8px; text-decoration: none; }
+.acert .btn.wide .icon { width: 16px; height: 16px; }
+.acert-h { margin: 4px 0 0; font-size: 14px; }
+#acert-ok { margin-top: 2px; }
+#acert-body { display: grid; gap: 12px; font-size: 13px; color: var(--text-2); }
+.acert-why { margin: 0; }
+.acert-os { flex-wrap: wrap; }
+.acert-os button { flex: 1 1 auto; padding: 6px 6px; font-size: 12px; }
+.acert-steps { margin: 0; padding-left: 20px; display: grid; gap: 6px; line-height: 1.45; }
+/* styles.css turns every `details code` into a block; inline names in sentences stay inline */
+#acert-body .acert-steps code, #acert-body small code { display: inline; margin: 0; padding: 1px 5px; border-radius: 5px; background: var(--surface-2);
+  font-family: var(--mono); font-size: 12px; user-select: text; word-break: break-all; }
+#acert-body .acert-fast small code { background: var(--bg); }
+.acert-fast { display: grid; gap: 8px; padding: 12px; border-radius: 10px; background: var(--surface-2); border: 1px solid var(--line); }
+.acert-fast > b { display: flex; align-items: center; gap: 6px; color: var(--text); font-size: 13px; }
+.acert-fast > b .icon { width: 15px; height: 15px; }
+.acert-fast p { margin: 0; }
+.acert-fast small, .acert-fp small { color: var(--text-3); font-size: 12px; line-height: 1.45; }
+.acert-cmd { display: grid; gap: 4px; }
+.acert-cmd-h { display: flex; justify-content: space-between; gap: 8px; font-size: 12px; color: var(--text-3); }
+.acert-cmd-h .link { font-size: 12px; }
+#acert-body .acert-cmd code, .acert-link code { display: block; margin: 0; padding: 8px 10px; border-radius: 8px; background: var(--bg); border: 1px solid var(--line);
+  font-family: var(--mono); font-size: 12px; color: var(--text); word-break: break-all; white-space: pre-wrap; user-select: all; }
+.acert-link { display: flex; gap: 8px; align-items: stretch; }
+.acert-link code { flex: 1; min-width: 0; }
+.acert-link .btn { flex: none; white-space: nowrap; }
+.acert-fp { margin: 0; display: grid; gap: 4px; }
+.acert-fp > span { font-size: 12px; font-weight: 600; color: var(--text-2); }
+#acert-body .acert-fp > code { display: block; padding: 8px 10px; border-radius: 8px; background: var(--surface-2); margin: 0; font-family: var(--mono); font-size: 11.5px; word-break: break-all; color: var(--text); user-select: all; }
+/* "Request sent": waiting for an administrator's approval (auth.js waitForApproval) */
+.pending-wait { margin: 0; display: flex; gap: 10px; align-items: flex-start; padding: 10px 12px; border-radius: 10px;
+  background: var(--accent-soft); color: var(--text-2); font-size: 13px; line-height: 1.45; }
+.pending-wait .spinner { margin-top: 2px; color: var(--accent); }
+@media (max-width: 380px) { .acert-link { flex-direction: column; } }

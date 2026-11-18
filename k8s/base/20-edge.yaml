@@ -1,0 +1,213 @@
+# The edge: Traefik terminates HTTPS for AXoR, PaaS apps and functions, routing Ingresses of class "axor".
+# - Its default certificate is the one AXoR's own CA signs (Platform → Domain & HTTPS writes it into the Secret
+#   edge-tls as Traefik dynamic configuration; Traefik reloads it on its own).
+# - Once the platform domain is public, Ingresses ask for Let's Encrypt certificates: through the resolver "dns"
+#   (DNS-01, answered by AXoR DNS below, for names in its zones, wildcards included) or "alpn" (TLS-ALPN-01 on
+#   port 443, for custom domains whose DNS is elsewhere). ACME settings are in the ConfigMap edge-config.
+# - It listens on 8000/8443 (and 8001) inside the pod; k8s/cutover.sh maps the host's ports 443, 8000 (AXoR's old
+#   address, redirected to HTTPS) and 80 if asked to them.
+# AXoR DNS answers on 5353 (UDP and TCP); the cutover maps the host's port 53, on the public address only, so this
+# host's own resolver (127.0.0.53) is untouched. Its API (8400) is for AXoR, and /acme for the edge.
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata: { name: edge-acme, namespace: axor-edge }
+spec:
+  accessModes: [ReadWriteOnce]
+  resources: { requests: { storage: 128Mi } }
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata: { name: edge, namespace: axor-edge, labels: { app: edge } }
+spec:
+  replicas: 1
+  strategy: { type: Recreate }  # host ports after cutover: two pods can't hold them at once
+  selector: { matchLabels: { app: edge } }
+  template:
+    metadata: { labels: { app: edge } }
+    spec:
+      serviceAccountName: edge
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 65532
+        runAsGroup: 65532
+        fsGroup: 65532
+        seccompProfile: { type: RuntimeDefault }
+      containers:
+        - name: traefik
+          image: traefik:v3.7.14
+          args:
+            - --global.checknewversion=false
+            - --global.sendanonymoususage=false
+            - --log.level=INFO
+            - --accesslog=true
+            - --ping=true
+            - --ping.entrypoint=admin
+            - --entrypoints.admin.address=:9000
+            - --entrypoints.admin.http.aliasHeadersStrategy=delete
+            - --entrypoints.web.address=:8000
+            - --entrypoints.web.http.aliasHeadersStrategy=delete
+            - --entrypoints.web.http.redirections.entrypoint.to=:443
+            - --entrypoints.web.http.redirections.entrypoint.scheme=https
+            - --entrypoints.legacy.address=:8001  # the host's port 8000 after cutover (AXoR's old address): redirects too
+            - --entrypoints.legacy.http.aliasHeadersStrategy=delete
+            - --entrypoints.legacy.http.redirections.entrypoint.to=:443
+            - --entrypoints.legacy.http.redirections.entrypoint.scheme=https
+            - --entrypoints.websecure.address=:8443
+            # X_Forwarded_For and the like would reach WSGI/PHP/CGI apps as the headers the edge sets: drop them
+            - --entrypoints.websecure.http.aliasHeadersStrategy=delete
+            - --entrypoints.websecure.http.tls=true
+            - --entrypoints.websecure.http.middlewares=secure-headers@file
+            - --entrypoints.websecure.transport.respondingtimeouts.readtimeout=0  # SSE streams and long uploads
+            - --providers.kubernetesingress=true
+            - --providers.kubernetesingress.ingressclass=axor
+            - --providers.kubernetesingress.namespaces=axor,axor-apps,axor-functions
+            - --providers.file.directory=/config
+            - --providers.file.watch=true
+            - --certificatesresolvers.dns.acme.storage=/acme/acme.json
+            - --certificatesresolvers.dns.acme.email=$(ACME_EMAIL)
+            - --certificatesresolvers.dns.acme.caserver=$(ACME_CA)
+            - --certificatesresolvers.dns.acme.dnschallenge.provider=httpreq
+            - --certificatesresolvers.dns.acme.dnschallenge.resolvers=1.1.1.1:53,8.8.8.8:53
+            - --certificatesresolvers.alpn.acme.storage=/acme/acme.json
+            - --certificatesresolvers.alpn.acme.email=$(ACME_EMAIL)
+            - --certificatesresolvers.alpn.acme.caserver=$(ACME_CA)
+            - --certificatesresolvers.alpn.acme.tlschallenge=true
+          env:
+            - { name: ACME_EMAIL, valueFrom: { configMapKeyRef: { name: edge-config, key: ACME_EMAIL, optional: true } } }
+            - { name: ACME_CA, valueFrom: { configMapKeyRef: { name: edge-config, key: ACME_CA, optional: true } } }
+            - { name: HTTPREQ_ENDPOINT, value: "http://dns.axor-edge.svc.cluster.local:8400/acme" }
+            - { name: HTTPREQ_USERNAME, value: acme }
+            - { name: HTTPREQ_PASSWORD, valueFrom: { secretKeyRef: { name: dns-secrets, key: acme } } }
+          ports:
+            - { name: web, containerPort: 8000 }
+            - { name: websecure, containerPort: 8443 }
+            - { name: admin, containerPort: 9000 }
+            - { name: legacy, containerPort: 8001 }  # keep the order: k8s/cutover.sh patches ports by position
+          readinessProbe: { httpGet: { path: /ping, port: admin }, periodSeconds: 5 }
+          livenessProbe: { httpGet: { path: /ping, port: admin }, periodSeconds: 20, failureThreshold: 3 }
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            capabilities: { drop: [ALL] }
+          resources:
+            requests: { cpu: 100m, memory: 64Mi }
+            limits: { cpu: "4", memory: 512Mi }
+          volumeMounts:
+            - { name: config, mountPath: /config, readOnly: true }
+            - { name: acme, mountPath: /acme }
+            - { name: tmp, mountPath: /tmp }
+      volumes:
+        # one directory, so the file provider's watch sees the kubelet swap in a new certificate (it doesn't watch subfolders)
+        - name: config
+          projected:
+            sources:
+              - configMap: { name: edge-base }
+              - secret: { name: edge-tls, optional: true }
+        - { name: acme, persistentVolumeClaim: { claimName: edge-acme } }
+        - { name: tmp, emptyDir: {} }
+---
+# headers every HTTPS response gets (AXoR sets its own stricter ones on top); modern TLS only
+apiVersion: v1
+kind: ConfigMap
+metadata: { name: edge-base, namespace: axor-edge }
+data:
+  base.yaml: |
+    http:
+      middlewares:
+        secure-headers:
+          headers:
+            stsSeconds: 31536000
+            contentTypeNosniff: true
+            referrerPolicy: strict-origin-when-cross-origin
+    tls:
+      options:
+        default:
+          minVersion: VersionTLS12
+          sniStrict: false
+---
+apiVersion: v1
+kind: Service
+metadata: { name: edge, namespace: axor-edge }
+spec:
+  selector: { app: edge }
+  ports:
+    - { name: web, port: 80, targetPort: web }
+    - { name: websecure, port: 443, targetPort: websecure }
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata: { name: dns-data, namespace: axor-edge }
+spec:
+  accessModes: [ReadWriteOnce]
+  resources: { requests: { storage: 1Gi } }
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata: { name: dns, namespace: axor-edge, labels: { app: dns } }
+spec:
+  replicas: 1
+  strategy: { type: Recreate }  # one SQLite database, and a host port after cutover
+  selector: { matchLabels: { app: dns } }
+  template:
+    metadata: { labels: { app: dns } }
+    spec:
+      automountServiceAccountToken: false
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1000
+        runAsGroup: 1000
+        fsGroup: 1000
+        seccompProfile: { type: RuntimeDefault }
+      containers:
+        - name: dns
+          image: axor/dns:${TAG}
+          imagePullPolicy: Never
+          env:
+            - { name: DNS_PORT, value: "5353" }
+            - { name: DNS_RATE, value: "50" }
+            - { name: DNS_SECRET, valueFrom: { secretKeyRef: { name: dns-secrets, key: api } } }
+            - { name: DNS_ACME_SECRET, valueFrom: { secretKeyRef: { name: dns-secrets, key: acme } } }
+          ports:
+            - { name: dns-udp, containerPort: 5353, protocol: UDP }
+            - { name: dns-tcp, containerPort: 5353, protocol: TCP }  # keep the order: k8s/cutover.sh patches ports by position
+            - { name: api, containerPort: 8400 }
+          readinessProbe: { httpGet: { path: /health, port: api }, periodSeconds: 10 }
+          livenessProbe: { httpGet: { path: /health, port: api }, periodSeconds: 30 }
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            capabilities: { drop: [ALL] }
+          resources:
+            requests: { cpu: 50m, memory: 64Mi }
+            limits: { cpu: "1", memory: 256Mi }
+          volumeMounts:
+            - { name: data, mountPath: /data }
+            - { name: tmp, mountPath: /tmp }
+      volumes:
+        - { name: data, persistentVolumeClaim: { claimName: dns-data } }
+        - { name: tmp, emptyDir: {} }
+---
+apiVersion: v1
+kind: Service
+metadata: { name: dns, namespace: axor-edge }
+spec:
+  selector: { app: dns }
+  ports:
+    - { name: dns-udp, port: 53, targetPort: dns-udp, protocol: UDP }
+    - { name: dns-tcp, port: 53, targetPort: dns-tcp, protocol: TCP }
+    - { name: api, port: 8400, targetPort: api }
+---
+# the DNS API is for AXoR (zones and records) and the edge (ACME challenges); DNS itself and the edge are public
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata: { name: dns, namespace: axor-edge }
+spec:
+  podSelector: { matchLabels: { app: dns } }
+  policyTypes: [Ingress]
+  ingress:
+    - ports: [{ port: 5353, protocol: UDP }, { port: 5353, protocol: TCP }]
+    - from:
+        - podSelector: { matchLabels: { app: edge } }
+        - namespaceSelector: { matchLabels: { kubernetes.io/metadata.name: axor } }
+          podSelector: { matchLabels: { app: web } }
+      ports: [{ port: 8400 }]

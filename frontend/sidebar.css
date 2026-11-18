@@ -1,0 +1,120 @@
+/* AXoR sidebar frame (sidebar.js; prefix sdb-), after the "AXoR Mission Control Sidebar" mock-up: the brand and pin at the top
+   (no search or + New since 11-10), sections with an icon before their name, the Ecosystems → Bittensor tree with guide lines, and the version
+   beside the health line at the foot. Loaded last, so #side selectors win over styles/platform/shell.css; colors come from the
+   theme tokens (the accent picker and light mode keep working). */
+:root { --sdb-w: 276px; --sdb-wc: 68px; }
+
+/* ---------- frame ---------- */
+#side { width: var(--sdb-w); padding: 0 12px; gap: 0; background: var(--side-bg); }
+#side.collapsed { width: var(--sdb-wc); }
+@media (min-width: 1280px) {
+  /* full height: the sidebar rises beside the top bar, whose own logo it replaces (narrower screens need that room for the bar) */
+  #side { position: sticky; top: 0; margin-top: calc(-1 * var(--sdb-top, 55px)); height: calc(100vh - var(--sb)); z-index: 31; }
+  #app header.top > .brand { display: none; }
+  #app header.top { padding-left: calc(var(--sdb-w) + 16px); }
+  #app:has(#side.collapsed) header.top { padding-left: calc(var(--sdb-wc) + 16px); }
+  #app header.top > .plt-crumb { padding-left: 0; border-left: 0; }  /* first in the bar now */
+  #app:has(#side:not(.collapsed)) header.top > .plt-crumb > :not(b) { display: none; }  /* the open sidebar already shows the section */
+}
+@media (min-width: 901px) and (max-width: 1279px) {
+  /* under the top bar, which keeps the logo: the sidebar's head is just the pin */
+  #side:not(.collapsed) .sdb-home { display: none; }
+  #side:not(.collapsed) .sdb-brand { justify-content: flex-end; }
+  #side:not(.collapsed) .sdb-head { padding-top: 12px; }
+}
+@media (min-width: 901px) { #plt-search { display: none; } }  /* the top bar has no room for it: search is Ctrl/⌘ K */
+
+/* ---------- brand and pin ---------- */
+.sdb-head { position: sticky; top: 0; z-index: 2; display: grid; gap: 14px; margin: 0 -12px; padding: 16px 12px 14px; background: var(--side-bg); }
+.sdb-brand { display: flex; align-items: center; gap: 8px; min-width: 0; }
+#side .sdb-home { flex: 1 1 auto; min-width: 0; display: flex; align-items: center; gap: 11px; width: auto; padding: 2px 4px; border-radius: 10px; background: none; color: var(--text); }
+#side .sdb-home:hover { background: none; }
+#side .sdb-home .sdb-mark { width: 40px; height: 40px; }
+.sdb-name { display: grid; min-width: 0; line-height: 1.15; }
+.sdb-name b { font-size: 21px; font-weight: 750; letter-spacing: -.01em; color: var(--text); }
+.sdb-name small { font-size: 12px; font-weight: 500; line-height: 1.25; color: var(--text-2); overflow-wrap: anywhere; }  /* "Adaptive Agent Company OS" may take two lines */
+#side .sdb-pin { flex: none; display: grid; place-items: center; width: 36px; height: 36px; padding: 0; border: 1px solid var(--line); border-radius: 9px; background: var(--surface); color: var(--text-2); }
+#side .sdb-pin:hover { color: var(--text); border-color: color-mix(in srgb, var(--accent) 45%, var(--line)); }
+#side .sdb-pin .icon { width: 17px; height: 17px; transform: none; }
+#side .sdb-pin[aria-pressed="true"] .icon { color: var(--text); }
+
+/* ---------- sections ---------- */
+#side .side-sec { padding: 2px 0 8px; border-top: 1px solid var(--line); }
+#side .side-sec > .side-group { gap: 11px; padding: 14px 6px 8px 8px; font-size: 13px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--text-2); }
+#side .side-sec > .side-group:hover { color: var(--text); }
+#side .side-group .sdb-ic { flex: none; width: 20px; height: 20px; color: var(--text-2); }
+#side .side-group .plt-gl { overflow: hidden; text-overflow: ellipsis; }
+#side .side-group .plt-chev { width: 16px; height: 16px; opacity: .7; }
+#side .side-sec > button:not(.side-group), #side .side-sec > .side-sub button, #side > #guide-side {
+  gap: 12px; margin-left: 12px; width: calc(100% - 12px); padding: 8px 10px; border-radius: 8px; font-size: 14.5px; font-weight: 500; color: var(--text-2); }
+#side .side-sec > button:not(.side-group):hover, #side .side-sec > .side-sub button:hover { color: var(--text); background: var(--surface-2); }
+#side .side-sec button:not(.side-group) .icon { width: 18px; height: 18px; }
+#side .side-subh:not(.sdb-tog) { padding: 10px 10px 4px 24px; font-size: 12px; }
+#side .ctl-tree { margin-left: 12px; }
+#side > #guide-side { margin: 6px 0 0; width: 100%; }
+#side .side-sec.closed > #nav-help { display: flex; }  /* Help & docs stays in reach with System folded (it used to sit in the foot) */
+
+/* where you are: a tinted row with the accent bar on its left edge */
+#side button[aria-current="page"], #side .axs-go.axs-cur { background: color-mix(in srgb, var(--accent) 20%, transparent); color: var(--text); font-weight: 650; }
+#side button[aria-current="page"]::before, #side .axs-go.axs-cur::before { content: ""; position: absolute; left: 0; top: 0; bottom: 0; width: 3px; border-radius: 8px 0 0 8px; background: var(--accent); }
+#side button[aria-current="page"] .icon, #side .axs-go.axs-cur .icon { color: var(--accent); opacity: 1; }
+#side.sdb-mhq-on #nav-mining[aria-current="page"] { background: none; color: var(--text-2); font-weight: 500; }
+#side.sdb-mhq-on #nav-mining[aria-current="page"]::before { content: none; }
+#side.sdb-mhq-on #nav-mining[aria-current="page"] .icon { color: inherit; opacity: .85; }
+
+/* ---------- Ecosystems → Bittensor ---------- */
+#side .sdb-tree { gap: 1px; }
+#side .side-subh.sdb-tog { display: flex; align-items: center; gap: 8px; margin: 2px 0 2px 6px; padding: 7px 8px 7px 4px; border-radius: 8px; cursor: pointer;
+  font-size: 14.5px; font-weight: 650; color: var(--text); opacity: 1; text-transform: none; letter-spacing: 0; }
+#side .sdb-tog:hover { background: var(--surface-2); }
+#side .sdb-tog:focus-visible { outline: 2px solid var(--accent); outline-offset: -2px; }
+#side .sdb-tog .icon { flex: none; width: 18px; height: 18px; }
+#side .sdb-tog .sdb-chev { width: 15px; height: 15px; color: var(--text-2); transition: transform .15s ease; }
+#side .sdb-tree.sdb-shut .sdb-chev { transform: rotate(-90deg); }
+#side .sdb-kids { display: flex; flex-direction: column; gap: 1px; margin-left: 26px; padding-left: 12px; border-left: 1px solid var(--line); }
+#side .sdb-kids > button { margin-left: 0; width: 100%; }
+#side .sdb-kids > button::after { content: ""; position: absolute; left: -12px; top: 50%; width: 9px; border-top: 1px solid var(--line); }
+#side .sdb-tree.sdb-shut .sdb-kids > :not([aria-current="page"]):not(.axs-cur) { display: none; }
+#side .sdb-tree.sdb-shut .sdb-kids:not(:has(> [aria-current="page"]:not([hidden]), > .axs-cur)) { display: none; }
+
+/* ---------- foot: version | health ---------- */
+#side .side-foot { position: sticky; bottom: 0; z-index: 2; display: flex; flex-wrap: nowrap; align-items: center; gap: 0; margin: auto -12px 0; padding: 10px 12px 12px;
+  border-top: 0; background: var(--side-bg); }
+#side .side-foot::before { content: ""; position: absolute; z-index: -1; inset: 10px 12px 12px; border: 1px solid var(--line); border-radius: 10px; background: var(--surface); pointer-events: none; }
+.sdb-ver { position: relative; order: -1; flex: none; padding: 11px 12px 11px 14px; font-size: 14px; font-weight: 600; color: var(--text); white-space: nowrap; }
+.sdb-ver::after { content: ""; position: absolute; right: 0; top: 10px; bottom: 10px; border-right: 1px solid var(--line); }
+#side .side-foot .axs-health { position: relative; flex: 1 1 auto; min-width: 0; margin: 0; padding: 11px 12px !important; border: 0 !important; background: none !important; font-size: 13.5px !important; justify-content: flex-start; }
+#side .side-foot .axs-health .lbl { overflow: hidden; text-overflow: ellipsis; }
+
+/* ---------- folded to icons (unpinned) ---------- */
+@media (min-width: 901px) {
+  #side.collapsed { padding: 0 8px; }
+  #side.collapsed .sdb-head { margin: 0 -8px; padding: 12px 8px; gap: 8px; }
+  #side.collapsed .sdb-brand { flex-direction: column; gap: 8px; }
+  #side.collapsed .sdb-home { justify-content: center; padding: 0; }
+  #side.collapsed .sdb-name { display: none; }
+  #side.collapsed .side-sec { border-top: 0; padding-bottom: 0; }
+  #side.collapsed .side-group .sdb-ic { display: none; }
+  #side.collapsed .side-sec > .side-group { display: block; width: auto; height: 1px; margin: 8px 10px; padding: 0; overflow: hidden; font-size: 0; background: var(--line); }
+  #side.collapsed .side-sec > button:not(.side-group), #side.collapsed .side-sec > .side-sub button, #side.collapsed > #guide-side { margin-left: 0; width: 100%; justify-content: center; padding: 9px 0; }
+  #side.collapsed .sdb-tog { display: none; }
+  #side.collapsed .sdb-kids { margin: 0; padding: 0; border: 0; }
+  #side.collapsed .sdb-kids > button::after { content: none; }
+  #side.collapsed .sdb-tree.sdb-shut .sdb-kids { display: flex; }
+  #side.collapsed .sdb-tree.sdb-shut .sdb-kids > button:not([hidden]) { display: flex; }
+  #side.collapsed .ctl-tree { margin: 0; }
+  #side.collapsed .sdb-ver { display: none; }
+  #side.collapsed .side-foot { margin: auto -8px 0; padding: 8px; }
+  #side.collapsed .side-foot::before { content: none; }
+  #side.collapsed .side-foot .axs-health { justify-content: center; padding: 9px 0 !important; }
+}
+
+/* ---------- phones: the slide-out keeps the brand; the pin has nothing to fold ---------- */
+@media (max-width: 900px) {
+  #side { padding: 0 12px; }
+  #side .sdb-pin { display: none; }
+  #side .sdb-head { padding-top: 14px; }
+  #side.collapsed .sdb-name { display: revert; }
+  #side.collapsed .sdb-tog { display: flex; }
+}
+@media (prefers-reduced-motion: reduce) { #side .sdb-tog .sdb-chev { transition: none; } }

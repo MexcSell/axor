@@ -1,0 +1,35 @@
+/* Page descriptions as a tip (pagetip.js): "?" after the page heading, framed tip on hover/focus/press. */
+.ptip-src { display: none !important; }
+
+h1 > button.ptip-btn {
+  all: unset; box-sizing: border-box;
+  display: inline-grid; place-items: center; vertical-align: middle;
+  width: 22px; height: 22px; margin: -3px 0 0 8px; padding: 0;
+  border-radius: 50%; color: var(--text-3); cursor: help;
+  transition: color .12s, background-color .12s;
+}
+h1 > button.ptip-btn:hover, h1 > button.ptip-btn.on, h1 > button.ptip-btn[aria-expanded=true] { color: var(--accent); background: var(--accent-soft); }
+h1 > button.ptip-btn:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; }
+h1 > button.ptip-btn > svg.icon { width: 17px !important; height: 17px !important; margin: 0 !important; color: inherit !important; vertical-align: 0; }
+
+.ptip-stamp { margin: 0 0 6px; font-size: 12px; color: var(--text-3); }
+.ptip-stamp:empty { display: none; }
+
+.ptip-pop {
+  position: fixed; z-index: 2147483000; box-sizing: border-box;
+  width: max-content; max-width: min(56ch, calc(100vw - 24px));
+  padding: 12px 14px; border: 1px solid var(--line); border-radius: 10px;
+  background: var(--surface); color: var(--text-2); box-shadow: var(--shadow), 0 10px 30px rgb(0 0 0 / .12);
+  font-size: 13.5px; font-weight: 400; line-height: 1.55; letter-spacing: 0; text-align: left; white-space: normal;
+  animation: ptip-in .12s ease-out;
+}
+.ptip-pop[hidden] { display: none; }
+.ptip-pop::before {   /* the frame's arrow */
+  content: ""; position: absolute; top: -6px; left: var(--ptip-arrow, 20px); width: 10px; height: 10px; margin-left: -5px;
+  background: var(--surface); border-left: 1px solid var(--line); border-top: 1px solid var(--line); transform: rotate(45deg);
+}
+.ptip-pop.up::before { top: auto; bottom: -6px; transform: rotate(225deg); }
+.ptip-pop b, .ptip-pop strong { color: var(--text); }
+.ptip-pop a { color: var(--accent); }
+@keyframes ptip-in { from { opacity: 0; transform: translateY(-2px); } to { opacity: 1; transform: none; } }
+@media (prefers-reduced-motion: reduce) { .ptip-pop { animation: none; } }

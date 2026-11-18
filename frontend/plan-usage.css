@@ -1,0 +1,28 @@
+/* Agents → Models → a connected model → Usage (plan-usage.js) */
+.pu { display: grid; gap: 8px; padding: 12px 14px; border: 1px solid var(--line); border-radius: 12px; background: var(--surface); min-width: 0; }
+.pu p { margin: 0; }
+.pu-head { display: flex; align-items: center; gap: 10px; min-width: 0; }
+.pu-head .faint { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.pu-title { font-size: 11px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; color: var(--text-2); flex: none; }
+.pu-again { margin-left: auto; width: 28px; height: 28px; border: 0; background: none; flex: none; }
+.pu-again .icon { width: 14px; height: 14px; }
+.pu-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); gap: 12px 16px; }
+.pu-tile { display: flex; align-items: center; gap: 10px; min-width: 0; }
+.pu-txt { display: grid; gap: 1px; min-width: 0; font-size: 13px; }
+.pu-txt > * { overflow-wrap: anywhere; }
+.pu-txt strong { font-weight: 600; }
+.pu-txt small { font-size: 11.5px; }
+.pu-none .pu-txt b { color: var(--text-2); }
+.pu-ring { position: relative; width: 44px; height: 44px; flex: none; display: inline-grid; place-items: center; }
+.pu-ring svg { position: absolute; inset: 0; width: 100%; height: 100%; transform: rotate(-90deg); }
+.pu-ring circle { fill: none; stroke-width: 3.2; }
+.pu-track { stroke: var(--surface-3); }
+.pu-bar { stroke-linecap: round; transition: stroke-dasharray .4s; }
+.pu-ok .pu-bar { stroke: var(--accent); }
+.pu-warn .pu-bar { stroke: var(--warn); }
+.pu-crit .pu-bar { stroke: var(--crit); }
+.pu-na .pu-bar { stroke: none; }
+.pu-ring b { font-size: 11px; font-weight: 700; font-variant-numeric: tabular-nums; }
+.pu-na b { color: var(--text-3); }
+.pu-left { white-space: nowrap; }
+.pu-foot .linkbtn { font-size: inherit; }

@@ -1,0 +1,21 @@
+# AXoR 5.1 Tempo: receives AXoR's OpenTelemetry traces over OTLP/HTTP (:4318), keeps them 7 days on local disk.
+server:
+  http_listen_port: 3200
+distributor:
+  receivers:
+    otlp:
+      protocols:
+        http:
+          endpoint: 0.0.0.0:4318
+ingester:
+  max_block_duration: 5m
+compactor:
+  compaction:
+    block_retention: 168h
+storage:
+  trace:
+    backend: local
+    wal:
+      path: /var/tempo/wal
+    local:
+      path: /var/tempo/blocks

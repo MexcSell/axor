@@ -1,0 +1,21 @@
+/* Workflow → GitHub tab (mining-github.js) */
+.mgh { display: grid; gap: 12px; container-type: inline-size; }
+.mgh-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; }
+.mgh-head h3 { display: flex; align-items: center; gap: 6px; margin: 0 0 2px; font-size: 15px; }
+.mgh-head p { margin: 0; max-width: 78ch; }
+.mgh-head .hq-chip { flex: none; }
+.mgh-st { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; margin: 8px 0 0; }
+.mgh-form { display: grid; gap: 10px; margin-top: 10px; }
+.mgh-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+.mgh-wide { grid-column: 1 / -1; }
+.mgh-grid textarea { width: 100%; resize: vertical; }
+.mgh-mode { border: 1px solid var(--border); border-radius: 8px; padding: 8px 10px; margin: 0; display: grid; gap: 6px; min-width: 0; }
+.mgh-mode legend { font-size: 12px; color: var(--text-2); padding: 0 4px; }
+.mgh-mode label, .mgh-check { display: flex; align-items: flex-start; gap: 8px; font-size: 13px; }
+.mgh-mode input, .mgh-check input { margin-top: 3px; flex: none; }
+.mgh-form .row { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.mgh-list li { align-items: flex-start; }
+.mgh-t { display: grid; gap: 2px; min-width: 0; flex: 1 1 260px; overflow-wrap: anywhere; }
+.mgh-q { white-space: pre-wrap; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+.mgh .mh-warn { display: flex; gap: 6px; align-items: flex-start; color: var(--warn, #b45309); margin: 0; }
+@container (max-width: 640px) { .mgh-grid { grid-template-columns: minmax(0, 1fr); } .mgh-head { flex-direction: column; } }

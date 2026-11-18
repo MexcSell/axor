@@ -1,0 +1,141 @@
+/* Model routing and journeys in the Control Hub (control-journey.js). Prefix ctlj-. Theme tokens only, so light and dark follow. */
+.ctlj { display: grid; gap: 14px; min-width: 0; }
+.ctlj-wait { display: flex; gap: 8px; align-items: center; padding: 18px 0; }
+.ctlj-wait .icon { width: 16px; height: 16px; animation: ctlj-spin 1.2s linear infinite; }
+@keyframes ctlj-spin { to { transform: rotate(360deg); } }
+@media (prefers-reduced-motion: reduce) { .ctlj-wait .icon, .ctlj-step.now.s-current .ctlj-node { animation: none; } }
+.ctlj-right { margin-left: auto; display: inline-flex; gap: 6px; align-items: center; }
+.ctlj-model { font-size: 12px; padding: 1px 6px; border-radius: 6px; background: var(--surface-2); color: var(--text); white-space: nowrap; max-width: 220px; overflow: hidden; text-overflow: ellipsis; display: inline-block; vertical-align: middle; }
+.ctlj-sub { display: block; color: var(--text-2); font-size: 11.5px; margin-top: 2px; }
+.ctlj-why { display: block; color: var(--text-2); font-size: 11.5px; margin-top: 3px; max-width: 260px; }
+.ctlj-reason { color: var(--text-2); font-size: 12.5px; min-width: 220px; max-width: 420px; }
+.ctlj-off td { color: var(--text-2); }
+.ctlj .ctl-table td .badge, .ctlj-dec .badge { vertical-align: middle; }
+
+/* tiles */
+.ctlj-tiles { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 10px; }
+.ctlj-tile { display: flex; gap: 10px; align-items: flex-start; padding: 12px 14px; border: 1px solid var(--line); border-radius: 12px; background: var(--surface); min-width: 0; }
+.ctlj-tile > .icon { width: 18px; height: 18px; color: var(--accent); flex: none; margin-top: 2px; }
+.ctlj-tile.warn > .icon { color: var(--warn); }
+.ctlj-tile.warn { border-color: color-mix(in srgb, var(--warn) 45%, var(--line)); }
+.ctlj-tile span { display: grid; gap: 1px; min-width: 0; }
+.ctlj-tile small { font-size: 11.5px; color: var(--text-2); text-transform: uppercase; letter-spacing: .04em; font-weight: 600; }
+.ctlj-tile b { font-size: 20px; font-weight: 650; }
+.ctlj-tile.cap b { text-transform: capitalize; }
+.ctlj-tile em { font-style: normal; font-size: 12px; color: var(--text-2); overflow-wrap: anywhere; }
+@media (max-width: 900px) { .ctlj-tiles { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+.ctlj-alert { border-color: color-mix(in srgb, var(--warn) 50%, var(--line)); }
+.ctlj-alert h3 .icon { color: var(--warn) !important; }
+
+/* decisions */
+.ctlj-recent { display: grid; gap: 4px; }
+.ctlj-dec { border: 1px solid var(--line); border-radius: 10px; background: var(--surface); }
+.ctlj-dec > summary { display: flex; gap: 10px; align-items: center; justify-content: space-between; flex-wrap: wrap; padding: 8px 10px; cursor: pointer; list-style: none; }
+.ctlj-dec > summary::-webkit-details-marker { display: none; }
+.ctlj-dec > summary:hover { background: var(--surface-2); border-radius: 10px; }
+.ctlj-dec[open] > summary { border-bottom: 1px solid var(--line); border-radius: 10px 10px 0 0; }
+.ctlj-dec-main { display: grid; gap: 1px; min-width: 0; flex: 1 1 220px; }
+.ctlj-dec-main b { font-weight: 600; font-size: 13.5px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.ctlj-dec-main small { color: var(--text-2); font-size: 12px; }
+.ctlj-dec-side { display: inline-flex; gap: 6px; align-items: center; flex-wrap: wrap; }
+.ctlj-decbody { padding: 10px 12px; display: grid; gap: 8px; font-size: 13px; }
+.ctlj-decbody p { margin: 0; }
+.ctlj-cands tr.ctlj-win td { background: color-mix(in srgb, var(--good) 8%, transparent); }
+
+/* the Journeys list */
+.ctlj-items { list-style: none; margin: 0; padding: 0; display: grid; gap: 6px; }
+.ctlj-item { width: 100%; display: grid; grid-template-columns: minmax(0, 1.4fr) 140px minmax(0, 1fr); gap: 14px; align-items: center; text-align: left; padding: 10px 12px;
+  border: 1px solid var(--line); border-radius: 10px; background: var(--surface); color: var(--text); font: inherit; cursor: pointer; }
+.ctlj-item:hover { border-color: color-mix(in srgb, var(--accent) 45%, var(--line)); background: var(--surface-2); }
+.ctlj-item:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.ctlj-item-main, .ctlj-item-now { display: grid; gap: 2px; min-width: 0; }
+.ctlj-item-main b { font-weight: 600; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.ctlj-item small { color: var(--text-2); font-size: 12px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.ctlj-now-l { font-weight: 600; font-size: 13px; display: inline-flex; align-items: center; gap: 6px; }
+.ctlj-now-l::before { content: ""; width: 8px; height: 8px; border-radius: 50%; background: var(--line); flex: none; }
+.ctlj-now-l.s-current::before { background: var(--accent); }
+.ctlj-now-l.s-waiting::before { background: var(--warn); }
+.ctlj-now-l.s-failed::before { background: var(--crit); }
+.ctlj-now-l.s-done::before { background: var(--good); }
+.ctlj-mini { display: inline-flex; flex-wrap: wrap; gap: 3px; align-items: center; }
+.ctlj-d { width: 10px; height: 10px; border-radius: 50%; background: var(--surface-2); border: 1px solid var(--line); }
+.ctlj-d.s-done { background: var(--good); border-color: var(--good); }
+.ctlj-d.s-current { background: var(--accent); border-color: var(--accent); box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 22%, transparent); }
+.ctlj-d.s-waiting { background: var(--warn); border-color: var(--warn); }
+.ctlj-d.s-failed { background: var(--crit); border-color: var(--crit); }
+.ctlj-d.s-skipped { background: none; border-style: dashed; }
+@media (max-width: 720px) {
+  .ctlj-item { grid-template-columns: minmax(0, 1fr) auto; }
+  .ctlj-mini { max-width: 120px; justify-content: flex-end; }
+  .ctlj-item-now { grid-column: 1 / -1; }
+}
+
+/* one journey: the now bar, the steps, the step's detail */
+.ctlj-j { display: grid; gap: 12px; min-width: 0; }
+.ctlj-nowbar { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; padding: 10px 12px; border-radius: 10px; border: 1px solid var(--line);
+  background: color-mix(in srgb, var(--accent) 6%, var(--surface)); font-size: 13.5px; }
+.ctlj-nowbar > .icon { width: 18px; height: 18px; color: var(--accent); flex: none; }
+.ctlj-nowbar span { flex: 1 1 240px; min-width: 0; }
+.ctlj-nowbar small { display: block; color: var(--text-2); font-size: 12px; margin-top: 1px; }
+.ctlj-nowbar em { font-style: normal; font-size: 12px; color: var(--text-2); white-space: nowrap; }
+.ctlj-nowbar.warn { background: color-mix(in srgb, var(--warn) 10%, var(--surface)); border-color: color-mix(in srgb, var(--warn) 45%, var(--line)); }
+.ctlj-nowbar.warn > .icon { color: var(--warn); }
+.ctlj-nowbar.crit { background: color-mix(in srgb, var(--crit) 9%, var(--surface)); border-color: color-mix(in srgb, var(--crit) 45%, var(--line)); }
+.ctlj-nowbar.crit > .icon { color: var(--crit); }
+.ctlj-nowbar.done { background: color-mix(in srgb, var(--good) 8%, var(--surface)); }
+.ctlj-nowbar.done > .icon { color: var(--good); }
+
+.ctlj-steps { list-style: none; margin: 0; padding: 4px 0 2px; display: flex; min-width: 0; }
+.ctlj-step { flex: 1 1 0; min-width: 0; position: relative; }
+.ctlj-step::before { content: ""; position: absolute; top: 15px; left: calc(-50% + 16px); right: calc(50% + 16px); height: 2px; background: var(--line); }
+.ctlj-step:first-child::before { display: none; }
+.ctlj-step.s-done::before, .ctlj-step.s-current::before, .ctlj-step.s-waiting::before, .ctlj-step.s-failed::before { background: var(--good); }
+.ctlj-step.s-skipped::before { background: none; border-top: 2px dashed var(--line); height: 0; }
+.ctlj-step > button { width: 100%; display: grid; justify-items: center; gap: 5px; padding: 0 2px 4px; border: 0; background: none; color: var(--text); font: inherit; cursor: pointer; border-radius: 8px; }
+.ctlj-step > button:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; }
+.ctlj-node { position: relative; z-index: 1; width: 32px; height: 32px; border-radius: 50%; display: grid; place-items: center; border: 2px solid var(--line); background: var(--surface); color: var(--text-2); font-size: 12px; font-weight: 650; }
+.ctlj-node i { font-style: normal; }
+.ctlj-node .icon { width: 15px; height: 15px; }
+.ctlj-step.s-done .ctlj-node { background: var(--good); border-color: var(--good); color: #fff; }
+.ctlj-step.s-current .ctlj-node { border-color: var(--accent); color: var(--accent); background: color-mix(in srgb, var(--accent) 12%, var(--surface)); }
+.ctlj-step.now.s-current .ctlj-node { animation: ctlj-pulse 1.8s ease-in-out infinite; }
+@keyframes ctlj-pulse { 0%, 100% { box-shadow: 0 0 0 0 color-mix(in srgb, var(--accent) 35%, transparent); } 50% { box-shadow: 0 0 0 6px color-mix(in srgb, var(--accent) 0%, transparent); } }
+.ctlj-step.s-waiting .ctlj-node { border-color: var(--warn); color: var(--warn); background: color-mix(in srgb, var(--warn) 14%, var(--surface)); }
+.ctlj-step.s-failed .ctlj-node { border-color: var(--crit); color: var(--crit); background: color-mix(in srgb, var(--crit) 12%, var(--surface)); }
+.ctlj-step.s-skipped .ctlj-node { border-style: dashed; opacity: .7; }
+.ctlj-step.on .ctlj-node { outline: 2px solid color-mix(in srgb, var(--accent) 55%, transparent); outline-offset: 3px; }
+.ctlj-lab { display: grid; gap: 0; justify-items: center; text-align: center; min-width: 0; max-width: 100%; }
+.ctlj-lab b { font-size: 12.5px; font-weight: 600; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 100%; }
+.ctlj-lab small { font-size: 11px; color: var(--text-2); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 100%; }
+.ctlj-step.s-pending .ctlj-lab b, .ctlj-step.s-skipped .ctlj-lab b { color: var(--text-2); font-weight: 500; }
+.ctlj-step.on .ctlj-lab b { color: var(--accent); }
+/* narrow (a phone, or a dialog on one): the steps run down the page */
+@media (max-width: 640px) {
+  .ctlj-steps { flex-direction: column; gap: 0; }
+  .ctlj-step > button { grid-template-columns: 32px minmax(0, 1fr); justify-items: start; align-items: center; gap: 10px; padding: 3px 4px; }
+  .ctlj-lab { justify-items: start; text-align: left; grid-auto-flow: column; gap: 8px; align-items: baseline; }
+  .ctlj-step::before { top: auto; bottom: calc(50% + 16px); height: calc(100% - 32px); left: 19px; right: auto; width: 2px; }
+  .ctlj-step.s-skipped::before { border-top: 0; border-left: 2px dashed var(--line); width: 0; height: calc(100% - 32px); }
+}
+
+.ctlj-detail { border: 1px solid var(--line); border-radius: 12px; padding: 12px 14px; display: grid; gap: 8px; background: var(--surface); min-width: 0; }
+.ctlj-dh { display: flex; gap: 8px 10px; align-items: center; flex-wrap: wrap; }
+.ctlj-dh h4 { margin: 0; font-size: 15px; }
+.ctlj-dh .faint { display: inline-flex; gap: 4px; align-items: center; }
+.ctlj-dh .faint .icon { width: 13px; height: 13px; }
+.ctlj-detail p { margin: 0; font-size: 13.5px; overflow-wrap: anywhere; }
+.ctlj-detail h5 { margin: 6px 0 0; font-size: 12.5px; text-transform: uppercase; letter-spacing: .04em; color: var(--text-2); }
+.ctlj-note { display: flex; gap: 6px; align-items: flex-start; padding: 8px 10px; border-radius: 8px; background: color-mix(in srgb, var(--warn) 10%, transparent); }
+.ctlj-note .icon { width: 15px; height: 15px; flex: none; margin-top: 2px; color: var(--warn); }
+.ctlj-log { list-style: none; margin: 0; padding: 0; display: grid; gap: 4px; font-size: 13px; }
+.ctlj-log li { display: grid; grid-template-columns: 74px minmax(0, 1fr) auto; gap: 8px; align-items: baseline; }
+.ctlj-log time { color: var(--text-2); font-size: 11.5px; white-space: nowrap; }
+.ctlj-log span { overflow-wrap: anywhere; }
+.ctlj-err { display: block; color: var(--crit); font-size: 12px; }
+
+/* in the task dialog, and its own dialog */
+.ctlj-slot { margin: 6px 0 10px; }
+dialog.modal.ctlj-dlg { width: min(940px, calc(100vw - 32px)); }
+.ctlj-dlg > .ctl-h { margin-bottom: 12px; }
+.ctlj-dlg > .ctl-h h3 { min-width: 0; flex: 1 1 auto; }
+.ctlj-dt { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }

@@ -1,0 +1,67 @@
+/* General Manager chat (gm-chat.js, D-039): the chat button in the top bar and its floating window. Prefix gm-. */
+.gm-btn { position: relative; }
+.gm-btn.on { background: var(--accent-soft); color: var(--accent); border-color: color-mix(in srgb, var(--accent) 40%, var(--line)); }
+.gm-dot { position: absolute; top: 4px; right: 4px; width: 9px; height: 9px; border-radius: 50%; background: var(--warn); box-shadow: 0 0 0 2px var(--surface); }
+.gm-chat { position: fixed; top: 62px; right: 14px; z-index: 60; width: min(420px, calc(100vw - 28px)); height: min(640px, calc(100vh - 80px));
+  display: grid; grid-template-rows: auto minmax(0, 1fr) auto; background: var(--bg); color: var(--text); border: 1px solid var(--line);
+  border-radius: 14px; box-shadow: var(--shadow), 0 18px 48px rgba(0, 0, 0, .18); overflow: hidden; }
+.gm-chat[hidden] { display: none; }
+.gm-chat.drop { outline: 2px dashed var(--accent); outline-offset: -6px; }
+.gm-head { display: flex; align-items: center; gap: 8px; padding: 10px 10px 10px 12px; border-bottom: 1px solid var(--line); background: var(--surface); }
+.gm-who { display: grid; flex: 1; min-width: 0; }
+.gm-who b { font-size: 14px; } .gm-who small { font-size: 12px; color: var(--text-3); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.gm-head .iconbtn.sm { width: 30px; height: 30px; }
+.gm-av { display: inline-grid; place-items: center; flex: none; width: 34px; height: 34px; border-radius: 50%; font: 700 12px/1 var(--mono);
+  color: #fff; background: linear-gradient(135deg, var(--accent), color-mix(in srgb, var(--accent) 55%, #000)); letter-spacing: .02em; }
+.gm-av.sm { width: 26px; height: 26px; font-size: 10px; }
+.gm-log { overflow-y: auto; padding: 14px 12px; display: flex; flex-direction: column; gap: 10px; }
+.gm-msg { display: flex; gap: 8px; align-items: flex-end; }
+.gm-msg.me { justify-content: flex-end; }
+.gm-bub { max-width: 86%; padding: 8px 11px; border-radius: 12px; background: var(--surface-2); font-size: 13.5px; line-height: 1.45; overflow-wrap: anywhere; }
+.gm-msg.me .gm-bub { background: var(--accent-soft); border-bottom-right-radius: 4px; }
+.gm-msg.gm .gm-bub { border-bottom-left-radius: 4px; }
+.gm-msg.err .gm-bub { background: var(--crit-soft); }
+.gm-bub p { margin: 0 0 6px; } .gm-bub p:last-of-type { margin-bottom: 4px; }
+.gm-bub > .btn { margin-top: 6px; }
+.gm-note { font-size: 12px; color: var(--text-2); }
+.gm-at { display: block; font-size: 11px; color: var(--text-3); text-align: right; }
+.gm-typing span { animation: gm-blink 1.2s infinite; } .gm-typing span:nth-child(2) { animation-delay: .2s; } .gm-typing span:nth-child(3) { animation-delay: .4s; }
+@keyframes gm-blink { 0%, 100% { opacity: .2; } 50% { opacity: 1; } }
+@media (prefers-reduced-motion: reduce) { .gm-typing span { animation: none; } }
+.gm-chips { display: flex; flex-wrap: wrap; gap: 4px; margin: 4px 0; }
+.gm-chip { display: inline-flex; align-items: center; gap: 5px; max-width: 100%; padding: 3px 7px; border-radius: 8px; border: 1px solid var(--line);
+  background: var(--surface); font-size: 12px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.gm-chip .icon { width: 13px; height: 13px; flex: none; }
+.gm-chip img { width: 22px; height: 22px; object-fit: cover; border-radius: 4px; }
+.gm-chip button { border: 0; background: none; padding: 0; cursor: pointer; color: var(--text-3); display: inline-grid; }
+.gm-chip button:hover { color: var(--crit); }
+.gm-card { margin: 6px 0 2px; padding: 9px 10px; border: 1px solid var(--line); border-radius: 10px; background: var(--surface); display: grid; gap: 6px; }
+.gm-card-top { display: flex; align-items: center; gap: 8px; min-width: 0; }
+.gm-card-top b { font-size: 13px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.gm-card .btn { justify-self: start; gap: 5px; }
+.gm-doing { margin: 0; font-size: 12.5px; color: var(--text-2); }
+.gm-doing.warn { color: var(--warn); } .gm-doing.bad { color: var(--crit); }
+.gm-st { flex: none; padding: 2px 7px; border-radius: 999px; font-size: 11px; font-weight: 600; background: var(--surface-2); color: var(--text-2); }
+.gm-st.run { background: var(--accent-soft); color: var(--accent); }
+.gm-st.wait, .gm-st.warn { background: var(--warn-soft); color: var(--warn); }
+.gm-st.ok { background: var(--good-soft); color: var(--good); }
+.gm-st.bad { background: var(--crit-soft); color: var(--crit); }
+.gm-answer { display: grid; gap: 6px; }
+.gm-answer label { display: grid; gap: 4px; font-size: 12.5px; }
+.gm-answer textarea, .gm-row textarea { width: 100%; resize: vertical; font: inherit; font-size: 13px; padding: 7px 9px; border-radius: 8px;
+  border: 1px solid var(--line); background: var(--surface); color: var(--text); box-sizing: border-box; }
+.gm-compose { border-top: 1px solid var(--line); padding: 8px 10px 10px; background: var(--surface); }
+.gm-files { display: flex; flex-wrap: wrap; gap: 4px; }
+.gm-files:not(:empty) { margin-bottom: 6px; }
+.gm-row { display: flex; align-items: flex-end; gap: 6px; }
+.gm-row textarea { flex: 1; min-height: 40px; max-height: 160px; resize: none; }
+.gm-row .iconbtn.sm { width: 34px; height: 34px; flex: none; }
+.gm-send { height: 34px; padding: 0 12px; }
+@media (max-width: 760px) {
+  .gm-chat { top: 56px; right: 0; left: 0; width: 100vw; height: calc(100vh - 56px); height: calc(100dvh - 56px); border-radius: 0; border-left: 0; border-right: 0; }
+}
+/* phones: the extra button must not push the account menu off the bar (it fit with 2 px to spare before): tighter gaps and side padding */
+@media (max-width: 480px) {
+  .top-right:has(#gm-btn) { gap: 3px; }
+  header.top:has(#gm-btn) { padding-left: 10px; padding-right: 10px; gap: 6px; }
+}

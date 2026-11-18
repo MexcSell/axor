@@ -1,0 +1,172 @@
+/* Mining HQ → Command center (mining-command.js): the operating loop strip, section tabs, the dashboard grid, a competition's
+   tiles, the Performance Lab's charts, the experiment board and dialog, approvals and checks. Uses mining.css's tones. */
+.mh-camp-cmd { font-weight: 650; }
+.mh-camp-cmd .icon { width: 14px; height: 14px; color: var(--accent); }
+.mcx { display: grid; gap: 14px; min-width: 0; }
+.mcx-body { display: grid; gap: 14px; min-width: 0; }
+
+/* the loop: subnet → … → rewards; the current section lights up */
+.mcx-flow { display: flex; flex-wrap: wrap; gap: 2px 0; align-items: center; font-size: 12px; color: var(--text-3); }
+.mcx-flow button { display: inline-flex; align-items: center; gap: 2px; border: 0; background: none; padding: 3px 4px; color: inherit; font: inherit; cursor: pointer; border-radius: 6px; }
+.mcx-flow button .icon { width: 11px; height: 11px; opacity: .55; }
+.mcx-flow button span { padding: 2px 7px; border-radius: 999px; }
+.mcx-flow button:hover span { color: var(--text); background: var(--surface-2); }
+.mcx-flow button.on span { color: var(--accent); background: var(--accent-soft); font-weight: 650; }
+.mcx-tabs { flex-wrap: wrap; max-width: 100%; }
+.mcx-tabs button { display: inline-flex; align-items: center; gap: 5px; }
+.mcx-tabs button .icon { width: 13px; height: 13px; }
+
+.mcx-picker { display: flex; gap: 8px; flex-wrap: wrap; }
+.mcx-empty h3 { display: flex; gap: 8px; align-items: center; margin: 0 0 6px; font-size: 15px; }
+.mcx-empty p { color: var(--text-2); margin: 0; }
+.mcx-panel { min-width: 0; }
+.mcx-panel > .hq-h, .mcx-tile > .hq-h, .mcx-chart > .hq-h { margin: 0 -16px 12px; padding: 0 16px 10px; border-bottom: 1px solid var(--line); align-items: center; }
+.mcx-panel > .hq-h .linkbtn { margin-left: auto; font-size: 12.5px; }
+.mcx-panel > .hq-h .faint { min-width: 0; }
+.mcx-h2 { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; margin: 0 0 4px; font-size: 18px; }
+.mcx-h2 .faint { font-size: 13px; font-weight: 500; }
+.mcx-perf-top { display: flex; gap: 12px; align-items: flex-end; justify-content: space-between; flex-wrap: wrap; }
+.mcx-perf-top > div:first-child { flex: 1 1 360px; min-width: 0; }
+.mcx-perf-top p { margin: 0; max-width: 760px; }
+
+/* dashboard */
+.mcx-grid { display: grid; grid-template-columns: minmax(0, 2fr) minmax(280px, 1fr); gap: 14px; align-items: start; }
+.mcx-side { display: grid; gap: 14px; min-width: 0; }
+.mcx-table { font-size: 12.5px; }
+.mcx-table td { vertical-align: middle; }
+.tablewrap.flat { box-shadow: none; max-height: none; }
+.mcx-up { color: var(--good); font-size: 10px; } .mcx-down { color: var(--crit); font-size: 10px; }
+td.mcx-down { color: var(--crit); }
+.mcx-pips { display: inline-flex; gap: 2px; }
+.mcx-pips i { display: inline-grid; place-items: center; width: 14px; height: 14px; border-radius: 4px; background: var(--surface-3); font: 600 9px/1 var(--mono); font-style: normal; color: var(--text-3); }
+.mcx-pips i.on { background: var(--accent-soft); color: var(--accent); }
+.mcx-checks, .mcx-queue, .mcx-mini, .mcx-log, .mcx-apprs { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; }
+.mcx-checks li { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; gap: 10px; align-items: start; padding: 8px 10px; border-radius: 10px; background: var(--surface-2); }
+.mcx-checks li > .icon { width: 15px; height: 15px; margin-top: 2px; }
+.mcx-checks li.t-bad > .icon { color: var(--crit); } .mcx-checks li.t-warn > .icon { color: var(--warn); }
+.mcx-checks li.t-bad { background: color-mix(in srgb, var(--crit) 8%, var(--surface)); }
+.mcx-checks li div, .mcx-queue li div { display: grid; gap: 2px; min-width: 0; }
+.mcx-checks.big li { padding: 12px 14px; }
+.mcx-queue li { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; gap: 10px; align-items: center; }
+.mcx-queue li > span .icon { width: 15px; height: 15px; color: var(--text-3); }
+.mcx-mini { gap: 5px; font-size: 13px; }
+ol.mcx-mini { list-style: decimal; padding-left: 18px; }
+
+/* a competition's HQ */
+.mcx-comp-head h2 { margin: 6px 0 8px; font-size: 20px; display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+.mcx-tiles { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; }
+.mcx-tile { display: flex; flex-direction: column; gap: 8px; min-width: 0; }
+.mcx-tile > p { margin: 0; color: var(--text-2); font-size: 13px; line-height: 1.5; }
+.mcx-tile .kv { grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); }
+.mcx-tile-act { margin-top: auto; padding-top: 6px; }
+
+/* the Performance Lab */
+.mcx-charts { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; }
+.mcx-svg { min-width: 0; }
+.mcx-svg svg { display: block; overflow: visible; }
+.mcx-svg .ax { stroke: var(--line); }
+.mcx-svg .ln { fill: none; stroke: var(--accent); stroke-width: 2; stroke-linejoin: round; stroke-linecap: round; }
+.mcx-svg circle { fill: var(--surface); stroke: var(--accent); stroke-width: 1.5; }
+.mcx-svg .tk { fill: var(--text-3); font-size: 10px; font-family: var(--mono); }
+.mcx-spark { min-width: 150px; }
+.mcx-spark svg .tk { display: none; }
+.mcx-spark svg .ln { fill: none; stroke: var(--accent); stroke-width: 1.6; } .mcx-spark svg circle { display: none; }
+.mcx-spark svg .ax { stroke: none; }
+.mcx-connect h3 { display: flex; gap: 8px; align-items: center; margin: 0 0 6px; font-size: 15px; }
+.mcx-connect p, .mcx-connect ol { color: var(--text-2); font-size: 13px; margin: 0 0 8px; }
+.mcx-pre { margin: 6px 0; padding: 10px 12px; border-radius: 10px; background: var(--surface-2); border: 1px solid var(--line); font: 12px/1.5 var(--mono);
+  white-space: pre-wrap; word-break: break-all; color: var(--text); max-height: 260px; overflow: auto; }
+.mcx-raw summary { cursor: pointer; display: flex; gap: 8px; align-items: center; font-weight: 600; }
+.mcx-raw .tablewrap { margin-top: 10px; }
+tr.mcx-prim td { background: color-mix(in srgb, var(--accent) 6%, var(--surface)); }
+tr.mcx-bad td { background: color-mix(in srgb, var(--crit) 7%, var(--surface)); }
+
+/* the Experiment Center's board */
+.mcx-board { display: grid; grid-template-columns: repeat(8, minmax(170px, 1fr)); gap: 10px; overflow-x: auto; padding-bottom: 6px; }
+.mcx-col { display: grid; align-content: start; gap: 8px; min-width: 0; padding: 10px; border-radius: 12px; background: var(--surface-2); border: 1px solid var(--line); }
+.mcx-col h4 { display: flex; gap: 6px; align-items: center; margin: 0; font-size: 12.5px; }
+.mcx-col h4 .faint { margin-left: auto; font-family: var(--mono); }
+.mcx-n { display: inline-grid; place-items: center; width: 18px; height: 18px; border-radius: 50%; background: var(--surface); border: 1px solid var(--line); font: 600 10px/1 var(--mono); color: var(--text-3); }
+.mcx-card { display: grid; gap: 4px; text-align: left; padding: 9px 10px; border-radius: 10px; border: 1px solid var(--line); background: var(--surface); font: inherit; color: var(--text); cursor: pointer; box-shadow: var(--shadow); }
+.mcx-card:hover { border-color: var(--accent); }
+.mcx-card b { font-size: 13px; line-height: 1.3; }
+.mcx-card-meta { display: flex; gap: 4px; flex-wrap: wrap; font-size: 11.5px; color: var(--text-3); align-items: center; }
+.mcx-none { margin: 0; text-align: center; }
+
+/* dialogs */
+dialog.modal.mcx-dlg.mcx-small { width: min(620px, calc(100vw - 32px)); }
+.mcx-exp { grid-template-columns: minmax(0, 1fr); }  /* a max-content table mustn't widen the dialog */
+.mcx-exp > *, .mcx-stage > * { min-width: 0; }
+.mcx-exp h3 { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; margin: 2px 0 4px; font-size: 18px; padding-right: 30px; }
+.mcx-steps { list-style: none; margin: 4px 0 8px; padding: 0; display: flex; flex-wrap: wrap; gap: 4px; }
+.mcx-steps li { display: inline-flex; gap: 5px; align-items: center; padding: 3px 9px 3px 4px; border-radius: 999px; background: var(--surface-2); font-size: 12px; color: var(--text-3); }
+.mcx-steps li i { display: inline-grid; place-items: center; width: 16px; height: 16px; border-radius: 50%; border: 1px solid var(--line); font: 600 9.5px/1 var(--mono); font-style: normal; }
+.mcx-steps li .icon { width: 14px; height: 14px; padding: 2px; border-radius: 50%; background: var(--good); color: #fff; }
+.mcx-steps li.done { color: var(--text-2); }
+.mcx-steps li.now { background: var(--accent-soft); color: var(--accent); font-weight: 650; }
+.mcx-steps li.now i { border-color: var(--accent); }
+.mcx-stage { border: 1px solid var(--line); border-radius: 12px; padding: 0 14px; background: var(--surface); }
+.mcx-stage > summary { cursor: pointer; padding: 10px 0; display: flex; gap: 8px; align-items: center; font-size: 13.5px; }
+.mcx-stage > summary .icon { width: 12px; height: 12px; }
+.mcx-stage[open] { padding-bottom: 14px; }
+.mcx-stage[data-later] > summary { color: var(--text-3); }
+.mcx-form { display: grid; gap: 10px; }
+.mcx-form.row { display: flex; align-items: center; }
+.mcx-form textarea, .mcx-form select, .mcx-form input:not([type=checkbox]) { width: 100%; padding: 8px 10px; border-radius: 9px; border: 1px solid var(--line); background: var(--bg); color: var(--text); font: inherit; font-size: 13.5px; font-weight: 400; }
+.mcx-form.row > input, .mcx-form.row > select, .mcx-form .row > input, .mcx-form .row > select { width: auto; flex: 1 1 160px; min-width: 0; }
+.mcx-form textarea { resize: vertical; }
+.mcx-art { grid-template-columns: repeat(5, minmax(0, 1fr)); align-items: end; }
+.mcx-art > .row { grid-column: 1 / -1; }
+.mcx-sides { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; align-items: start; }
+.mcx-sides > .mh-card h4 { display: flex; gap: 6px; align-items: center; margin: 0 0 10px; font-size: 13.5px; }
+.mcx-runs { padding: 10px 12px; border-radius: 10px; background: var(--surface-2); min-width: 0; }
+.mcx-runs h4 { margin: 0 0 6px; font-size: 13px; }
+.mcx-runs ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 4px; }
+.mcx-runs li { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; gap: 8px; align-items: center; font-size: 12.5px; }
+.mcx-runs li .faint { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.mcx-mgrid { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 8px; }
+.mcx-mgrid .in { font-size: 11.5px; gap: 3px; }
+.mcx-mgrid2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.mcx-wide { grid-column: 1 / -1; }
+.mcx-rule { display: flex; gap: 8px; align-items: baseline; flex-wrap: wrap; margin: 2px 0; }
+.mcx-review { display: grid; gap: 8px; }
+.mcx-review h4 { margin: 4px 0 0; font-size: 12.5px; color: var(--text-2); }
+.mcx-review ul { margin: 0; padding-left: 18px; font-size: 13px; }
+.mcx-review p { margin: 0; font-size: 13px; }
+.mcx-log { gap: 4px; font-size: 12.5px; max-height: 280px; overflow: auto; }
+.mcx-logbox { margin: 0 0 8px; }
+.mcx-inline { display: flex; gap: 4px; align-items: center; }
+.mcx-inline input { width: 90px; padding: 4px 6px; border-radius: 7px; border: 1px solid var(--line); background: var(--bg); color: var(--text); font: inherit; font-size: 12.5px; }
+.mcx-costform { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px; }
+.mcx-costform > * { flex: 1 1 120px; width: auto !important; }
+.mcx-costform > button { flex: 0 0 auto; }
+
+/* approvals */
+.mcx-appr { display: grid; gap: 8px; padding: 14px 16px; }
+.mcx-appr-h { display: grid; grid-template-columns: auto minmax(0, 1fr) auto auto; gap: 10px; align-items: start; }
+.mcx-appr-h > .icon { width: 17px; height: 17px; margin-top: 2px; color: var(--accent); }
+.mcx-appr-h > div { display: grid; gap: 2px; min-width: 0; }
+.mcx-appr p { margin: 0; color: var(--text-2); white-space: pre-line; }
+.mcx-dl { display: grid; grid-template-columns: max-content minmax(0, 1fr); gap: 4px 12px; margin: 0; font-size: 12.5px; }
+.mcx-dl dt { color: var(--text-3); }
+.mcx-dl dd { margin: 0; min-width: 0; overflow-wrap: anywhere; }
+.mcx-filters > * { flex: 1 1 150px; min-width: 0; padding: 7px 10px; border-radius: 9px; border: 1px solid var(--line); background: var(--bg); color: var(--text); font: inherit; font-size: 13px; }
+.mcx-filters > input { flex: 2 1 220px; }
+.mcx-newkey { display: grid; gap: 6px; padding: 10px 12px; border-radius: 10px; border: 1px solid color-mix(in srgb, var(--warn) 40%, var(--line)); background: color-mix(in srgb, var(--warn) 8%, var(--surface)); margin: 8px 0; }
+.mcx-newkey b { display: flex; gap: 6px; align-items: center; }
+.mcx-newkey .btn { justify-self: start; }
+
+@media (max-width: 1180px) {
+  .mcx-tiles { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .mcx-grid { grid-template-columns: minmax(0, 1fr); }
+  .mcx-art { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+}
+@media (max-width: 760px) {
+  .mcx-tiles, .mcx-charts, .mcx-sides, .mcx-mgrid2 { grid-template-columns: minmax(0, 1fr); }
+  .mcx-art { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .mcx-flow { display: none; }
+  .mcx-appr-h { grid-template-columns: auto minmax(0, 1fr); }
+  .mcx-appr-h > .hq-chip { grid-column: 2; justify-self: start; }
+  .mcx-board { grid-template-columns: repeat(8, 78vw); scroll-snap-type: x mandatory; }
+  .mcx-col { scroll-snap-align: start; }
+}

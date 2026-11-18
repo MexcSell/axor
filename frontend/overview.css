@@ -1,0 +1,117 @@
+/* My workspace → Overview (overview.js) */
+.ws-ov { display: flex; align-items: center; gap: 8px; width: 100%; padding: 8px; border: 0; border-radius: 9px; background: none; color: var(--text);
+  font: inherit; font-size: 13px; font-weight: 600; text-align: left; cursor: pointer; }
+.ws-ov:hover { background: var(--surface-2); }
+.ws-ov.on { background: var(--accent-soft); color: var(--accent); }
+.ws-ov > span:first-of-type { flex: 1; }
+.ws-ov .count { font-size: 11px; padding: 0 7px; border-radius: 10px; background: var(--warn-soft); color: var(--warn); font-variant-numeric: tabular-nums; }
+
+.ov { display: grid; gap: 14px; min-width: 0; }
+.ov-top { display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; flex-wrap: wrap; }
+.ov-top h1.page { margin-bottom: 2px; }
+.ov-top .lead { margin: 0; max-width: 70ch; }
+.ov-err { display: flex; gap: 8px; align-items: flex-start; padding: 8px 12px; border-radius: 8px; background: var(--warn-soft); color: var(--text); font-size: 13px; }
+.ov-err .icon { color: var(--warn); flex: none; margin-top: 2px; }
+.ov-kpis { margin-bottom: 0; grid-template-columns: repeat(auto-fit, minmax(128px, 1fr)); }
+.ov-kpis .stat { border-left: 3px solid transparent; }
+.ov-kpis .stat.t-warn { border-left-color: var(--warn); }
+.ov-kpis .stat.t-stop { border-left-color: var(--crit); }
+.ov-kpis .stat.t-stop .value { color: var(--crit); }
+
+.ov-grid { display: grid; grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr); gap: 14px; align-items: start; }
+.ov-wide { grid-column: 1 / -1; }
+.ov-side { display: grid; gap: 14px; align-content: start; min-width: 0; }
+.ov-card { margin: 0; min-width: 0; }
+.ov-card h3 .faint { font-weight: 500; }
+.ov-none { margin: 4px 0; }
+.ov-clear { display: flex; align-items: center; gap: 6px; color: var(--good); font-weight: 500; }
+.ov-more { margin-top: 8px; }
+.ov-txt { flex: 1; min-width: 0; }
+.ov-txt small { display: block; margin-top: 2px; font-size: 12px; }  /* the source icon stays on the line of its label when the label wraps */
+.ov-txt small .icon { width: 12px; height: 12px; vertical-align: -2px; margin-right: 4px; }
+
+.ov-list { list-style: none; margin: 0; padding: 0; display: grid; gap: 2px; }
+.ov-need { display: flex; align-items: flex-start; gap: 10px; padding: 9px 4px; border-top: 1px solid var(--line); }
+.ov-need:first-child { border-top: 0; }
+.ov-need p { margin: 3px 0 0; font-size: 13px; color: var(--text-2); }
+.ov-need .btn { flex: none; align-self: center; }
+.ov-dot { flex: none; width: 9px; height: 9px; margin-top: 5px; border-radius: 50%; background: var(--text-3); }
+.ov-need.l-warn .ov-dot { background: var(--warn); }
+.ov-need.l-stop .ov-dot { background: var(--crit); box-shadow: 0 0 0 3px var(--crit-soft); }
+
+.ov-row { display: flex; align-items: flex-start; gap: 10px; width: 100%; padding: 7px 6px; border: 0; border-radius: 8px; background: none; color: inherit;
+  font: inherit; font-size: 13px; text-align: left; cursor: pointer; }
+.ov-row:hover { background: var(--surface-2); }
+.ov-row:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; }
+.ov-pulse { flex: none; width: 8px; height: 8px; margin-top: 5px; border-radius: 50%; background: var(--accent); animation: ov-pulse 1.6s ease-in-out infinite; }
+@keyframes ov-pulse { 50% { opacity: .35; } }
+@media (prefers-reduced-motion: reduce) { .ov-pulse { animation: none; } }
+
+.ov-team-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 300px), 1fr)); gap: 12px; }
+.ov-team { display: grid; gap: 10px; align-content: start; padding: 12px 14px; border: 1px solid var(--line); border-left: 3px solid var(--text-3); border-radius: 10px; background: var(--surface); min-width: 0; }
+.ov-team.s-working { border-left-color: var(--accent); }
+.ov-team.s-stuck { border-left-color: var(--crit); }
+.ov-team.s-waiting { border-left-color: var(--warn); }
+.ov-team-head { display: flex; justify-content: space-between; align-items: flex-start; gap: 8px; }
+.ov-team-head b { display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.ov-team-head .badge { flex: none; }
+.ov-team { grid-template-columns: minmax(0, 1fr); }  /* a long team name ellipsizes instead of pushing the card past a phone's width */
+.ov-team-head > :first-child { min-width: 0; }
+.ov-line { margin: 0; font-size: 13px; }
+.ov-prog { display: grid; grid-template-columns: minmax(0, 1fr) 96px; gap: 12px; align-items: end; }
+.ov-prog > div:first-child { display: grid; gap: 4px; }
+.ov-week, .ov-days { display: grid; grid-auto-flow: column; grid-auto-columns: 1fr; gap: 3px; align-items: end; height: 34px; }
+.ov-week i, .ov-days i { display: block; height: max(2px, var(--h)); border-radius: 2px 2px 0 0; background: var(--good); opacity: .85; }
+.ov-days { height: 44px; margin: 10px 0; }
+.ov-days i { background: var(--accent); }
+.ov-mini { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+.ov-mini em { font-style: normal; }
+.ov-bad { color: var(--crit); }
+.ov-budget { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; gap: 8px; align-items: center; }
+
+.ov-meter { display: block; height: 6px; border-radius: 3px; background: var(--surface-3); overflow: hidden; min-width: 40px; }
+.ov-meter i { display: block; height: 100%; border-radius: 3px; background: var(--accent); }
+.ov-meter.good i { background: var(--good); }
+.ov-meter.warn i { background: var(--warn); }
+.ov-meter.stop i { background: var(--crit); }
+
+.ov-steps { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.ov-steps ol { display: flex; gap: 2px; margin: 0; padding: 0; list-style: none; }
+.ov-steps li { padding: 2px 7px; border-radius: 4px; background: var(--surface-2); color: var(--text-3); font-size: 11.5px; }
+.ov-steps li.done { color: var(--text-2); }
+.ov-steps li.on { background: var(--accent-soft); color: var(--accent); font-weight: 600; }
+.ov-wait { color: var(--warn); font-size: 12px; }
+.ov-actions { gap: 6px; }
+
+.ov-miner { display: grid; gap: 8px; padding: 9px 4px; border-top: 1px solid var(--line); }
+.ov-miner:first-child { border-top: 0; }
+.ov-miner p { margin: 3px 0 0; }
+.ov-ranks { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; margin: 0; }
+.ov-ranks dt { font-size: 11px; color: var(--text-3); }
+.ov-ranks dd { margin: 0; font-size: 13px; font-weight: 600; }
+.ov-phase { flex: none; min-width: 74px; padding: 2px 7px; border-radius: 4px; background: var(--surface-2); color: var(--text-2); font-size: 11.5px; font-weight: 600; text-align: center; }
+.ov-phase.s-plan, .ov-phase.s-do, .ov-phase.s-check, .ov-phase.s-act { background: color-mix(in srgb, var(--sc) 16%, var(--surface)); color: var(--text); }
+.ov-phase.s-waiting { background: var(--warn-soft); color: var(--warn); }
+.ov-phase.s-failed { background: var(--crit-soft); color: var(--crit); }
+
+.ov-src { list-style: none; margin: 0 0 8px; padding: 0; display: grid; gap: 6px; font-size: 13px; }
+.ov-src li { display: grid; grid-template-columns: minmax(0, 9em) minmax(0, 1fr) 4em; gap: 8px; align-items: center; }
+.ov-src li span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.ov-src li b { text-align: right; font-weight: 600; }
+
+.ov-feed { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: minmax(0, 1fr); }  /* a long line ellipsizes instead of widening the page */
+.ov-feed li { min-width: 0; }
+.ov-feed .ov-row { align-items: baseline; }
+.ov-feed time { flex: none; width: 4.5em; font-size: 12px; }
+.ov-tag { flex: none; padding: 1px 6px; border-radius: 4px; background: var(--surface-2); color: var(--text-2); font-size: 11px; white-space: nowrap; }
+.ov-feed .ov-txt { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+@media (max-width: 1100px) { .ov-grid { grid-template-columns: minmax(0, 1fr); } }
+@media (max-width: 560px) {
+  .ov-need { flex-wrap: wrap; }
+  .ov-need .ov-txt { flex-basis: calc(100% - 30px); }
+  .ov-need .btn { margin-left: 19px; align-self: flex-start; }
+  .ov-prog { grid-template-columns: minmax(0, 1fr); }
+  .ov-feed .ov-row { flex-wrap: wrap; }
+  .ov-feed .ov-txt { flex-basis: 100%; white-space: normal; }
+}

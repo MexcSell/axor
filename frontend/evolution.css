@@ -1,0 +1,129 @@
+/* AXoR 5.0 pages: Evolution Lab (evolution.js, evo-), Analytics and Governance (analytics.js, governance.js, g5-). Cards, pills
+   and KPIs come from command.css (occ-) and hubs.css (axh-); colors only from the theme tokens, so dark mode follows. */
+.evo { display: grid; grid-template-columns: minmax(0, 1fr); gap: 14px; min-width: 0; }
+.evo-tab { min-width: 0; }
+.evo-policy { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 8px 16px; padding: 10px 14px; margin: 0; font-size: 13px; }
+.evo-policy .icon { width: 15px; height: 15px; vertical-align: -3px; margin-right: 6px; color: var(--accent); }
+
+/* the loop */
+.evo-loop { display: flex; align-items: stretch; gap: 6px; padding: 14px; margin: 0; overflow-x: auto; grid-column: auto; }
+.evo-step { flex: 1 1 0; min-width: 104px; display: grid; justify-items: start; gap: 2px; padding: 10px 12px; border-radius: 10px; background: var(--surface-2, var(--bg)); }
+.evo-step-i { display: inline-grid; place-items: center; width: 26px; height: 26px; border-radius: 8px; background: var(--accent-soft); color: var(--accent); margin-bottom: 4px; }
+.evo-step-i .icon { width: 15px; height: 15px; }
+.evo-step b { font-size: 13px; }
+.evo-step .num { font-size: 22px; font-weight: 650; line-height: 1.1; }
+.evo-step small { color: var(--text-3, var(--text-2)); font-size: 11.5px; }
+.evo-arr { align-self: center; color: var(--text-3, var(--text-2)); flex: none; }
+.evo-arr .icon { width: 14px; height: 14px; }
+
+/* proposals */
+.evo-list { list-style: none; margin: 0; padding: 0; display: grid; gap: 10px; }
+.evo-prop { display: grid; gap: 8px; padding: 14px 16px; }
+.evo-prop.focus { outline: 2px solid var(--accent); outline-offset: 2px; }
+.evo-prop-h { display: flex; justify-content: space-between; gap: 10px; flex-wrap: wrap; }
+.evo-prop-h h3 { margin: 0; font-size: 15px; }
+.evo-prop-h p { margin: 2px 0 0; }
+.evo-pills { display: flex; gap: 6px; flex-wrap: wrap; align-items: flex-start; }
+.evo-hyp { margin: 0; font-size: 13.5px; color: var(--text-2); }
+.evo-acts { gap: 6px; flex-wrap: wrap; }
+.evo-prog { display: inline-flex; align-items: center; gap: 6px; font-size: 13px; color: var(--warn); }
+.evo-prog .icon { width: 14px; height: 14px; animation: evo-spin 1.4s linear infinite; }
+@keyframes evo-spin { to { transform: rotate(360deg); } }
+@media (prefers-reduced-motion: reduce) { .evo-prog .icon { animation: none; } }
+.evo-ev { display: grid; gap: 4px; padding: 10px 12px; border-radius: 10px; background: var(--surface-2, var(--bg)); }
+.evo-ev p { margin: 0; }
+.evo-bars { display: grid; grid-template-columns: auto minmax(0, 1fr) 3.5em; align-items: center; gap: 4px 10px; font-size: 12.5px; }
+.evo-bar-l { color: var(--text-2); }
+.evo-bar-t { height: 8px; border-radius: 4px; background: var(--line); overflow: hidden; }
+.evo-bar-t i { display: block; height: 100%; border-radius: 0 4px 4px 0; }
+.evo-bar-t i.b { background: var(--text-3, var(--text-2)); }
+.evo-bar-t i.c { background: var(--accent); }
+.evo-bars b { text-align: right; }
+.evo-ev .up { color: var(--good); } .evo-ev .down { color: var(--crit); }
+.evo-why { color: var(--text-2); display: flex; gap: 6px; align-items: flex-start; margin: 0; }
+.evo-why .icon { width: 13px; height: 13px; flex: none; margin-top: 2px; }
+.evo-tools { gap: 10px; align-items: center; flex-wrap: wrap; margin-bottom: 10px; }
+.evo-note { margin: 0 0 10px; }
+
+/* agents and packages */
+.evo-agents { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 10px; }
+.evo-agent { display: grid; gap: 3px; text-align: left; padding: 12px 14px; margin: 0; cursor: pointer; font: inherit; color: inherit; }
+.evo-agent:hover { border-color: var(--accent); }
+.evo-agent small { color: var(--text-2); }
+.evo-others { margin-top: 14px; }
+.evo-others summary { cursor: pointer; font-size: 13px; color: var(--text-2); margin-bottom: 8px; }
+.evo-pkg { display: grid; grid-template-columns: repeat(auto-fill, minmax(170px, 1fr)); gap: 8px; }
+.evo-comp { display: grid; gap: 2px; padding: 10px 12px; border: 1px solid var(--line); border-radius: 10px; min-width: 0; }
+.evo-comp small { color: var(--text-3, var(--text-2)); font-size: 11.5px; text-transform: uppercase; letter-spacing: .04em; }
+.evo-comp b { font-size: 15px; overflow-wrap: anywhere; }
+.evo-comp span { overflow-wrap: anywhere; }
+.evo-vers { list-style: none; margin: 0; padding: 0; display: grid; gap: 6px; }
+.evo-vers li { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 10px; font-size: 13px; padding: 6px 0; border-bottom: 1px solid var(--line); }
+.evo-sigs ul { margin: 4px 0 0; padding-left: 18px; }
+.evo-sigs li { align-items: flex-start; }
+.evo-sigs > li { display: flex; gap: 8px; flex-wrap: wrap; padding: 10px 0; border-bottom: 1px solid var(--line); }
+.evo-sigs > li .occ-need-t { flex: 1 1 220px; }
+
+/* audit */
+.evo-audit { list-style: none; margin: 0; padding: 0; display: grid; font-size: 13px; }
+.evo-audit li { display: grid; grid-template-columns: max-content minmax(6em, auto) auto minmax(0, 1fr); gap: 4px 12px; padding: 7px 0; border-bottom: 1px solid var(--line); align-items: baseline; }
+.evo-audit code { font-size: 12px; color: var(--text-2); }
+.evo-audit span:last-child { overflow-wrap: anywhere; }
+@media (max-width: 720px) { .evo-audit li { grid-template-columns: 1fr; gap: 2px; } }
+
+/* dialogs */
+dialog.modal.evo-dlg { width: min(600px, calc(100vw - 32px)); max-height: calc(100vh - 48px); overflow: auto; padding: 18px 20px; }
+dialog.modal.evo-dlg.wide { width: min(880px, calc(100vw - 32px)); }
+.evo-dh { display: flex; justify-content: space-between; align-items: center; gap: 10px; }
+.evo-dh h3 { margin: 0; font-size: 16px; }
+.evo-dlg h4 { margin: 8px 0 0; font-size: 13.5px; }
+.evo-case { border: 1px solid var(--line); border-radius: 10px; padding: 8px 10px; margin: 0 0 8px; display: grid; gap: 6px; min-width: 0; }
+.evo-case legend { font-size: 12px; color: var(--text-2); padding: 0 4px; }
+.evo-cases { display: grid; }
+.evo-pre { white-space: pre-wrap; overflow-wrap: anywhere; font-family: var(--mono); font-size: 12px; background: var(--surface-2, var(--bg)); padding: 8px 10px; border-radius: 8px; max-height: 280px; overflow: auto; margin: 6px 0 0; }
+.evo-trials { display: grid; gap: 8px; }
+.evo-trial { display: grid; gap: 4px; padding: 8px 10px; border: 1px solid var(--line); border-radius: 10px; }
+.evo-ans { padding-left: 10px; border-left: 3px solid var(--line); }
+.evo-ans.candidate { border-left-color: var(--accent); }
+
+/* Analytics: one measure per chart, columns from the baseline */
+.g5-cols { display: flex; align-items: flex-end; gap: 2px; height: 140px; padding-bottom: 18px; position: relative; }
+.g5-col { flex: 1 1 0; min-width: 0; height: 100%; display: flex; flex-direction: column; justify-content: flex-end; position: relative; outline: none; }
+.g5-col i { display: block; background: var(--accent); border-radius: 4px 4px 0 0; min-height: 0; }
+.g5-col:hover i, .g5-col:focus i { background: color-mix(in srgb, var(--accent) 75%, var(--text)); }
+.g5-col small { position: absolute; top: 100%; left: 0; font-size: 10.5px; color: var(--text-3, var(--text-2)); white-space: nowrap; margin-top: 3px; }
+.g5-col[data-tip]:hover::after, .g5-col[data-tip]:focus::after { content: attr(data-tip); position: absolute; bottom: calc(100% + 6px); left: 50%; transform: translateX(-50%); z-index: 3;
+  white-space: nowrap; font-size: 12px; padding: 4px 8px; border-radius: 6px; background: var(--text); color: var(--surface); pointer-events: none; }
+.g5-col:first-child[data-tip]:hover::after, .g5-col:first-child[data-tip]:focus::after { left: 0; transform: none; }
+.g5-col:last-child[data-tip]:hover::after, .g5-col:last-child[data-tip]:focus::after { left: auto; right: 0; transform: none; }
+.g5-cols { border-bottom: 1px solid var(--line); margin-bottom: 4px; }
+.g5-axis { margin: 16px 0 0; }
+
+/* Governance */
+.g5-modes { list-style: none; margin: 0 0 8px; padding: 0; display: grid; gap: 6px; }
+.g5-modes li { display: flex; gap: 8px; align-items: flex-start; padding: 8px 10px; border-radius: 10px; border: 1px solid var(--line); }
+.g5-modes li.on { border-color: var(--accent); background: var(--accent-soft); }
+.g5-modes li > .icon, .g5-modes li > i { width: 15px; height: 15px; flex: none; margin-top: 2px; color: var(--accent); }
+.g5-modes span { display: grid; gap: 2px; }
+.g5-modes small { color: var(--text-2); }
+.g5-locked { list-style: none; margin: 0; padding: 0; display: grid; gap: 6px; font-size: 13px; }
+.g5-locked .icon { width: 13px; height: 13px; margin-right: 6px; vertical-align: -2px; color: var(--warn); }
+.g5-radio { border: 0; padding: 0; margin: 0; display: grid; gap: 6px; }
+.g5-radio legend { font-size: 12.5px; color: var(--text-2); margin-bottom: 4px; }
+.g5-radio label { display: flex; gap: 8px; align-items: center; font-size: 13.5px; }
+
+/* Simple mode keeps the sidebar to Mission Control, approvals and My subnets: Organization HQ stays in Advanced */
+body[data-axmode="simple"] #side #nav-org { display: none; }
+.evo-prop-h h3 { text-transform: none; letter-spacing: 0; font-size: 15px; font-weight: 650; color: var(--text); }
+.evo-tools > span { flex: 1 1 220px; min-width: 0; }
+@media (max-width: 720px) {
+  .evo-loop { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); overflow: visible; }
+  .evo-arr { display: none; }
+  .evo-step { min-width: 0; }
+}
+.evo-audit li > span:first-child { white-space: nowrap; }
+
+/* Governance: the three kinds of autonomy (governance.js) wrap instead of scrolling sideways */
+table.grid.g5-auto { width: 100%; }
+.g5-auto td, .g5-auto th { white-space: normal; vertical-align: top; }
+.g5-auto td:nth-child(2) { min-width: 220px; }

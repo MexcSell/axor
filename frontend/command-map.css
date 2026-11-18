@@ -1,0 +1,106 @@
+/* The chain of command (command-map.js, prefix cmap-): tiers joined by a line, from you down to the agents. Colors come from the
+   app's theme tokens; cyan is what's working, amber what's queued or waits for you, dashed what's missing. */
+.cmap { padding: 0; overflow: hidden; --cmap-run: #06b6d4; --cmap-q: var(--warn, #f59e0b); }
+.cmap details > summary { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 8px 16px; padding: 14px 18px; cursor: pointer; list-style: none; }
+.cmap details > summary::-webkit-details-marker { display: none; }
+.cmap-title { display: inline-flex; align-items: center; gap: 8px; font-weight: 600; font-size: 15px; }
+.cmap-title .icon { width: 16px; height: 16px; color: var(--accent); }
+.cmap details:not([open]) .cmap-title::after { content: "show"; font-weight: 400; font-size: 12px; color: var(--text-3); }
+.cmap-legend { display: inline-flex; flex-wrap: wrap; align-items: center; gap: 4px 6px; font-size: 11.5px; color: var(--text-3); }
+.cmap-legend i { width: 8px; height: 8px; border-radius: 50%; display: inline-block; margin-left: 6px; background: var(--text-3); }
+.cmap-legend i.s-working { background: var(--cmap-run); }
+.cmap-legend i.s-queued { background: var(--cmap-q); }
+.cmap-legend i.s-idle { background: var(--surface-3, var(--line)); border: 1px solid var(--text-3); }
+.cmap-legend i.s-missing { background: none; border: 1px dashed var(--text-2); }
+.cmap-slot { padding: 0 18px 18px; }
+
+.cmap-chain { display: grid; gap: 0; min-width: 0; }
+.cmap-tier { position: relative; display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; padding: 14px 0 0; min-width: 0; }
+.cmap-tier:first-child { padding-top: 0; }
+.cmap-tier:not(:first-child)::before { content: ""; position: absolute; top: 0; left: 50%; width: 2px; height: 14px; background: var(--line); transform: translateX(-1px); }
+.t-teams { display: grid; justify-content: stretch; }
+
+.cmap-node { display: flex; align-items: flex-start; gap: 10px; min-width: 0; max-width: 100%; padding: 10px 12px; text-align: left;
+  border: 1px solid var(--line); border-radius: 10px; background: var(--surface); color: var(--text); font: inherit; }
+.cmap-node > .icon { flex: none; width: 18px; height: 18px; margin-top: 1px; color: var(--text-2); }
+.cmap-node > div { display: grid; gap: 2px; min-width: 0; }
+.cmap-node b { font-size: 13.5px; overflow-wrap: anywhere; }
+.cmap-node small { font-size: 12px; color: var(--text-2); overflow-wrap: anywhere; }
+.cmap-node small.cmap-meta { color: var(--text-3); }
+.cmap-node em, .cmap-dir em { font-style: normal; color: var(--cmap-q); font-weight: 600; }
+.n-you { border-color: color-mix(in srgb, var(--accent) 55%, var(--line)); background: color-mix(in srgb, var(--accent) 7%, var(--surface)); }
+.n-you > .icon, .n-mc > .icon { color: var(--accent); }
+.n-mission { cursor: pointer; width: min(320px, 100%); }
+.n-mission:hover, .n-mission:focus-visible { border-color: var(--accent); }
+.n-mission.t-run { border-color: color-mix(in srgb, var(--cmap-run) 55%, var(--line)); }
+.n-mission.t-run > .icon { color: var(--cmap-run); }
+.n-mission.t-wait, .n-mission.t-warn { border-color: color-mix(in srgb, var(--cmap-q) 60%, var(--line)); }
+.n-mission.t-ok > .icon { color: #10b981; }
+.n-mission.t-bad > .icon { color: var(--crit, #ef4444); }
+.n-ghost { border-style: dashed; background: transparent; max-width: 560px; }
+.cmap-chip { align-self: center; flex: none; padding: 2px 8px; border-radius: 999px; font-size: 11.5px; font-weight: 600; white-space: nowrap; }
+.cmap-chip.t-wait { color: var(--cmap-q); background: color-mix(in srgb, var(--cmap-q) 14%, transparent); }
+
+.cmap-engines { display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 10px; width: 100%; }
+.n-engine { opacity: .62; }
+.n-engine.on { opacity: 1; border-color: color-mix(in srgb, var(--cmap-run) 55%, var(--line)); }
+.n-engine.on > .icon { color: var(--cmap-run); }
+.n-engine.off { opacity: .4; }
+
+.cmap-team { display: grid; gap: 12px; padding: 12px; border: 1px solid var(--line); border-radius: 12px; background: var(--surface-2, var(--surface)); min-width: 0; }
+.cmap-team + .cmap-team { margin-top: 10px; }
+.cmap-team.missing { border-style: dashed; border-width: 2px; background: transparent; }
+.cmap-thead { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; min-width: 0; }
+.cmap-thead > .icon { width: 18px; height: 18px; color: var(--accent); flex: none; }
+.cmap-thead > div { display: grid; gap: 2px; flex: 1 1 220px; min-width: 0; }
+.cmap-thead small { font-size: 12px; color: var(--text-2); }
+.cmap-dir { display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 6px 10px; position: relative; }
+.cmap-dir small { font-size: 12px; color: var(--text-2); }
+.cmap-squads { display: grid; grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); gap: 8px; position: relative; padding-top: 12px; }
+.cmap-squads::before { content: ""; position: absolute; top: 0; left: 50%; width: 2px; height: 12px; background: var(--line); transform: translateX(-1px); }
+.cmap-squad { display: grid; align-content: start; gap: 6px; padding: 8px 10px; border: 1px solid var(--line); border-radius: 10px; background: var(--surface); min-width: 0; }
+.cmap-sh { display: flex; justify-content: space-between; gap: 8px; align-items: baseline; }
+.cmap-sh b { font-size: 12.5px; }
+.cmap-sh small, .cmap-head small { font-size: 11px; color: var(--text-3); }
+.cmap-head { display: flex; align-items: center; gap: 6px; }
+.cmap-ags { display: flex; flex-wrap: wrap; gap: 4px; }
+.cmap-ag { display: inline-flex; align-items: center; gap: 5px; max-width: 100%; padding: 2px 8px 2px 6px; border-radius: 999px; font-size: 12px;
+  border: 1px solid var(--line); background: var(--surface); color: var(--text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.cmap-ag i { flex: none; width: 8px; height: 8px; border-radius: 50%; border: 1px solid var(--text-3); background: var(--surface-3, var(--line)); }
+.cmap-ag.s-working { border-color: color-mix(in srgb, var(--cmap-run) 60%, var(--line)); }
+.cmap-ag.s-working i { background: var(--cmap-run); border-color: var(--cmap-run); animation: cmap-pulse 1.6s ease-in-out infinite; }
+.cmap-ag.s-queued i { background: var(--cmap-q); border-color: var(--cmap-q); }
+.cmap-ag.s-off { opacity: .45; text-decoration: line-through; }
+.cmap-ag.cmap-big { padding: 6px 12px 6px 10px; font-size: 13.5px; font-weight: 600; white-space: normal; }
+.cmap-ag.cmap-big em { font-style: normal; font-weight: 400; color: var(--text-2); font-size: 12px; }
+.cmap-more { font-size: 12px; color: var(--text-3); align-self: center; }
+.cmap-none { margin: 0; font-size: 12.5px; color: var(--text-2); display: flex; gap: 6px; align-items: center; }
+.cmap-tchips { display: flex; flex-wrap: wrap; justify-content: center; gap: 6px; }
+.cmap-tchip { display: inline-flex; align-items: center; gap: 6px; padding: 5px 10px; border: 1px solid var(--line); border-radius: 999px; background: var(--surface);
+  color: var(--text); font: inherit; font-size: 12.5px; cursor: pointer; max-width: 100%; }
+.cmap-tchip:hover, .cmap-tchip:focus-visible { border-color: var(--accent); }
+.cmap-tchip small { color: var(--text-3); }
+.cmap-tchip .icon { width: 14px; height: 14px; color: var(--accent); }
+@keyframes cmap-pulse { 50% { opacity: .35; } }
+@media (prefers-reduced-motion: reduce) { .cmap-ag.s-working i { animation: none; } }
+@media (max-width: 640px) {
+  .cmap details > summary, .cmap-slot { padding-left: 12px; padding-right: 12px; }
+  .n-mission { width: 100%; }
+  .cmap-engines { grid-template-columns: 1fr 1fr; }
+}
+
+/* Mining HQ: the team's missions strip (mission-team.js, prefix mtm-) */
+.mtm-strip { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 12px; padding: 10px 14px; margin: 0 0 10px; border: 1px solid var(--line);
+  border-radius: 10px; background: var(--surface); min-width: 0; }
+.mtm-strip > .icon { width: 16px; height: 16px; color: var(--accent); flex: none; }
+.mtm-line { flex: 1 1 260px; min-width: 0; font-size: 13px; color: var(--text-2); overflow-wrap: anywhere; }
+.mtm-line b { color: var(--text); }
+.mtm-acts { display: flex; flex-wrap: wrap; gap: 6px; }
+.mtm-map { margin: 0 0 12px; }
+.mx-onteam { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; padding: 8px 12px; border: 1px solid color-mix(in srgb, var(--accent) 45%, var(--line));
+  border-radius: 10px; font-size: 13px; background: color-mix(in srgb, var(--accent) 6%, var(--surface)); }
+.mx-onteam .icon { width: 15px; height: 15px; color: var(--accent); }
+.mx-teamreq { display: grid; gap: 8px; }
+.mx-teamreq .mx-acts { flex-wrap: wrap; }
+.mx-teamuse { display: inline-flex; flex-wrap: wrap; gap: 6px; align-items: center; }
+.mx-teamuse select { max-width: 240px; }

@@ -1,0 +1,138 @@
+/* Agent Swarm (swarm.js, prefix swm-). Colours come from the app's theme tokens (styles.css), so light and dark both follow. */
+.swm .axh-tabs { margin-top: 4px; }
+.swm-grid { display: grid; grid-template-columns: minmax(240px, 300px) minmax(0, 1fr); gap: 14px; align-items: start; }
+.swm-side { margin: 0; padding: 8px; position: sticky; top: 72px; max-height: calc(100vh - 96px); overflow: auto; }
+.swm-list { list-style: none; margin: 0; padding: 0; display: grid; gap: 4px; }
+.swm-item { display: grid; gap: 3px; width: 100%; padding: 9px 10px; border: 1px solid transparent; border-radius: 8px; background: none; color: inherit; font: inherit; text-align: left; cursor: pointer; }
+.swm-item:hover { background: var(--surface-2); }
+.swm-item.on { background: var(--accent-soft); border-color: color-mix(in srgb, var(--accent) 40%, transparent); }
+.swm-ih { display: flex; align-items: flex-start; justify-content: space-between; gap: 8px; }
+.swm-ih b { font-size: 13.5px; line-height: 1.3; overflow-wrap: anywhere; }
+.swm-im { display: block; font-size: 12px; line-height: 1.5; }
+.swm-im .icon { width: 12px; height: 12px; vertical-align: -2px; margin-right: 3px; }
+
+.swm-detail { margin: 0; min-width: 0; display: grid; gap: 12px; }
+.swm-dh { display: flex; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+.swm-dh h2 { margin: 0 0 2px; font-size: 18px; }
+.swm-dh p { margin: 0; max-width: 72ch; }
+.swm-dh .row { display: flex; gap: 8px; align-items: center; height: max-content; }
+.swm-steps { display: flex; gap: 0; list-style: none; margin: 0; padding: 0; counter-reset: s; flex-wrap: wrap; }
+.swm-steps li { counter-increment: s; display: flex; align-items: center; gap: 6px; padding: 4px 14px 4px 0; font-size: 12.5px; color: var(--text-3); }
+.swm-steps li::before { content: counter(s); display: grid; place-items: center; width: 20px; height: 20px; border-radius: 50%; border: 1px solid var(--line); font-size: 11px; font-weight: 650; }
+.swm-steps li.done { color: var(--text-2); }
+.swm-steps li.done::before { content: "✓"; background: var(--good-soft); border-color: transparent; color: var(--good); }
+.swm-steps li.now { color: var(--text); font-weight: 600; }
+.swm-steps li.now::before { background: var(--accent); border-color: var(--accent); color: #fff; }
+.swm-meta { display: flex; flex-wrap: wrap; gap: 6px 16px; font-size: 13px; color: var(--text-2); }
+.swm-meta > span { display: inline-flex; align-items: center; gap: 6px; }
+.swm-meta .icon { width: 14px; height: 14px; color: var(--text-3); }
+.swm-bar { display: inline-block; width: 64px; height: 6px; border-radius: 3px; background: var(--surface-3); overflow: hidden; vertical-align: middle; }
+.swm-bar i { display: block; height: 100%; background: var(--accent); border-radius: inherit; }
+.swm-bar.over i { background: var(--crit); }
+.swm-ctl { padding: 10px 12px; border-radius: 10px; background: var(--surface-2); display: grid; gap: 6px; }
+.swm-ctl p { margin: 0; font-size: 13.5px; line-height: 1.45; }
+.swm-ctl b .icon { width: 14px; height: 14px; vertical-align: -2px; margin-right: 4px; color: var(--accent); }
+.swm-switch { color: var(--warn); }
+.swm-pol { display: flex; flex-wrap: wrap; gap: 6px; margin: 0; }
+.swm-err { margin: 0; padding: 8px 10px; border-radius: 8px; background: var(--crit-soft); color: var(--crit); font-size: 13px; display: flex; gap: 6px; align-items: center; }
+
+/* the swarm map */
+.swm-map { overflow-x: auto; padding: 6px 0 2px; border: 1px solid var(--line); border-radius: 10px; background:
+  radial-gradient(circle at 1px 1px, color-mix(in srgb, var(--text-3) 22%, transparent) 1px, transparent 0) 0 0 / 16px 16px, var(--surface); }
+.swm-map svg { display: block; margin: 0 auto; max-width: none; }
+.swm-map path { fill: none; stroke: var(--line); stroke-width: 1.6; }
+.swm-map path.swm-e-ctl { stroke-dasharray: 3 4; stroke: color-mix(in srgb, var(--accent) 45%, var(--line)); }
+.swm-map path.on { stroke: var(--good); }
+.swm-n rect { fill: var(--surface); stroke: var(--line); stroke-width: 1.4; }
+.swm-n[data-swm-c] { cursor: pointer; }
+.swm-n[data-swm-c]:hover rect, .swm-n[data-swm-c]:focus rect { stroke: var(--accent); stroke-width: 2; }
+.swm-n:focus { outline: none; }
+.swm-n text { fill: var(--text); font: 600 12.5px Inter, system-ui, sans-serif; }
+.swm-n .swm-a { fill: var(--text-2); font-weight: 500; font-size: 11.5px; }
+.swm-n .swm-s { fill: var(--text-3); font-weight: 500; font-size: 11px; }
+.swm-hub rect { fill: var(--accent-soft); stroke: color-mix(in srgb, var(--accent) 50%, transparent); }
+.swm-n.st-running rect { stroke: var(--info); fill: color-mix(in srgb, var(--info-soft) 70%, var(--surface)); }
+.swm-n.st-done rect { stroke: color-mix(in srgb, var(--good) 60%, transparent); fill: color-mix(in srgb, var(--good-soft) 60%, var(--surface)); }
+.swm-n.st-failed rect { stroke: var(--crit); fill: color-mix(in srgb, var(--crit-soft) 60%, var(--surface)); }
+.swm-n.st-skipped rect, .swm-n.st-dropped rect { stroke-dasharray: 4 3; opacity: .7; }
+.swm-live { fill: var(--info); animation: swm-pulse 1.2s ease-in-out infinite; }
+@keyframes swm-pulse { 50% { opacity: .25; } }
+@media (prefers-reduced-motion: reduce) { .swm-live { animation: none; } }
+
+/* contracts */
+.swm-sub { display: grid; gap: 10px; min-width: 0; }
+.swm-c { margin: 0; padding: 12px 14px; display: grid; gap: 8px; border-left: 3px solid var(--line); scroll-margin-top: 80px; }
+.swm-c.st-running { border-left-color: var(--info); }
+.swm-c.st-done { border-left-color: var(--good); }
+.swm-c.st-failed { border-left-color: var(--crit); }
+.swm-c header { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.swm-c h4 { margin: 0; font-size: 14.5px; flex: 1 1 200px; }
+.swm-k { font: 650 12px/1 ui-monospace, SFMono-Regular, Menlo, monospace; color: var(--text-3); }
+.swm-obj { margin: 0; font-size: 13.5px; line-height: 1.45; }
+.swm-cm { display: flex; flex-wrap: wrap; gap: 4px 14px; font-size: 12.5px; color: var(--text-2); }
+.swm-cm span { display: inline-flex; align-items: center; gap: 5px; }
+.swm-cm .icon { width: 13px; height: 13px; color: var(--text-3); }
+.swm-doing { margin: 0; display: flex; gap: 6px; align-items: center; font-size: 12.5px; color: var(--info); }
+.swm-doing .icon { width: 13px; height: 13px; }
+.swm-dl { margin: 0; padding-left: 18px; font-size: 13px; color: var(--text-2); }
+.swm-tries, .swm-hist { list-style: none; margin: 0; padding: 0; display: grid; gap: 4px; }
+.swm-tries li { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 10px; padding: 6px 8px; border-radius: 7px; background: var(--surface-2); font-size: 12.5px; }
+.swm-who { font-weight: 600; }
+.swm-note { flex-basis: 100%; color: var(--text-2); }
+.swm-hist { font-size: 12px; color: var(--text-3); grid-auto-flow: row; }
+.swm-hist li::before { content: "↳ "; }
+.swm-out summary, .swm-json summary { cursor: pointer; font-size: 12.5px; color: var(--text-2); font-weight: 600; }
+.swm-json pre { margin: 6px 0 0; padding: 10px; border-radius: 8px; background: var(--surface-2); font-size: 12px; overflow-x: auto; white-space: pre; }
+.swm-md { font-size: 13.5px; line-height: 1.55; overflow-wrap: anywhere; }
+.swm-md h2 { font-size: 15px; margin: 12px 0 4px; }
+.swm-md h3 { font-size: 14px; margin: 10px 0 4px; }
+
+/* bus, board, activity, result */
+.swm-filt { display: flex; gap: 6px; flex-wrap: wrap; }
+.swm-filt .chip.on { background: var(--accent-soft); border-color: var(--accent); color: var(--accent); font-weight: 600; }
+.swm-msgs, .swm-finds, .swm-ev, .swm-crit, .swm-state ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 6px; }
+.swm-msgs li { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 8px; padding: 8px 10px; border: 1px solid var(--line); border-radius: 8px; }
+.swm-msgs p { flex-basis: 100%; margin: 0; font-size: 13px; }
+.swm-route { display: inline-flex; align-items: center; gap: 4px; font-size: 13px; }
+.swm-route .icon { width: 12px; height: 12px; color: var(--text-3); }
+.swm-state { padding: 10px 12px; border-radius: 10px; background: var(--surface-2); }
+.swm-state h4, .swm-sub > h4 { margin: 0 0 6px; font-size: 13px; }
+.swm-state li { font-size: 13px; display: flex; flex-wrap: wrap; align-items: center; gap: 6px; }
+.swm-state li p { flex-basis: 100%; margin: 0 0 0 4px; }
+.swm-finds li { font-size: 13px; padding: 6px 0; border-bottom: 1px solid var(--line); }
+.swm-finds li.gone { color: var(--text-3); text-decoration: line-through; text-decoration-color: color-mix(in srgb, var(--text-3) 60%, transparent); }
+.swm-finds li.gone .occ-pill { text-decoration: none; }
+.swm-ev li { display: grid; grid-template-columns: 70px minmax(90px, auto) 1fr auto; gap: 8px; align-items: baseline; font-size: 13px; padding: 4px 0; border-bottom: 1px solid var(--line); }
+.swm-ev li.k-fail span:nth-child(3), .swm-ev li.k-warn span:nth-child(3) { color: var(--warn); }
+.swm-ev li.k-adapt span:nth-child(3) { color: var(--accent); }
+.swm-headline { margin: 0 0 6px; font-size: 16px; font-weight: 650; line-height: 1.35; }
+.swm-crit li { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; font-size: 13px; }
+
+/* patterns, roster, how it works */
+.swm-pats { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 12px; margin-bottom: 12px; }
+.swm-pat { margin: 0; display: grid; gap: 6px; align-content: start; }
+.swm-pat h3 { margin: 0; display: flex; align-items: center; gap: 7px; font-size: 15px; }
+.swm-pat h3 .icon { width: 16px; height: 16px; color: var(--accent); }
+.swm-pat p { margin: 0; font-size: 13px; line-height: 1.45; }
+.swm-rec { padding-top: 6px; border-top: 1px solid var(--line); }
+.swm-roster ul { list-style: none; margin: 8px 0 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 4px 16px; }
+.swm-roster li { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 8px; align-items: baseline; font-size: 13px; padding: 5px 0; border-bottom: 1px solid var(--line); }
+.swm-roster li > span:first-child { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.swm-roster h3, .swm-how h3 { margin: 0; font-size: 15px; display: flex; gap: 7px; align-items: center; }
+.swm-how ol { list-style: none; margin: 0 0 10px; padding: 0; display: grid; gap: 12px; }
+.swm-how li { display: flex; gap: 12px; }
+.swm-how li p { margin: 2px 0 0; font-size: 13.5px; line-height: 1.5; color: var(--text-2); max-width: 80ch; }
+.swm-hi { flex: none; display: grid; place-items: center; width: 32px; height: 32px; border-radius: 9px; background: var(--accent-soft); color: var(--accent); }
+.swm-hi .icon { width: 16px; height: 16px; }
+
+dialog.modal.swm-dlg { width: min(600px, calc(100vw - 32px)); max-height: calc(100vh - 48px); overflow: auto; padding: 18px 20px; }
+.swm-dlgh { display: flex; justify-content: space-between; align-items: center; }
+.swm-dlgh h3 { margin: 0; display: flex; gap: 7px; align-items: center; }
+
+@media (max-width: 900px) {
+  .swm-grid { grid-template-columns: minmax(0, 1fr); }
+  .swm-side { position: static; max-height: 260px; }
+  .swm-ev li { grid-template-columns: 62px 1fr; }
+  .swm-ev li > :nth-child(3) { grid-column: 1 / -1; }
+  .swm-ev li > :nth-child(4) { display: none; }
+}

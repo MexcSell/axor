@@ -1,0 +1,105 @@
+/* Sidebar layout (side-layout.js, prefix sbl-): the sidebar drawn from a saved list, and the editor page.
+   Colors come from the app's theme tokens, so light and dark both follow. */
+
+/* the page's own item, last in System: in reach with System folded, like Help & docs above it (sidebar.css) */
+#side .side-sec.closed > #nav-sidelayout:not([hidden]) { display: flex; }
+/* …and in the built-in Simple sidebar, which hides the rest of System (mission.css): administrators can always get back here */
+body[data-axmode="simple"] #side .side-sec[data-sec="system"] > #nav-sidelayout:not([hidden]):not(.sbl-out) { display: flex; }
+
+/* ---------- the sidebar from a list: sections become `display: contents`, each item an ordered flex item of #side ----------
+   !important because the Simple-mode rules (mission.css, evolution.css, topology.css, control.css) and folded sections
+   (platform.css .side-sec.closed, sidebar.css .sdb-shut) hide items with display:none; everything stays scoped to .sbl-on,
+   so nothing changes while no list applies. The `hidden` attribute (access) always wins: no rule here shows a [hidden] item. */
+#side.sbl-on .side-sec:not([hidden]), #side.sbl-on .side-sub:not([hidden]), #side.sbl-on .sdb-kids { display: contents !important; }
+#side.sbl-on .side-sec > .side-group, #side.sbl-on .side-subh { display: none !important; }
+#side.sbl-on [data-sbl].sbl-out { display: none !important; }
+#side.sbl-on button[data-sbl]:not(.sbl-out):not([hidden]) { display: flex !important; margin-left: 0; width: 100%; }
+#side.sbl-on #ctl-tree[data-sbl]:not(.sbl-out):not([hidden]) { display: grid !important; margin-left: 0; }
+#side.sbl-on .sdb-kids > button::after { content: none; }
+/* the frame keeps its place: brand, search and Progress first; the tour button, phone mode switch and foot last */
+#side.sbl-on > :not(.sdb-head):not(.jny):not(.side-sec):not(.sbl-h):not(#plt-side-search) { order: 99999; }
+#side .sbl-h { flex: none; padding: 14px 6px 6px 8px; margin-top: 4px; border-top: 1px solid var(--line); font-size: 12px; font-weight: 700; letter-spacing: .08em;
+  text-transform: uppercase; color: var(--text-2); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+#side .sbl-h[hidden] { display: none; }
+/* the user method (accounts that aren't administrators, or an administrator previewing the User list; side-layout.js): one
+   sidebar and no operator chrome: Progress (journey.js), the sidebar foot's version and health (sidebar.js, shell.js), the status
+   bar (shell.js) and the top bar's chain, TAO price, unit and Simple/Advanced switch. Collapse, bell, theme and account stay. */
+body.sbl-user #jny, body.sbl-user #sdb-ver, body.sbl-user #axs-health, body.sbl-user #statusbar,
+body.sbl-user #live, body.sbl-user #taoprice, body.sbl-user #unit, body.sbl-user .mx-mode { display: none !important; }
+body.sbl-user.has-sb { --sb: 0px; padding-bottom: 0; }
+#side.sbl-preview { box-shadow: inset -3px 0 0 var(--accent); }
+@media (min-width: 901px) {
+  #side.sbl-on.collapsed #ctl-tree[data-sbl]:not(.sbl-out):not([hidden]) { display: none !important; }  /* folded to icons: no tree (control.css) */
+  #side.sbl-on.collapsed button[data-sbl]:not(.sbl-out):not([hidden]) { justify-content: center; padding: 9px 0; }
+  #side.collapsed .sbl-h { height: 1px; margin: 8px 10px; padding: 0; border: 0; overflow: hidden; font-size: 0; background: var(--line); }
+}
+
+/* ---------- the editor ---------- */
+#sbl { display: grid; gap: 14px; }
+.sbl-top { display: flex; flex-wrap: wrap; align-items: flex-start; justify-content: space-between; gap: 12px 20px; }
+.sbl-top > div:first-child { flex: 1 1 520px; min-width: 0; }
+.sbl-top .lead { max-width: 80ch; }
+.sbl-acts { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
+.sbl-state { font-size: 13px; color: var(--text-2); }
+.sbl-state.dirty { color: var(--accent); font-weight: 600; }
+.sbl-acts .btn[disabled] { opacity: .5; cursor: default; }
+.sbl-banner { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; padding: 10px 14px; border: 1px solid color-mix(in srgb, var(--accent) 45%, var(--line));
+  border-radius: var(--radius); background: color-mix(in srgb, var(--accent) 8%, var(--surface)); }
+.sbl-banner > .icon { color: var(--accent); }
+.sbl-banner > span { flex: 1 1 260px; }
+
+.sbl-cols { display: grid; grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr) minmax(0, 1fr); gap: 14px; align-items: start; }
+@media (max-width: 1180px) { .sbl-cols { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); } .sbl-adv { grid-row: span 2; } }
+@media (max-width: 760px) { .sbl-cols { grid-template-columns: minmax(0, 1fr); } .sbl-adv { grid-row: auto; } }
+.sbl-col { display: grid; gap: 10px; min-width: 0; padding: 14px; }
+.sbl-col header { display: grid; gap: 4px; }
+.sbl-col h2 { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin: 0; font-size: 16px; }
+.sbl-col h2 small { font-size: 12.5px; font-weight: 500; color: var(--text-2); }
+.sbl-col header .muted { margin: 0; font-size: 13px; }
+.sbl-tools { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 6px; }
+.sbl-tools .btn { padding: 5px 10px; font-size: 13px; }
+.sbl-tools .btn .icon { width: 15px; height: 15px; }
+.sbl-tools .btn[aria-pressed="true"] { border-color: var(--accent); color: var(--accent); }
+.sbl-col.sbl-drop { outline: 2px dashed var(--accent); outline-offset: -2px; }
+
+.sbl-adv-list { display: grid; gap: 2px; max-height: calc(100vh - 260px); min-height: 240px; overflow-y: auto; margin: 0 -6px; padding: 0 6px; }
+.sbl-sec { margin: 10px 0 2px; font-size: 11.5px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--text-2); }
+.sbl-sec:first-child { margin-top: 0; }
+.sbl-sub { margin: 6px 0 0 14px; font-size: 12px; font-weight: 600; color: var(--text-3); }
+
+.sbl-list { display: grid; gap: 2px; min-height: 120px; margin: 0; padding: 4px; list-style: none; border: 1px dashed var(--line); border-radius: 10px; }
+.sbl-empty { padding: 18px 10px; text-align: center; font-size: 13px; color: var(--text-2); }
+.sbl-row { display: flex; align-items: center; gap: 8px; min-width: 0; min-height: 38px; padding: 4px 6px; border-radius: 8px; background: var(--surface); }
+.sbl-row:hover { background: var(--surface-2); }
+.sbl-row > .icon { flex: none; width: 17px; height: 17px; color: var(--text-2); }
+.sbl-row.sbl-nest { padding-left: 18px; }
+.sbl-grip { flex: none; display: grid; place-items: center; width: 16px; color: var(--text-3); cursor: grab; }
+.sbl-grip .icon { width: 15px; height: 15px; }
+.sbl-row[draggable="true"] { cursor: grab; }
+.sbl-row.sbl-dragging { opacity: .45; }
+.sbl-name { flex: 1 1 auto; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 13.5px; }
+.sbl-name .tag { margin-left: 4px; vertical-align: 1px; }
+.sbl-name code { font-size: 12px; }
+.sbl-hid { margin-left: 6px; font-size: 12px; color: var(--text-3); }
+.sbl-off .sbl-name, .sbl-off > .icon { opacity: .5; }
+.sbl-off .sbl-name .sbl-hid { opacity: 1; }
+.sbl-gone .sbl-name { color: var(--crit); }
+.sbl-head { background: color-mix(in srgb, var(--text) 4%, var(--surface)); }
+.sbl-hin { flex: 1 1 auto; min-width: 0; padding: 4px 8px; border: 1px solid transparent; border-radius: 6px; background: transparent; color: var(--text-2);
+  font: 700 12px/1.4 inherit; letter-spacing: .08em; text-transform: uppercase; }
+.sbl-hin:hover { border-color: var(--line); }
+.sbl-hin:focus { border-color: var(--accent); outline: none; background: var(--surface); color: var(--text); }
+.sbl-ctl, .sbl-add { flex: none; display: flex; align-items: center; gap: 2px; }
+.sbl-ib { display: grid; place-items: center; width: 28px; height: 28px; padding: 0; border: 0; border-radius: 6px; background: none; color: var(--text-2); cursor: pointer; }
+.sbl-ib:hover:not([disabled]) { background: var(--surface-3); color: var(--text); }
+.sbl-ib[disabled] { opacity: .3; cursor: default; }
+.sbl-ib .icon { width: 15px; height: 15px; }
+.sbl-eye[aria-pressed="true"] { color: var(--accent); }
+.sbl-mini { display: inline-flex; align-items: center; gap: 3px; height: 26px; padding: 0 8px; border: 1px solid var(--line); border-radius: 6px; background: var(--surface);
+  color: var(--text-2); font-size: 12px; font-weight: 600; cursor: pointer; }
+.sbl-mini .icon { width: 12px; height: 12px; }
+.sbl-mini:hover:not([disabled]) { border-color: var(--accent); color: var(--accent); }
+.sbl-mini.on { border-color: transparent; background: none; color: var(--text-3); cursor: default; }
+.sbl-ib:focus-visible, .sbl-mini:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; }
+.sbl-mark { height: 0; margin: -1px 4px; border-top: 2px solid var(--accent); list-style: none; pointer-events: none; }
+@media (max-width: 760px) { .sbl-adv-list { max-height: 50vh; } .sbl-row { min-height: 44px; } .sbl-ib { width: 34px; height: 34px; } .sbl-mini { height: 32px; } }

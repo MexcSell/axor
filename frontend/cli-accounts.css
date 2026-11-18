@@ -1,0 +1,52 @@
+/* Agents → My logins (cli-accounts.js): your own Claude Code / Codex login */
+.cla-card .faint, .cla-card p { margin: 0; }
+.cla-top { display: flex; justify-content: space-between; align-items: center; gap: 8px; flex-wrap: wrap; }
+.cla-steps { margin: 0; padding-left: 18px; display: grid; gap: 4px; color: var(--text-2); }
+.cla-steps code, .cla-card code { font-family: var(--mono); font-size: 11px; }
+.cla-actions { display: flex; gap: 8px; flex-wrap: wrap; }
+.cla-device { display: grid; gap: 6px; padding: 10px 12px; border: 1px dashed var(--line); border-radius: 10px; background: var(--surface); }
+.cla-device a { word-break: break-all; }
+.cla-code { font-family: var(--mono); font-size: 22px; font-weight: 700; letter-spacing: .12em; user-select: all; }
+.cla-table { width: 100%; border-collapse: collapse; }
+.cla-table th, .cla-table td { text-align: left; padding: 6px 8px; border-bottom: 1px solid var(--line); vertical-align: middle; }
+.cla-table th { color: var(--text-3); font-weight: 600; }
+@media (max-width: 640px) { .cla-table th:nth-child(4), .cla-table td:nth-child(4) { display: none; } }
+
+/* Connect requests (cli-invites.js): the member's note and banner, the admins' team logins */
+.cla-card.cla-asked { outline: 2px solid var(--accent); outline-offset: -1px; }
+.cli-asked { display: grid; gap: 6px; padding: 10px 12px; border-radius: 10px; background: var(--accent-soft); color: var(--text); }
+.cli-asked p { margin: 0; }
+.cli-asked code { font-family: var(--mono); font-size: 11px; }
+.cli-asked-actions { display: flex; gap: 6px; flex-wrap: wrap; }
+.cli-team { display: grid; gap: 8px; }
+.cli-team p { margin: 0; }
+.cli-team-head { display: flex; justify-content: space-between; align-items: center; gap: 8px; flex-wrap: wrap; }
+.cli-team-head h4 { margin: 0; display: flex; gap: 6px; align-items: center; }
+.cli-warn { display: flex; gap: 6px; align-items: flex-start; padding: 8px 10px; border-radius: 8px; background: var(--warn-soft); color: var(--text); }
+.cli-table-wrap { overflow-x: auto; }
+.cli-table { width: 100%; border-collapse: collapse; min-width: 520px; }
+.cli-table th, .cli-table td { text-align: left; padding: 6px 8px; border-bottom: 1px solid var(--line); vertical-align: top; }
+.cli-table th { color: var(--text-3); font-weight: 600; }
+.cli-table .cli-check { width: 28px; }
+.cli-table tr.cli-off td { opacity: .6; }
+.cli-cell { display: flex; flex-wrap: wrap; gap: 4px 8px; align-items: center; }
+.cli-acts { display: inline-flex; gap: 10px; }
+.cli-by { display: block; font-size: 11px; margin-top: 2px; }
+.cli-askbar { display: flex; flex-wrap: wrap; gap: 8px 14px; align-items: center; padding: 8px 10px; border: 1px solid var(--line); border-radius: 10px; background: var(--surface-2); }
+.cli-want { display: inline-flex; gap: 5px; align-items: center; }
+.cli-askbar .btn { margin-left: auto; }
+.cli-ask-banner { position: fixed; z-index: 60; right: 16px; bottom: 16px; width: min(420px, calc(100vw - 32px)); display: grid; grid-template-columns: auto 1fr;
+  gap: 8px 12px; padding: 12px 14px; border: 1px solid var(--line); border-radius: 12px; background: var(--surface); color: var(--text); box-shadow: var(--shadow); }
+.cli-ask-icon { color: var(--accent); padding-top: 2px; }
+.cli-ask-text p { margin: 2px 0 0; color: var(--text-2); }
+.cli-ask-actions { grid-column: 2; display: flex; gap: 8px; }
+@media (max-width: 640px) {
+  .cli-ask-banner { right: 16px; left: 16px; width: auto; bottom: calc(16px + env(safe-area-inset-bottom)); }
+  .cli-askbar .btn { margin-left: 0; width: 100%; }
+  .cli-table { min-width: 0; }
+  .cli-table thead th:not(.cli-check) { display: none; }
+  .cli-table tr { display: grid; grid-template-columns: 28px 1fr; border-bottom: 1px solid var(--line); padding: 4px 0; }
+  .cli-table td { border: 0; padding: 4px 6px; }
+  .cli-table td[data-label] { grid-column: 2; }
+  .cli-table td[data-label]::before { content: attr(data-label); display: block; font-size: 11px; color: var(--text-3); font-weight: 600; }
+}

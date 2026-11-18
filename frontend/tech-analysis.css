@@ -1,0 +1,68 @@
+/* Technology Research analysis (tech-analysis.js): the research brief under the spotlight and the analysis in a story's
+   sheet. Built on the app's tokens (--surface, --text, --good, --warn…), so it follows the theme; the category colors
+   (.c-ai …, --c) come from tech.css. */
+.tan { margin: 28px 0 0; padding: 22px 24px 18px; border: 1px solid var(--line); border-radius: var(--tb-r, 24px); background: var(--surface); }
+.tan-head { display: flex; align-items: flex-end; justify-content: space-between; flex-wrap: wrap; gap: 12px; }
+.tan-eyebrow { display: inline-flex; align-items: center; gap: 6px; font-size: 12px; font-weight: 700; letter-spacing: .09em; text-transform: uppercase; color: var(--accent); }
+.tan-head h2 { margin: 6px 0 0; font: 800 clamp(22px, 2.4vw, 30px)/1.1 var(--tb-font, system-ui); letter-spacing: -.03em; text-wrap: balance; }
+.tan-head h2 span { color: var(--text-3); }
+.tan-scope { display: flex; gap: 6px; }
+.tan-body { margin-top: 14px; }
+.tan-hl { margin: 4px 0 8px; font: 750 19px/1.25 var(--tb-font, system-ui); letter-spacing: -.015em; }
+.tan-sum { margin: 0; max-width: 92ch; font-size: 15px; line-height: 1.62; color: var(--text); }
+.tan-empty { display: flex; align-items: center; gap: 8px; margin: 4px 0 10px; color: var(--text-2); }
+.tan-sk { display: grid; gap: 8px; } .tan-sk .skeleton { display: block; height: 14px; border-radius: 6px; } .tan-sk .skeleton:nth-child(2) { width: 82%; } .tan-sk .skeleton:nth-child(3) { width: 64%; }
+
+.tan-themes { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 12px; margin-top: 18px; }
+.tan-theme { position: relative; padding: 14px 16px; border-radius: 16px; background: var(--surface-2); border: 1px solid var(--line); min-width: 0; }
+.tan-n { font: 800 12px/1 var(--mono, monospace); color: var(--text-3); }
+.tan-theme h4 { margin: 6px 0 6px; font-size: 15px; letter-spacing: -.01em; }
+.tan-theme p { margin: 0; font-size: 13.5px; line-height: 1.55; color: var(--text-2); }
+.tan-stories { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px; }
+.tan-story { display: inline-flex; align-items: center; gap: 4px; max-width: 100%; padding: 3px 9px; border-radius: 999px; border: 1px solid var(--line);
+  background: var(--surface); color: var(--c, var(--text)); font: 600 12px/1.4 inherit; text-decoration: none; cursor: pointer; text-align: left;
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.tan-story:hover, .tan-story:focus-visible { border-color: var(--c, var(--accent)); }
+.tan-story .icon { flex: none; width: 12px; height: 12px; }
+
+.tan-cols { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 8px 24px; margin-top: 18px; }
+.tan-cols h4, .tan-an h4 { display: flex; align-items: center; gap: 6px; margin: 0 0 8px; font-size: 12px; letter-spacing: .09em; text-transform: uppercase; color: var(--text-3); }
+.tan-an h4 { margin-top: 16px; }
+.tan-list { display: grid; gap: 6px; margin: 0; padding: 0; list-style: none; }
+.tan-list li { position: relative; padding-left: 16px; line-height: 1.5; font-size: 14px; }
+.tan-list li::before { content: ""; position: absolute; left: 2px; top: .62em; width: 6px; height: 6px; border-radius: 50%; background: var(--text-3); }
+.tan-list.good li::before { background: var(--good); } .tan-list.warn li::before { background: var(--warn); }
+.tan-foot { display: flex; align-items: center; flex-wrap: wrap; gap: 6px 10px; margin: 16px 0 0; }
+.tan-foot > span { flex: 1 1 260px; }
+
+/* the story sheet */
+.tan-sheet { margin-top: 20px; padding-top: 4px; border-top: 1px solid var(--line); }
+.tan-cta { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px; padding: 14px 16px; border-radius: 14px; background: var(--surface-2); }
+.tan-cta b { display: inline-flex; align-items: center; gap: 6px; }
+.tan-cta p { margin: 4px 0 0; }
+.tan-badges { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; }
+.tan-verdict { display: inline-flex; align-items: center; gap: 5px; padding: 3px 10px; border-radius: 999px; font-weight: 700; font-size: 13px; }
+.tan-verdict.v-adopt { background: var(--good-soft); color: var(--good); }
+.tan-verdict.v-try { background: var(--accent-soft); color: var(--accent); }
+.tan-verdict.v-watch { background: var(--warn-soft); color: var(--warn); }
+.tan-verdict.v-skip { background: var(--surface-3); color: var(--text-2); }
+.tan-pill { padding: 3px 9px; border-radius: 999px; background: var(--surface-3); color: var(--text-2); font-size: 12px; text-transform: capitalize; }
+.tan-pill.conf-low { background: var(--warn-soft); color: var(--warn); }
+.tan-why { margin: 8px 0 0; font-weight: 600; }
+.tan-an > p { font-size: 15px; line-height: 1.62; }
+.tan-dl { display: grid; grid-template-columns: max-content 1fr; gap: 6px 14px; margin: 12px 0 0; }
+.tan-dl dt { font-size: 12.5px; font-weight: 700; color: var(--text-3); padding-top: 2px; }
+.tan-dl dd { margin: 0; line-height: 1.5; }
+.tan-bg { margin-top: 16px; padding: 10px 14px; border-left: 3px solid var(--line); background: var(--surface-2); border-radius: 0 10px 10px 0; }
+.tan-bg p { margin: 4px 0 0; font-size: 14px; line-height: 1.55; color: var(--text-2); }
+.tan-an .row { margin-top: 12px; gap: 8px; flex-wrap: wrap; }
+
+/* the badge on an analyzed story's card (white on the card's scrim, like the kicker) */
+.tan-mark { display: inline-flex; align-items: center; gap: 3px; margin-left: 8px; padding: 1px 7px; border-radius: 999px; background: rgba(255, 255, 255, .18);
+  font-size: 10.5px; letter-spacing: .04em; }
+.tan-mark .icon { width: 11px; height: 11px; }
+
+@media (max-width: 640px) {
+  .tan { padding: 18px 16px 14px; border-radius: 18px; }
+  .tan-dl { grid-template-columns: 1fr; gap: 2px; } .tan-dl dd { margin-bottom: 8px; }
+}

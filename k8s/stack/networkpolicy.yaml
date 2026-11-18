@@ -1,0 +1,31 @@
+# AXoR 5.1 stack: the namespace's own policy (k8s/base/30-axor.yaml) lets only web (and the edge, sandbox runs) reach pods in
+# axor. These add the stack's own paths; NetworkPolicies add up, so nothing else opens. Applied by k8s/stack.sh up/monitoring.
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata: { name: stack-postgres, namespace: axor }
+spec:
+  podSelector: { matchLabels: { app: postgres } }
+  policyTypes: [Ingress]
+  ingress:
+    - from: [{ podSelector: { matchLabels: { app: temporal } } }, { podSelector: { matchLabels: { app: pg-migrate } } }]
+      ports: [{ port: 5432 }]
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata: { name: stack-metrics-scrape, namespace: axor }
+spec:
+  podSelector: { matchLabels: { app: web } }
+  policyTypes: [Ingress]
+  ingress:
+    - from: [{ podSelector: { matchLabels: { app: prometheus } } }]
+      ports: [{ port: 8000 }]
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata: { name: stack-grafana-sources, namespace: axor }
+spec:
+  podSelector: { matchExpressions: [{ key: app, operator: In, values: [prometheus, tempo] }] }
+  policyTypes: [Ingress]
+  ingress:
+    - from: [{ podSelector: { matchLabels: { app: grafana } } }]
+      ports: [{ port: 9090 }, { port: 3200 }]

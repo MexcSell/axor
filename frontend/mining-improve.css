@@ -1,0 +1,75 @@
+/* Competition teams, Improvements (mining-improve.js), and what the Workflow shows of the eval record and the research
+   (mining-bench.js: the Plan step's ledger and research card, a stale base on the score line) */
+.mi-top p { margin: 0 0 10px; line-height: 1.5; max-width: 900px; }
+.mi-ask-row { gap: 6px; flex-wrap: wrap; }
+.mi-ask { display: grid; gap: 8px; margin-top: 10px; padding: 10px 12px; border-radius: 10px; background: var(--surface-2); }
+.mi-ask .row { gap: 8px; flex-wrap: wrap; align-items: center; }
+.mi-card { display: grid; gap: 8px; }
+.mi-card > p { margin: 0; }
+.mi-card.st-proposed, .mi-card.st-better { border-color: color-mix(in srgb, var(--accent) 45%, var(--line)); }
+.mi-card .mb-h h3 { display: flex; gap: 6px; align-items: baseline; flex-wrap: wrap; min-width: 0; }
+.mi-root { line-height: 1.5; }
+.mi-root b { display: inline-block; min-width: 92px; color: var(--text-2); font-size: 12px; text-transform: uppercase; letter-spacing: .04em; }
+.mi-change { display: grid; gap: 6px; padding: 8px 10px; border-radius: 10px; background: var(--surface-2); }
+.mi-change summary { cursor: pointer; font-weight: 600; font-size: 13px; }
+.mi-words { margin: 6px 0 0; line-height: 1.6; white-space: pre-wrap; overflow-wrap: anywhere; font-size: 13px; }
+.mi-words ins { text-decoration: none; background: color-mix(in srgb, var(--good) 22%, transparent); border-radius: 3px; padding: 0 1px; }
+.mi-words del { color: var(--text-3); background: color-mix(in srgb, var(--crit) 14%, transparent); border-radius: 3px; padding: 0 1px; }
+.ml-chip.mi-add { border-color: color-mix(in srgb, var(--good) 45%, var(--line)); background: color-mix(in srgb, var(--good) 10%, var(--surface)); }
+.ml-chip.mi-drop { border-color: color-mix(in srgb, var(--crit) 45%, var(--line)); background: color-mix(in srgb, var(--crit) 8%, var(--surface)); text-decoration: line-through; }
+.mi-arms { list-style: none; margin: 0; padding: 0; display: grid; gap: 4px; }
+.mi-arms li { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; font-size: 13px; }
+.mi-tiles { grid-template-columns: repeat(4, minmax(0, 1fr)); margin: 0; }
+.mi-tiles b.up { color: var(--good); }
+.mi-tiles b.down { color: var(--crit); }
+.mi-result { padding: 8px 10px; border-radius: 10px; background: var(--surface-2); line-height: 1.5; }
+.mi-result.ok { background: color-mix(in srgb, var(--good) 10%, var(--surface)); }
+.mi-result.bad { background: color-mix(in srgb, var(--crit) 8%, var(--surface)); }
+.mi-card .mb-acts { gap: 8px; flex-wrap: wrap; align-items: center; }
+.mi-tag { display: inline-block; padding: 1px 7px; border-radius: 999px; font-size: 11px; font-weight: 600; letter-spacing: .02em; white-space: nowrap;
+  color: var(--text-2); background: var(--surface-2); border: 1px solid var(--line); }
+.mi-tag.held { color: var(--accent); border-color: color-mix(in srgb, var(--accent) 40%, var(--line)); background: color-mix(in srgb, var(--accent) 8%, var(--surface)); }
+.mi-plan { display: grid; gap: 8px; padding: 10px 12px; border-radius: 10px; border: 1px dashed var(--line); }
+.mi-plan p { margin: 0; line-height: 1.5; }
+.mi-plan-set { gap: 12px; flex-wrap: wrap; align-items: end; }
+.mi-plan-set .in { min-width: 150px; }
+.mi-plan-list, .mi-per { list-style: none; margin: 0; padding: 0; display: grid; gap: 5px; }
+.mi-plan-list li, .mi-per li { display: flex; gap: 8px; align-items: baseline; flex-wrap: wrap; font-size: 13px; min-width: 0; }
+.mi-per-t { min-width: 0; overflow-wrap: anywhere; }
+.mi-per b { font-variant-numeric: tabular-nums; }
+.mi-per b.up { color: var(--good); }
+.mi-per b.down { color: var(--crit); }
+.mi-arms li { align-items: baseline; }
+.mi-sides { display: grid; gap: 3px; flex-basis: 100%; padding-left: 10px; border-left: 2px solid var(--line); }
+.mi-side { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; min-width: 0; }
+.mi-runs summary { cursor: pointer; font-size: 13px; font-weight: 600; }
+.mi-runs .mi-arms { margin-top: 6px; }
+
+.mb-ledger { margin: 10px 0; }
+.mb-ledger summary { cursor: pointer; font-weight: 600; display: inline-flex; gap: 6px; align-items: center; }
+.mb-ledger pre { margin: 8px 0 4px; padding: 10px 12px; border-radius: 10px; background: var(--surface-2); white-space: pre-wrap; overflow-wrap: anywhere; font-size: 12.5px; line-height: 1.55; max-height: 340px; overflow: auto; }
+.mb-research { margin: 12px 0; padding: 10px 12px; border-radius: 10px; border: 1px solid var(--line); display: grid; gap: 8px; }
+.mb-research h4 { margin: 0; display: flex; gap: 6px; align-items: center; }
+.mb-research p { margin: 0; }
+.mb-rs-start { gap: 8px; flex-wrap: wrap; }
+.mb-rs-start input { flex: 1 1 260px; min-width: 0; }
+.mb-score .mb-stale { color: var(--warn); display: inline-flex; gap: 3px; align-items: center; }
+.mb-score .mb-stale svg { width: 12px; height: 12px; }
+
+@media (max-width: 640px) {
+  .mi-tiles { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .mi-per li .faint { flex-basis: 100%; }
+  .mi-root b { display: block; }
+}
+
+/* improve on its own (mining_evolve.py): limit, spend, freeze, watches */
+.mi-self { display: grid; gap: 10px; margin: 0 0 10px 28px; padding: 10px 12px; border-radius: 10px; background: var(--surface-2); }
+.mi-self-row { gap: 16px; flex-wrap: wrap; align-items: flex-end; }
+.mi-self-row .in { max-width: 200px; }
+.mi-self-row .mb-switch { margin: 0; flex: 1 1 260px; }
+.mi-spent { display: grid; gap: 4px; min-width: 150px; }
+.mi-bar { display: block; height: 6px; border-radius: 3px; background: var(--line); overflow: hidden; }
+.mi-bar i { display: block; height: 100%; background: var(--accent); }
+.mi-watches { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; }
+.mi-watches li { line-height: 1.5; }
+@media (max-width: 640px) { .mi-self { margin-left: 0; } }

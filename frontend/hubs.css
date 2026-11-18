@@ -1,0 +1,138 @@
+/* AXoR 2.0 hubs (hubs.js, hub-intel.js, hub-infra.js; prefix axh-) and the Approval Center's governance tabs: built on command.css's
+   occ- cards, pills and lists, so every hub reads like the Command Center. */
+
+.axh-span12 { grid-column: span 12; }
+.occ-grid > .axh-card:not(.axh-span12) { grid-column: span 6; }
+.axh-warn { margin: 8px 0 0; color: var(--warn); }
+.axh-warn .icon { width: 14px; height: 14px; vertical-align: -2px; margin-right: 5px; }
+
+/* ---------- tabs ---------- */
+.axh-tabs { display: flex; gap: 2px; margin: 0 0 12px; padding: 3px; overflow-x: auto; border: 1px solid var(--line); border-radius: 10px; background: var(--surface); width: max-content; max-width: 100%; }
+.axh-tabs button { display: inline-flex; align-items: center; gap: 7px; padding: 6px 12px; border: 0; border-radius: 7px; background: none; color: var(--text-2); cursor: pointer; font: inherit; font-size: 13px; font-weight: 500; white-space: nowrap; }
+.axh-tabs button .icon { width: 15px; height: 15px; color: var(--text-3); }
+.axh-tabs button b { font: 600 11px/1 var(--mono); color: var(--text-3); }
+.axh-tabs button:hover { background: var(--surface-2); color: var(--text); }
+.axh-tabs button[aria-selected="true"] { background: color-mix(in srgb, var(--accent) 14%, transparent); color: var(--text); font-weight: 600; }
+.axh-tabs button[aria-selected="true"] .icon { color: var(--accent); }
+
+/* ---------- bar charts: one hue, thin bars, values in text color ---------- */
+.axh-bars { list-style: none; margin: 0; padding: 0; display: grid; gap: 6px; }
+.axh-bars li { display: grid; grid-template-columns: minmax(0, 38%) minmax(0, 1fr) 64px; gap: 10px; align-items: center; font-size: 12.5px; }
+.axh-bar-l { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; color: var(--text-2); text-align: left; border: 0; background: none; padding: 0; font: inherit; }
+button.axh-bar-l { cursor: pointer; } button.axh-bar-l:hover { color: var(--text); text-decoration: underline; text-underline-offset: 2px; }
+.axh-bar-t { position: relative; height: 10px; }
+.axh-bar-t i { position: absolute; left: 0; top: 0; bottom: 0; border-radius: 0 4px 4px 0; background: var(--accent); opacity: .85; }
+.axh-bars li:hover .axh-bar-t i { opacity: 1; }
+.axh-bars b { text-align: right; font-weight: 600; font-size: 12px; color: var(--text); }
+.axh-meter { display: inline-block; vertical-align: middle; width: 64px; margin-right: 4px; }
+.occ-by .axh-meter { width: 100%; margin: 0; }
+.axh-risk li { grid-template-columns: 120px minmax(0, 1fr) 50px; }
+
+/* ---------- tables ---------- */
+.axh-table td { vertical-align: middle; }
+.axh-table td .occ-pill { vertical-align: middle; }
+/* Analytics: the Owner's targets (G5-5 L5.1). What each was read from is the point of the table, so it wraps instead of being cut */
+table.grid.g5-targets { width: 100%; } .g5-targets td { white-space: normal; } .g5-targets td:nth-child(1) { min-width: 200px; } .g5-targets td:nth-child(3) { min-width: 240px; }
+.axh-lead { font-style: normal; font-size: 10.5px; font-weight: 650; text-transform: uppercase; letter-spacing: .04em; color: var(--accent); }
+.axh-kv { list-style: none; margin: 0; padding: 0; display: grid; gap: 7px; font-size: 13px; }
+.axh-kv li { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+.axh-kv li > span:first-child { color: var(--text-2); }
+.axh-kv b { font-weight: 600; text-align: right; }
+.axh-chiprow { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px; }
+.axh-notes { list-style: none; margin: 0; padding: 0; display: grid; gap: 6px; font-size: 13px; }
+.axh-notes li { display: grid; gap: 2px; padding: 7px 10px; border-radius: 8px; background: var(--surface-2); }
+.axh-inkpis { margin-bottom: 4px; }
+
+/* ---------- Organization: the hierarchy ---------- */
+.axh-root-node { display: flex; align-items: center; gap: 12px; width: max-content; max-width: 100%; margin: 0 auto 14px; padding: 10px 18px; border-radius: 12px;
+  border: 1px solid color-mix(in srgb, var(--accent) 45%, var(--line)); background: color-mix(in srgb, var(--accent) 10%, var(--surface)); }
+.axh-root-node > div { display: grid; line-height: 1.3; }
+.axh-root-node small { color: var(--text-3); font-size: 12px; }
+.axh-you { display: grid; place-items: center; width: 32px; height: 32px; border-radius: 50%; background: var(--accent); color: var(--accent-ink, #fff); }
+.axh-you .icon { width: 16px; height: 16px; }
+.axh-orgcols { position: relative; display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 12px; align-items: start; padding-top: 14px; border-top: 2px solid color-mix(in srgb, var(--accent) 35%, var(--line)); }
+.axh-orgcols::before { content: ""; position: absolute; left: 50%; top: -16px; width: 2px; height: 14px; background: color-mix(in srgb, var(--accent) 35%, var(--line)); }
+.axh-col { display: grid; gap: 8px; padding: 10px; border-radius: 10px; border: 1px solid var(--line); background: color-mix(in srgb, var(--surface) 94%, transparent); min-width: 0; }
+.axh-colh { display: flex; align-items: flex-start; gap: 9px; padding: 4px 4px 8px; border: 0; border-bottom: 1px solid var(--line); background: none; color: var(--text); cursor: pointer; font: inherit; text-align: left; }
+.axh-colh > .icon { width: 18px; height: 18px; color: var(--accent); flex: none; margin-top: 1px; }
+.axh-colh > span { display: grid; min-width: 0; line-height: 1.3; }
+.axh-colh b { font-size: 14px; }
+.axh-colh small { font-size: 11.5px; color: var(--text-3); }
+.axh-colh:hover b { text-decoration: underline; text-underline-offset: 2px; }
+.axh-grp { border-radius: 8px; background: var(--surface-2); }
+.axh-grp summary { display: flex; align-items: center; justify-content: space-between; gap: 8px; padding: 7px 10px; cursor: pointer; font-size: 12.5px; font-weight: 600; list-style: none; }
+.axh-grp summary::-webkit-details-marker { display: none; }
+.axh-grp summary::before { content: "▸"; color: var(--text-3); font-size: 10px; transition: transform .15s; }
+.axh-grp[open] summary::before { transform: rotate(90deg); }
+.axh-grp summary span { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.axh-grp summary b { font: 600 11px/1 var(--mono); color: var(--text-3); }
+.axh-grp > p { margin: -2px 10px 6px; }
+.axh-grp ul, .axh-flat { list-style: none; margin: 0; padding: 0 4px 6px; display: grid; gap: 1px; }
+.axh-flat { padding: 0; }
+.axh-ag { display: flex; align-items: center; gap: 8px; width: 100%; padding: 5px 6px; border: 0; border-radius: 6px; background: none; color: var(--text); cursor: pointer; font: inherit; text-align: left; }
+.axh-ag:hover { background: color-mix(in srgb, var(--accent) 9%, transparent); }
+.axh-ag > span:nth-child(2) { display: grid; flex: 1; min-width: 0; line-height: 1.25; }
+.axh-ag b { font-size: 12.5px; font-weight: 600; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.axh-ag small { font-size: 11px; color: var(--text-3); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.axh-ag .plt-dot { width: 7px; height: 7px; box-shadow: none; }
+.axh-load { flex: none; font: 600 10.5px/1 var(--mono); padding: 3px 6px; border-radius: 8px; background: color-mix(in srgb, var(--accent) 16%, var(--surface)); color: var(--text); }
+
+/* ---------- cards: teams, projects, launchers ---------- */
+.axh-cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 10px; margin-bottom: 14px; }
+.axh-tcard, .axh-pcard { display: grid; gap: 5px; align-content: start; padding: 12px 14px; border-radius: 10px; border: 1px solid var(--line); background: color-mix(in srgb, var(--surface) 94%, transparent);
+  color: var(--text); font: inherit; text-align: left; min-width: 0; }
+.axh-tcard { cursor: pointer; } .axh-tcard:hover { border-color: color-mix(in srgb, var(--accent) 40%, var(--line)); }
+.axh-tcard > b { font-size: 14px; } .axh-tcard > small { font-size: 12px; color: var(--text-3); }
+.axh-tmeta { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 4px; font-size: 12px; color: var(--text-2); }
+.axh-tmeta span { display: inline-flex; align-items: center; gap: 4px; }
+.axh-tmeta .icon { width: 13px; height: 13px; color: var(--text-3); }
+.axh-pname { padding: 0; border: 0; background: none; color: var(--text); font: inherit; font-size: 14.5px; font-weight: 650; text-align: left; cursor: pointer; }
+.axh-pname:hover { text-decoration: underline; text-underline-offset: 2px; }
+.axh-pcard > p { margin: 0; font-size: 12.5px; color: var(--text-2); display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+.axh-pstats { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin: 4px 0; }
+.axh-pstats div { display: grid; gap: 3px; min-width: 0; }
+.axh-pstats dt { font-size: 10.5px; font-weight: 650; letter-spacing: .05em; text-transform: uppercase; color: var(--text-3); }
+.axh-pstats dd { margin: 0; display: flex; align-items: center; gap: 6px; font-size: 12px; min-width: 0; }
+.axh-pstats .axh-meter { flex: 1; width: auto; min-width: 30px; }
+.axh-launch { display: grid; grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); gap: 6px; }
+.axh-ll { font-size: 13.5px !important; font-weight: 600; }
+.occ-orgi .axh-ll + em { white-space: normal; }
+
+/* ---------- dependencies ---------- */
+.axh-deps { list-style: none; margin: 0; padding: 0; display: grid; gap: 6px; }
+.axh-deps li { display: grid; grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr); gap: 10px; align-items: center; padding: 8px 10px; border: 1px solid var(--line); border-radius: 10px;
+  background: color-mix(in srgb, var(--surface) 94%, transparent); }
+.axh-dep-end { display: flex; align-items: center; gap: 7px; min-width: 0; padding: 6px 9px; border: 1px solid var(--line); border-radius: 8px; background: var(--surface-2); color: var(--text); cursor: pointer; font: inherit; font-size: 13px; text-align: left; }
+.axh-dep-end:hover { border-color: color-mix(in srgb, var(--accent) 40%, var(--line)); }
+.axh-dep-end .icon { width: 14px; height: 14px; color: var(--accent); flex: none; }
+.axh-dep-end span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.axh-dep-k { display: inline-flex; align-items: center; gap: 4px; font-size: 11.5px; color: var(--text-3); white-space: nowrap; }
+.axh-dep-k .icon { width: 13px; height: 13px; }
+
+/* ---------- the task board ---------- */
+.axh-board { display: grid; grid-template-columns: repeat(5, minmax(220px, 1fr)); gap: 10px; overflow-x: auto; padding-bottom: 6px; align-items: start; }
+.axh-lane { display: grid; gap: 6px; padding: 8px; border-radius: 10px; background: color-mix(in srgb, var(--surface-2) 90%, transparent); border-top: 3px solid var(--text-3); min-width: 0; }
+.axh-lane.l-info { border-top-color: var(--info); } .axh-lane.l-ok { border-top-color: var(--good); } .axh-lane.l-warn { border-top-color: var(--warn); } .axh-lane.l-crit { border-top-color: var(--crit); }
+.axh-lane h4 { display: flex; align-items: center; justify-content: space-between; margin: 2px 4px 4px; font-size: 12px; font-weight: 650; text-transform: uppercase; letter-spacing: .05em; color: var(--text-2); }
+.axh-lane h4 b { font: 600 11px/1 var(--mono); color: var(--text-3); }
+.axh-lane ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 6px; }
+.axh-task { display: grid; gap: 4px; width: 100%; padding: 9px 10px; border: 1px solid var(--line); border-radius: 8px; background: var(--surface); color: var(--text); cursor: pointer; font: inherit; text-align: left; }
+.axh-task:hover { border-color: color-mix(in srgb, var(--accent) 40%, var(--line)); }
+.axh-task b { font-size: 12.5px; font-weight: 600; line-height: 1.35; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+.axh-task small { display: flex; align-items: center; gap: 4px; font-size: 11px; color: var(--text-3); overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+.axh-task small .icon { width: 12px; height: 12px; flex: none; }
+.axh-task-f { display: flex; justify-content: space-between; gap: 6px; font-size: 11px; color: var(--text-2); }
+.axh-task-f span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.axh-lane-empty { margin: 4px; }
+
+/* ---------- smaller screens ---------- */
+@media (max-width: 1180px) { .occ-grid > .axh-card:not(.axh-span12) { grid-column: span 12; } }
+@media (max-width: 600px) {
+  .axh-bars li { grid-template-columns: minmax(0, 45%) minmax(0, 1fr) 52px; gap: 6px; }
+  .axh-deps li { grid-template-columns: minmax(0, 1fr); }
+  .axh-dep-k { padding-left: 6px; }
+  .axh-orgcols { grid-template-columns: minmax(0, 1fr); }
+  .axh-board { grid-template-columns: repeat(5, 78vw); }
+  .axh-risk li { grid-template-columns: 110px minmax(0, 1fr) 40px; }
+  .axh-kv li { flex-wrap: wrap; }
+}

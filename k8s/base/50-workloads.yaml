@@ -1,0 +1,98 @@
+# Where PaaS apps (axor-apps) and FaaS functions (axor-functions) run, and what they may reach:
+# - a quota per namespace (no NodePorts or load balancers: the edge is the only way in; no KVM, which is for
+#   machines, 55-machines.yaml) and default limits
+# - in: only from the edge, from AXoR (its "Open" and "Invoke" buttons) and from their own namespace
+# - out: cluster DNS, their own namespace, the edge (other apps by their public names) and the internet, but not
+#   AXoR, this host (${PUBLIC_IP}), the Kubernetes API or any private range
+apiVersion: v1
+kind: ResourceQuota
+metadata: { name: workloads, namespace: axor-apps }
+spec:
+  hard:
+    requests.axor.dev/kvm: "0"
+    limits.cpu: "24"
+    limits.memory: 48Gi
+    requests.storage: 200Gi
+    persistentvolumeclaims: "50"
+    pods: "200"
+    services.nodeports: "0"
+    services.loadbalancers: "0"
+---
+apiVersion: v1
+kind: ResourceQuota
+metadata: { name: workloads, namespace: axor-functions }
+spec:
+  hard:
+    requests.axor.dev/kvm: "0"
+    limits.cpu: "16"
+    limits.memory: 16Gi
+    persistentvolumeclaims: "0"
+    pods: "300"
+    services.nodeports: "0"
+    services.loadbalancers: "0"
+---
+apiVersion: v1
+kind: LimitRange
+metadata: { name: workloads, namespace: axor-apps }
+spec:
+  limits:
+    - type: Container
+      default: { cpu: 500m, memory: 256Mi }
+      defaultRequest: { cpu: 50m, memory: 64Mi }
+      max: { cpu: "8", memory: 16Gi }
+---
+apiVersion: v1
+kind: LimitRange
+metadata: { name: workloads, namespace: axor-functions }
+spec:
+  limits:
+    - type: Container
+      default: { cpu: 500m, memory: 256Mi }
+      defaultRequest: { cpu: 25m, memory: 32Mi }
+      max: { cpu: "4", memory: 4Gi }
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata: { name: workloads, namespace: axor-apps }
+spec:
+  podSelector: {}
+  policyTypes: [Ingress, Egress]
+  ingress:
+    - from:
+        - podSelector: {}
+        - namespaceSelector: { matchLabels: { kubernetes.io/metadata.name: axor-edge } }
+          podSelector: { matchLabels: { app: edge } }
+        - namespaceSelector: { matchLabels: { kubernetes.io/metadata.name: axor } }
+          podSelector: { matchLabels: { app: web } }
+  egress:
+    - to: [{ podSelector: {} }]
+    - to: [{ namespaceSelector: { matchLabels: { kubernetes.io/metadata.name: kube-system } }, podSelector: { matchLabels: { k8s-app: kube-dns } } }]
+      ports: [{ port: 53, protocol: UDP }, { port: 53, protocol: TCP }]
+    - to: [{ namespaceSelector: { matchLabels: { kubernetes.io/metadata.name: axor-edge } }, podSelector: { matchLabels: { app: edge } } }]
+    - to:
+        - ipBlock:
+            cidr: 0.0.0.0/0
+            except: [10.0.0.0/8, 172.16.0.0/12, 192.168.0.0/16, 100.64.0.0/10, 169.254.0.0/16, 127.0.0.0/8, "${PUBLIC_IP}/32"]
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata: { name: workloads, namespace: axor-functions }
+spec:
+  podSelector: {}
+  policyTypes: [Ingress, Egress]
+  ingress:
+    - from:
+        - podSelector: {}
+        - namespaceSelector: { matchLabels: { kubernetes.io/metadata.name: axor-edge } }
+          podSelector: { matchLabels: { app: edge } }
+        - namespaceSelector: { matchLabels: { kubernetes.io/metadata.name: axor } }
+          podSelector: { matchLabels: { app: web } }
+  egress:
+    - to: [{ podSelector: {} }]
+    - to: [{ namespaceSelector: { matchLabels: { kubernetes.io/metadata.name: kube-system } }, podSelector: { matchLabels: { k8s-app: kube-dns } } }]
+      ports: [{ port: 53, protocol: UDP }, { port: 53, protocol: TCP }]
+    - to: [{ namespaceSelector: { matchLabels: { kubernetes.io/metadata.name: axor-edge } }, podSelector: { matchLabels: { app: edge } } }]
+    - to:
+        - ipBlock:
+            cidr: 0.0.0.0/0
+            except: [10.0.0.0/8, 172.16.0.0/12, 192.168.0.0/16, 100.64.0.0/10, 169.254.0.0/16, 127.0.0.0/8, "${PUBLIC_IP}/32"]

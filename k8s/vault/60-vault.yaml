@@ -1,0 +1,111 @@
+# HashiCorp Vault for AXoR's run credentials (decision D-033: own namespace, reachable only from AXoR's web pod; Shamir keys
+# 3 of 5 with the Owner as custodian; only the Owner writes secrets; a run gets a credential through AXoR's broker, never a token).
+#
+# NOT APPLIED BY ANY SCRIPT. k8s/deploy.sh applies k8s/base and k8s/host only. Creating this namespace and pod is a production
+# step that needs the Owner's own written authorization, and the first start needs the Owner present:
+#   1. kubectl apply -f k8s/vault/60-vault.yaml
+#   2. kubectl -n axor-vault exec -it vault-0 -- vault operator init -key-shares=5 -key-threshold=3
+#      The five unseal keys and the root token are shown ONCE, to the Owner. AXoR never sees or stores them.
+#   3. vault operator unseal, three times with three different keys. Again after every restart of the pod: until then every run
+#      that needs a credential is held, and nothing else in AXoR is affected.
+#   4. VAULT_ADDR=… VAULT_TOKEN=<root token> k8s/vault/bootstrap.sh    then revoke the root token (vault token revoke -self).
+#   5. Give AXoR's web pod the token bootstrap.sh printed, as a file (VAULT_TOKEN_FILE), and VAULT_ADDR=http://vault.axor-vault.svc.cluster.local:8200.
+#
+# Open before this is used for real (stated, not decided here):
+# - TLS. This listener is plain HTTP. The NetworkPolicy lets only the web pod reach it and the cluster is one node, so the
+#   traffic never leaves the host; with a second node it must have TLS first.
+# - Memory locking is off (the namespace's baseline Pod Security doesn't allow IPC_LOCK), so a secret could reach the host's swap.
+#   The host has swap; pods on it get none (memory.swap.max 0, read 2026-11-13), which is what keeps this acceptable.
+# - AXoR's token is a file and has to be renewed (it lives 32 days). Vault's Kubernetes auth would remove the file: not built.
+# - Backup: the volume holds the encrypted store; it is useless without three keys, and it must be in the backup (k8s/backup.sh doesn't know it yet).
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: axor-vault
+  labels:
+    axor.dev/tier: platform
+    pod-security.kubernetes.io/enforce: baseline
+    pod-security.kubernetes.io/enforce-version: latest
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata: { name: default, namespace: axor-vault }
+automountServiceAccountToken: false
+---
+apiVersion: v1
+kind: ConfigMap
+metadata: { name: vault-config, namespace: axor-vault }
+data:
+  vault.hcl: |
+    ui            = false
+    disable_mlock = true
+    api_addr      = "http://vault.axor-vault.svc.cluster.local:8200"
+    cluster_addr  = "http://127.0.0.1:8201"
+    listener "tcp" {
+      address     = "0.0.0.0:8200"
+      tls_disable = true
+    }
+    storage "raft" {
+      path    = "/vault/data"
+      node_id = "vault-0"
+    }
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata: { name: vault, namespace: axor-vault, labels: { app: vault } }
+spec:
+  serviceName: vault
+  replicas: 1
+  selector: { matchLabels: { app: vault } }
+  template:
+    metadata: { labels: { app: vault } }
+    spec:
+      automountServiceAccountToken: false
+      enableServiceLinks: false          # a Service named vault would set VAULT_PORT=tcp://… in the pod
+      securityContext: { runAsNonRoot: true, runAsUser: 100, runAsGroup: 1000, fsGroup: 1000, seccompProfile: { type: RuntimeDefault } }
+      containers:
+        - name: vault
+          image: hashicorp/vault:1.18    # pin by digest when this is applied; staging used this tag (Vault v1.18.x)
+          args: ["server", "-config=/vault/config/vault.hcl"]
+          env:
+            - { name: SKIP_SETCAP, value: "1" }
+            - { name: SKIP_CHOWN, value: "1" }
+          ports: [{ name: api, containerPort: 8200 }]
+          readinessProbe:               # ready only when initialized and unsealed: a sealed Vault is "not ready", and the pod stays up to be unsealed
+            httpGet: { path: /v1/sys/health, port: api }
+            periodSeconds: 10
+          securityContext: { allowPrivilegeEscalation: false, readOnlyRootFilesystem: true, capabilities: { drop: [ALL] } }
+          resources: { requests: { cpu: 50m, memory: 128Mi }, limits: { cpu: "1", memory: 512Mi } }
+          volumeMounts:
+            - { name: data, mountPath: /vault/data }
+            - { name: logs, mountPath: /vault/logs }
+            - { name: config, mountPath: /vault/config, readOnly: true }
+            - { name: tmp, mountPath: /tmp }
+      volumes:
+        - { name: config, configMap: { name: vault-config } }
+        - { name: tmp, emptyDir: { sizeLimit: 64Mi } }
+  volumeClaimTemplates:
+    - metadata: { name: data }
+      spec: { accessModes: [ReadWriteOnce], resources: { requests: { storage: 1Gi } } }
+    - metadata: { name: logs }           # the audit device's file (bootstrap.sh: /vault/logs/audit.log)
+      spec: { accessModes: [ReadWriteOnce], resources: { requests: { storage: 2Gi } } }
+---
+apiVersion: v1
+kind: Service
+metadata: { name: vault, namespace: axor-vault }
+spec:
+  selector: { app: vault }
+  ports: [{ name: api, port: 8200, targetPort: api }]
+---
+# Only AXoR's web pod reaches Vault, on its API port. Vault itself reaches nothing: no DNS, no internet, no other pod.
+# Sandbox runs, runner VMs and the egress proxy have no rule here and so no route (staged: evidence/vault-run2, A-CRED-3).
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata: { name: vault, namespace: axor-vault }
+spec:
+  podSelector: {}
+  policyTypes: [Ingress, Egress]
+  ingress:
+    - from: [{ namespaceSelector: { matchLabels: { kubernetes.io/metadata.name: axor } }, podSelector: { matchLabels: { app: web } } }]
+      ports: [{ port: 8200, protocol: TCP }]
+  egress: []

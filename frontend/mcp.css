@@ -1,0 +1,82 @@
+/* Tools & MCP (mcp.js; prefix tmc-): the server list on the Agents page and the grant pickers in profiles and teams. */
+.tmc { display: grid; grid-template-columns: minmax(0, 1fr); gap: 14px; }  /* minmax: the calls table scrolls in its card on phones */
+.tmc .hub-top { display: flex; gap: 16px; align-items: flex-end; justify-content: space-between; flex-wrap: wrap; }
+.tmc .lead { max-width: 760px; }
+.tmc-loading { display: flex; gap: 8px; align-items: center; color: var(--text-3); padding: 40px 0; justify-content: center; }
+.tmc-none { display: flex; gap: 10px; align-items: center; }
+.tmc-list { display: grid; gap: 12px; }
+.tmc-srv { padding: 14px 16px; display: grid; gap: 10px; }
+.tmc-srv > header { display: flex; gap: 12px; align-items: center; flex-wrap: wrap; }
+.tmc-ico { width: 36px; height: 36px; border-radius: 9px; display: grid; place-items: center; background: var(--surface-2); color: var(--text-2); flex: none; }
+.tmc-t { min-width: 0; flex: 1 1 220px; }
+.tmc-t h3 { margin: 0; font-size: 15px; }
+.tmc-t p { margin: 2px 0 0; overflow-wrap: anywhere; }
+.tmc-pills, .tmc-acts { display: flex; gap: 6px; flex-wrap: wrap; align-items: center; }
+.tmc-pill { display: inline-flex; align-items: center; gap: 4px; font-size: 11.5px; line-height: 1.5; padding: 1px 8px; border-radius: 999px; border: 1px solid var(--line); color: var(--text-2); white-space: nowrap; }
+.tmc-pill .icon { width: 12px; height: 12px; }
+.tmc-pill.t-ok { color: var(--good); border-color: color-mix(in srgb, var(--good) 40%, transparent); }
+.tmc-pill.t-err { color: var(--crit); border-color: color-mix(in srgb, var(--crit) 40%, transparent); }
+.tmc-pill.t-warn { color: var(--warn); border-color: color-mix(in srgb, var(--warn) 40%, transparent); }
+.tmc-pill.t-off, .tmc-pill.t-new { color: var(--text-3); }
+.tmc-err { margin: 0; color: var(--crit); font-size: 13px; display: flex; gap: 6px; align-items: flex-start; overflow-wrap: anywhere; }
+.tmc-err .icon { flex: none; margin-top: 2px; }
+.tmc-tools { border-top: 1px solid var(--line); padding-top: 10px; display: grid; gap: 8px; }
+.tmc-th { margin: 0; font-size: 12.5px; color: var(--text-2); }
+.tmc-tools ul, .tmc-pick ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 6px; }
+.tmc-chk { display: flex; gap: 10px; align-items: flex-start; cursor: pointer; }
+span.tmc-chk { cursor: default; }
+.tmc-chk input { margin-top: 3px; flex: none; }
+.tmc-chk > span { min-width: 0; display: flex; flex-wrap: wrap; gap: 4px 6px; align-items: center; }
+.tmc-chk small { flex-basis: 100%; overflow-wrap: anywhere; }
+.tmc code, .tmc-pick code { font-size: 12px; overflow-wrap: anywhere; }
+.tmc-form { padding: 16px; display: grid; gap: 12px; max-width: 760px; }
+.tmc-form h3 { margin: 0; display: flex; gap: 8px; align-items: center; }
+.tmc-seg { justify-self: start; }
+.tmc-seg [aria-checked=true] { background: var(--accent-soft); color: var(--accent); font-weight: 600; }
+.tmc-pairs { display: grid; gap: 6px; }
+.tmc-pair { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.4fr) auto; gap: 6px; align-items: center; }
+.tmc-note { margin: 0; font-size: 13px; color: var(--text-2); display: flex; gap: 6px; align-items: flex-start; }
+.tmc-note .icon { flex: none; margin-top: 2px; }
+.tmc-calls { padding: 14px 16px; }
+.tmc-calls h3, .tmc-builtin h3 { margin: 0 0 8px; display: flex; gap: 8px; align-items: center; font-size: 14px; }
+.tmc-builtin { padding: 14px 16px; }
+.tmc-builtin p { margin: 0; }
+
+/* the grant picker (an agent's Tools tab, a Competition team's Agents tab) */
+.aos-mcp, .mw-mcp { margin-top: 14px; }
+.mw-mcp { padding: 14px 16px; }
+.tmc-pick { display: grid; gap: 10px; }
+.tmc-pick > header { display: flex; gap: 10px; align-items: baseline; justify-content: space-between; flex-wrap: wrap; }
+.tmc-pick h4 { margin: 0; display: flex; gap: 6px; align-items: center; font-size: 14px; }
+.tmc-pick li { border: 1px solid var(--line); border-radius: 9px; padding: 8px 10px; display: grid; gap: 8px; }
+.tmc-pick li.on { border-color: color-mix(in srgb, var(--accent) 45%, var(--line)); }
+.tmc-tl { display: flex; flex-wrap: wrap; gap: 6px 12px; align-items: center; padding-left: 26px; }
+.tmc-tool { display: inline-flex; gap: 5px; align-items: center; cursor: pointer; }
+.tmc-tl small { flex-basis: 100%; }
+.tmc-pick p { margin: 0; }
+
+@media (max-width: 600px) {
+  .tmc-pair { grid-template-columns: minmax(0, 1fr) auto; }
+  .tmc-pair input[type=password] { grid-column: 1; }
+  .tmc-acts { width: 100%; }
+}
+
+/* the catalog and the mission tools */
+.tmc-h2 { margin: 6px 0 0; font-size: 15px; display: flex; gap: 8px; align-items: center; }
+.tmc-h2 .faint { font-weight: 400; }
+.tmc-cat { display: grid; gap: 10px; }
+.tmc-cat-head { display: flex; gap: 10px; align-items: center; justify-content: space-between; flex-wrap: wrap; }
+.tmc-cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 260px), 1fr)); gap: 10px; }
+.tmc-cc { border: 1px solid var(--line); border-radius: 10px; background: var(--surface); padding: 12px 14px; display: grid; gap: 8px; align-content: start; }
+.tmc-cc.added { border-color: color-mix(in srgb, var(--good) 35%, var(--line)); }
+.tmc-cc header { display: flex; gap: 8px; align-items: baseline; justify-content: space-between; flex-wrap: wrap; }
+.tmc-cc p { margin: 0; }
+.tmc-tags { display: flex; gap: 4px; flex-wrap: wrap; }
+.tmc-tag { font-size: 11px; padding: 0 7px; border-radius: 999px; background: var(--surface-2); color: var(--text-2); }
+.tmc-cc-foot { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+.tmc-cf { display: grid; gap: 8px; }
+.tmc-cf .in small { display: block; margin-top: 3px; }
+.tmc-missions { padding: 14px 16px; display: grid; gap: 8px; }
+.tmc-missions p { margin: 0; }
+details.tmc-tools > summary { cursor: pointer; list-style: revert; }
+details.tmc-tools:not([open]) { padding-bottom: 0; }

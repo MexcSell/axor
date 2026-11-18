@@ -1,0 +1,192 @@
+/* Mining HQ 2.0 shell (mining-shell.js): the header band, the six-area rail, search, and a denser command-center finish for the
+   panels of Mining HQ and Competition teams. Colors come from platform.css's tokens (navy surfaces, emerald accent), so light mode
+   follows; tones from mining.css. Loaded after every mining*.css. */
+.mxs { --mxs-rail: 250px; display: grid; grid-template-columns: var(--mxs-rail) minmax(0, 1fr); gap: 18px; align-items: start; }
+.mxs.fold { --mxs-rail: 52px; }
+.mxs-main { min-width: 0; display: grid; gap: 14px; align-content: start; container: mxs-main / inline-size; }
+.mxs-main > #mining, .mxs-main > #teams { min-width: 0; }
+.mxs-scrim { display: none; }
+
+/* ---------- rail ---------- */
+.mxs-rail { position: sticky; top: 72px; max-height: calc(100vh - 88px); overflow-y: auto; overscroll-behavior: contain; scrollbar-width: thin;
+  border: 1px solid var(--line); border-radius: 14px; background: var(--surface); padding: 8px; }
+.mxs-rail-in { display: grid; gap: 10px; }
+.mxs-rail-top { display: flex; align-items: center; justify-content: space-between; gap: 6px; padding: 2px 4px 0 8px; }
+.mxs-rail-t { font-size: 10.5px; font-weight: 650; letter-spacing: .14em; text-transform: uppercase; color: var(--text-3); }
+.mxs-fold { display: grid; place-items: center; width: 28px; height: 28px; border: 0; border-radius: 8px; background: none; color: var(--text-3); cursor: pointer; }
+.mxs-fold:hover { background: var(--surface-2); color: var(--text); }
+.mxs-area { display: grid; gap: 1px; }
+.mxs-area + .mxs-area { padding-top: 8px; border-top: 1px solid var(--line); }
+.mxs-area-h { display: flex; align-items: baseline; gap: 7px; padding: 2px 8px 4px; font-size: 10px; font-weight: 650; letter-spacing: .05em; text-transform: uppercase; color: var(--text-3); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.mxs-num { font: 600 10.5px/1 var(--mono); letter-spacing: 0; color: var(--accent); }
+.mxs-item { position: relative; display: flex; align-items: center; gap: 9px; width: 100%; min-height: 31px; padding: 5px 8px; border: 0; border-radius: 8px;
+  background: none; color: var(--text-2); font: 500 13px/1.25 inherit; text-align: left; cursor: pointer; }
+.mxs-item .icon { width: 15px; height: 15px; color: var(--text-3); }
+.mxs-item:hover:not(:disabled) { background: var(--surface-2); color: var(--text); }
+.mxs-item:hover:not(:disabled) .icon { color: var(--text-2); }
+.mxs-item.on { background: var(--accent-soft); color: var(--text); font-weight: 600; }
+.mxs-item.on .icon { color: var(--accent); }
+.mxs-item.on::before { content: ""; position: absolute; left: -8px; top: 7px; bottom: 7px; width: 3px; border-radius: 0 3px 3px 0; background: var(--accent); }
+.mxs-item:disabled { opacity: .45; cursor: default; }
+.mxs-item:focus-visible, .mxs-fold:focus-visible, .mxs-stat:focus-visible, .mxs-find:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; }
+.mxs-l { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.mxs-out .icon { width: 11px; height: 11px; opacity: .6; }
+.mxs-c { min-width: 18px; padding: 1px 6px; border-radius: 999px; font: 600 10.5px/1.5 var(--mono); text-align: center; background: var(--surface-3); color: var(--text-2); }
+.mxs-c.warn { background: var(--warn-soft); color: var(--warn); }
+.mxs-c.bad { background: var(--crit-soft); color: var(--crit); }
+.mxs-c.run, .mxs-c.info { background: var(--accent-soft); color: var(--accent); }
+
+/* folded: icons only, the area numbers stay as dividers */
+.mxs.fold .mxs-rail { padding: 8px 6px; }
+.mxs.fold .mxs-rail-top { justify-content: center; padding: 0; }
+.mxs.fold :is(.mxs-rail-t, .mxs-l, .mxs-out, .mxs-area-h > span:not(.mxs-num)) { display: none; }
+.mxs.fold .mxs-area-h { justify-content: center; padding: 2px 0 4px; }
+.mxs.fold .mxs-item { justify-content: center; padding: 7px 0; }
+.mxs.fold .mxs-item.on::before { left: -6px; }
+.mxs.fold .mxs-c { position: absolute; top: 1px; right: 1px; min-width: 15px; padding: 0 4px; font-size: 9.5px; }
+
+/* ---------- header band (a container: it lays itself out by its own width, beside one or two sidebars) ---------- */
+.mxs-head { position: relative; container: mxs-head / inline-size; border: 1px solid var(--line); border-radius: 14px; overflow: hidden;
+  background: radial-gradient(120% 140% at 0% 0%, color-mix(in srgb, var(--accent) 9%, transparent), transparent 55%), var(--surface); }
+.mxs-head::after { content: ""; position: absolute; left: 0; right: 0; top: 0; height: 2px; background: linear-gradient(90deg, var(--accent), color-mix(in srgb, var(--info) 60%, transparent) 45%, transparent 80%); }
+.mxs-hg { display: grid; grid-template-columns: minmax(0, 1fr); grid-template-areas: "brand" "stats" "tools" "crumb"; gap: 10px 18px; align-items: center; padding: 12px; }
+.mxs-brand { grid-area: brand; display: flex; align-items: center; gap: 11px; min-width: 0; }
+.mxs-menu { display: none; place-items: center; width: 34px; height: 34px; flex: none; border: 1px solid var(--line); border-radius: 9px; background: var(--surface-2); color: var(--text-2); cursor: pointer; }
+.mxs-mark { display: grid; place-items: center; width: 38px; height: 38px; border-radius: 10px; flex: none; color: var(--accent-ink, #fff);
+  background: linear-gradient(140deg, var(--accent), color-mix(in srgb, var(--accent) 55%, var(--info))); box-shadow: 0 0 0 1px color-mix(in srgb, var(--accent) 40%, transparent), 0 6px 18px color-mix(in srgb, var(--accent) 25%, transparent); }
+.mxs-mark .icon { width: 19px; height: 19px; }
+.mxs-id { display: grid; gap: 1px; min-width: 0; }
+.mxs-id h1 { margin: 0; font-size: 17px; font-weight: 750; letter-spacing: .1em; text-transform: uppercase; line-height: 1.15; white-space: nowrap; }
+.mxs-tag { font-size: 10.5px; font-weight: 600; letter-spacing: .16em; text-transform: uppercase; color: var(--text-3); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.mxs-stats { grid-area: stats; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; min-width: 0; }
+.mxs-stat { --t: var(--text-3); display: grid; gap: 1px; min-width: 0; padding: 7px 12px 8px; border: 1px solid var(--line); border-radius: 10px; background: color-mix(in srgb, var(--surface-2) 70%, transparent);
+  color: var(--text); font: inherit; text-align: left; cursor: pointer; }
+.mxs-stat:hover { border-color: color-mix(in srgb, var(--accent) 45%, var(--line)); }
+.mxs-stat.run { --t: var(--accent); } .mxs-stat.warn { --t: var(--warn); } .mxs-stat.bad { --t: var(--crit); }
+.mxs-stat > span { font-size: 10px; font-weight: 650; letter-spacing: .08em; text-transform: uppercase; color: var(--text-3); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.mxs-stat b { font: 650 22px/1.15 var(--mono); letter-spacing: -.02em; font-variant-numeric: tabular-nums; }
+.mxs-stat:is(.run, .warn, .bad) b { color: var(--t); }
+.mxs-stat small { font-size: 11px; color: var(--text-3); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.mxs-tools { grid-area: tools; display: flex; align-items: center; gap: 8px; min-width: 0; }
+.mxs-status { --t: var(--text-3); display: inline-flex; align-items: center; gap: 6px; flex: none; padding: 3px 10px 3px 8px; border-radius: 999px; white-space: nowrap;
+  font: 650 10.5px/1.4 inherit; letter-spacing: .1em; text-transform: uppercase; color: var(--t); background: color-mix(in srgb, var(--t) 12%, transparent); border: 1px solid color-mix(in srgb, var(--t) 30%, transparent); }
+.mxs-status.t-ok { --t: var(--good); } .mxs-status.t-warn { --t: var(--warn); } .mxs-status.t-bad { --t: var(--crit); }
+.mxs-status i { width: 7px; height: 7px; border-radius: 50%; background: var(--t); }
+.mxs-status.t-ok i { box-shadow: 0 0 0 0 color-mix(in srgb, var(--t) 60%, transparent); animation: mxs-pulse 2.4s ease-out infinite; }
+.mxs-status-l { display: none; }
+@keyframes mxs-pulse { 70% { box-shadow: 0 0 0 6px transparent; } 100% { box-shadow: 0 0 0 0 transparent; } }
+@media (prefers-reduced-motion: reduce) { .mxs-status.t-ok i { animation: none; } }
+.mxs-find { display: inline-flex; flex: 1; align-items: center; gap: 8px; min-width: 0; height: 34px; padding: 0 12px; border: 1px solid var(--line); border-radius: 10px;
+  background: var(--surface-2); color: var(--text-3); font: 500 13px/1 inherit; cursor: pointer; }
+.mxs-find:hover { color: var(--text); border-color: color-mix(in srgb, var(--accent) 45%, var(--line)); }
+.mxs-find span { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.mxs-crumb { grid-area: crumb; contain: inline-size; display: flex; align-items: center; gap: 6px; min-width: 0; font-size: 12px; color: var(--text-3); white-space: nowrap; overflow: hidden; }
+.mxs-crumb .icon { width: 12px; height: 12px; opacity: .6; }
+.mxs-crumb b { color: var(--text); font-weight: 600; overflow: hidden; text-overflow: ellipsis; }
+.mxs-crumb-c { margin-left: 4px; padding: 1px 8px; border-radius: 999px; background: var(--surface-2); color: var(--text-2); font: 500 11px/1.6 var(--mono); overflow: hidden; text-overflow: ellipsis; }
+@container mxs-head (min-width: 760px) {
+  .mxs-hg { grid-template-columns: minmax(0, auto) minmax(0, 1fr) auto; grid-template-areas: "brand stats stats" "crumb crumb tools"; padding: 14px 16px 10px; }
+  .mxs-stats { justify-self: end; width: 100%; max-width: 600px; }
+  .mxs-crumb, .mxs-tools { padding-top: 9px; border-top: 1px solid var(--line); align-self: stretch; }
+  .mxs-tools { justify-content: flex-end; }
+  .mxs-find { flex: 0 1 300px; width: 300px; }
+}
+@container mxs-head (min-width: 1150px) { .mxs-status-l { display: inline; margin-left: 4px; font-weight: 500; letter-spacing: 0; text-transform: none; opacity: .85; } }
+
+/* the pages' own titles give way to the band */
+.mxs #mining > .hq-top > div:first-child, .mxs #mining > h1.page { display: none; }
+.mxs #mining > .hq-top { justify-content: flex-end; margin-bottom: 10px; min-height: 0; }
+.mxs #mining > .hq-top > .hq-actions:empty { display: none; }
+.mxs #mining > .hq-top:has(> .hq-actions:empty) { display: none; }
+.mxs #teams .mw-top h1 { font-size: 17px; }
+.mxs #teams .mw-top .faint { font-size: 12.5px; }
+.mxs #teams [data-mw="hq"] { display: none; }
+
+@media (min-width: 901px) { #app .mxs #mining :is(.mcx-tabs, .mh-tabs-wrap, .mcx-flow) { display: none; } }  /* #app: outranks design.css's #app main .seg.full[role=tablist]; the workflow rail replaces the tab rows and the 9-step strip */
+
+/* ---------- a denser command-center finish for the panels inside the shell ---------- */
+.mxs-main :is(.mh-card, .mw-head) { border-radius: 12px; box-shadow: none; }
+.mxs-main .mh-kpi { box-shadow: none; overflow: hidden; }
+.mxs-main .mh-kpi::after { content: ""; position: absolute; left: 0; right: 0; top: 0; height: 2px; background: linear-gradient(90deg, color-mix(in srgb, var(--tone) 75%, transparent), transparent 75%); }
+.mxs-main .mh-kpi b { font-variant-numeric: tabular-nums; }
+.mxs-main table.grid thead th { font-size: 10.5px; font-weight: 650; letter-spacing: .08em; text-transform: uppercase; color: var(--text-3); }
+.mxs-main table.grid tbody tr[tabindex]:hover { background: color-mix(in srgb, var(--accent) 5%, transparent); }
+.mxs-main .hq-h { letter-spacing: -.005em; }
+.mxs-main .mcx-flow { padding: 6px 8px; border: 1px dashed var(--line); border-radius: 10px; }
+.mxs-main :is(.mh-camp, .mw-tab) { border-radius: 10px; }
+.mxs-main :is(.mh-camp.on, .mw-tab.on) { box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--accent) 55%, transparent); }
+
+/* the pages' grids by the room the rail leaves them, not by the window */
+@container mxs-main (max-width: 1120px) {
+  .mh-kpis { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .mcx-grid { grid-template-columns: minmax(0, 1fr); }
+  .mcx-side { grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); }
+}
+@container mxs-main (max-width: 560px) { .mh-kpis { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+
+/* ---------- search ---------- */
+.mxs-find-dlg { width: min(640px, calc(100vw - 32px)); max-height: min(560px, calc(100vh - 80px)); margin: 10vh auto auto; padding: 0; border: 1px solid var(--line); border-radius: 14px;
+  background: var(--surface); color: var(--text); box-shadow: var(--shadow-lg); overflow: hidden; }
+.mxs-find-dlg::backdrop { background: rgb(4 8 14 / .55); backdrop-filter: blur(2px); }
+.mxs-find-in { display: grid; grid-template-rows: auto minmax(0, 1fr) auto; max-height: inherit; }
+.mxs-q { display: flex; align-items: center; gap: 10px; padding: 12px 16px; border-bottom: 1px solid var(--line); }
+.mxs-q .icon { color: var(--accent); }
+.mxs-q input { flex: 1; min-width: 0; border: 0; outline: 0; background: none; font-size: 15px; }
+.mxs-res { overflow-y: auto; padding: 6px; min-height: 80px; }
+.mxs-res-h { padding: 8px 10px 4px; font-size: 10.5px; font-weight: 650; letter-spacing: .1em; text-transform: uppercase; color: var(--text-3); }
+.mxs-r { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; gap: 10px; align-items: center; width: 100%; padding: 7px 10px; border: 0; border-radius: 8px;
+  background: none; color: var(--text); font: inherit; text-align: left; cursor: pointer; }
+.mxs-r .icon { width: 15px; height: 15px; color: var(--text-3); }
+.mxs-r span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.mxs-r small { max-width: 260px; color: var(--text-3); font-size: 12px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.mxs-r.on, .mxs-r:hover { background: var(--accent-soft); }
+.mxs-r.on .icon { color: var(--accent); }
+.mxs-none { padding: 14px 10px; margin: 0; }
+.mxs-find-f { display: flex; gap: 6px; align-items: center; margin: 0; padding: 8px 16px; border-top: 1px solid var(--line); }
+.mxs-find-f kbd { font: 500 10.5px/1 var(--mono); padding: 3px 5px; border: 1px solid var(--line); border-radius: 4px; background: var(--surface-2); }
+
+/* ---------- narrower screens ---------- */
+@media (max-width: 1100px) and (min-width: 901px) {
+  .mxs:not(.fold) { --mxs-rail: 200px; }
+}
+@media (max-width: 900px) {
+  .mxs, .mxs.fold { display: block; }
+  .mxs-main { gap: 12px; }
+  .mxs-menu { display: grid; }
+  .mxs-rail { position: fixed; z-index: 60; top: 0; bottom: 0; left: 0; width: min(280px, 84vw); max-height: none; border-radius: 0 14px 14px 0; padding: 12px 10px;
+    transform: translateX(-105%); transition: transform .2s ease; box-shadow: var(--shadow-lg); }
+  .mxs.sheet .mxs-rail { transform: none; }
+  .mxs.sheet .mxs-scrim { display: block; position: fixed; inset: 0; z-index: 59; background: rgb(4 8 14 / .5); }
+  .mxs-fold { display: none; }
+  /* the sheet always shows labels */
+  .mxs.fold :is(.mxs-rail-t, .mxs-l, .mxs-area-h > span:not(.mxs-num)) { display: revert; }
+  .mxs.fold .mxs-item { justify-content: flex-start; padding: 5px 8px; }
+  .mxs.fold .mxs-area-h { justify-content: flex-start; padding: 2px 8px 4px; }
+  .mxs.fold .mxs-c { position: static; }
+  .mxs-stats { gap: 6px; }
+  .mxs-stat { padding: 6px 8px; }
+  .mxs-stat b { font-size: 18px; }
+  .mxs-stat > span { font-size: 9px; letter-spacing: .06em; }
+  .mxs-tag { font-size: 9.5px; letter-spacing: .1em; }
+}
+@media (max-width: 420px) {
+  .mxs-mark { width: 32px; height: 32px; }
+  .mxs-id h1 { font-size: 15px; }
+}
+
+/* Ask AI (mining-ops.js's drawer) beside search */
+.mxs-ask { display: inline-flex; align-items: center; gap: 6px; flex: none; height: 34px; padding: 0 12px; border: 1px solid color-mix(in srgb, var(--accent) 45%, var(--line)); border-radius: 10px;
+  background: var(--accent-soft); color: var(--text); font: 600 13px/1 inherit; cursor: pointer; }
+.mxs-ask .icon { color: var(--accent); }
+.mxs-ask:hover { border-color: var(--accent); }
+.mxs-ask:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; }
+@media (max-width: 420px) { .mxs-ask span { display: none; } }
+
+/* "More": the screens outside the five workflow steps, folded by default (mining-shell.js rail()) */
+.mxs-more-h { width: 100%; align-items: center; border: 0; border-radius: 6px; background: none; font-family: inherit; text-align: left; cursor: pointer; }
+.mxs-more-h:hover { color: var(--text-2); background: var(--surface-2); }
+.mxs-more-h .mxs-c { margin-left: auto; text-transform: none; letter-spacing: 0; }
+.mxs-more-h .mxs-chev { display: inline-flex; margin-left: auto; }
+.mxs-more-h .mxs-c + .mxs-chev { margin-left: 4px; }
+.mxs-more-h .mxs-chev .icon { width: 12px; height: 12px; }
+.mxs.fold .mxs-more-h { justify-content: center; }

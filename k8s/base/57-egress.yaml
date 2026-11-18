@@ -1,0 +1,80 @@
+# AXoR egress (backend/app/egress_proxy.py): the only way out to the internet for sandbox runs whose team has internet on.
+# - in: port 3128 from sandbox pods labelled axor.dev/internet=on (56-sandbox.yaml lets only those out to it), port 3129
+#   (control) from AXoR's web pod; both need a secret (a run's token, or EGRESS_SECRET)
+# - out: cluster DNS and the public internet, never the private ranges or this server's own address (the proxy checks the
+#   same again, after resolving the name, and allows only ports 80 and 443)
+# - exit address: secret egress-upstream, key url = http://user:pass@host:port of a proxy elsewhere (see k8s/egress/README.md);
+#   without it the runs leave through this server's address, and the team switch says so
+# - off for everyone at once: kubectl -n axor-egress scale deploy/egress --replicas=0 (runs with internet then fail to start)
+apiVersion: apps/v1
+kind: Deployment
+metadata: { name: egress, namespace: axor-egress, labels: { app: egress } }
+spec:
+  replicas: 1
+  strategy: { type: Recreate }   # the runs it knows live in memory: one pod, and a restart ends the runs that were open
+  selector: { matchLabels: { app: egress } }
+  template:
+    metadata: { labels: { app: egress } }
+    spec:
+      automountServiceAccountToken: false
+      enableServiceLinks: false   # a Service named egress would set EGRESS_PORT=tcp://…
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 65534
+        runAsGroup: 65534
+        seccompProfile: { type: RuntimeDefault }
+      containers:
+        - name: egress
+          image: axor/web:${TAG}
+          imagePullPolicy: Never
+          command: ["python", "/app/backend/app/egress_proxy.py"]
+          env:
+            - { name: EGRESS_SECRET, valueFrom: { secretKeyRef: { name: egress, key: secret } } }
+            - { name: EGRESS_UPSTREAM, valueFrom: { secretKeyRef: { name: egress-upstream, key: url, optional: true } } }
+            - { name: EGRESS_BLOCK, value: "${PUBLIC_IP}/32" }
+            - { name: EGRESS_PORTS, value: "80,443" }
+            - { name: PYTHONUNBUFFERED, value: "1" }
+          ports: [{ name: proxy, containerPort: 3128 }, { name: control, containerPort: 3129 }]
+          readinessProbe: { tcpSocket: { port: control }, periodSeconds: 15 }
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            capabilities: { drop: [ALL] }
+          resources:
+            requests: { cpu: 50m, memory: 64Mi }
+            limits: { cpu: "2", memory: 512Mi }
+---
+apiVersion: v1
+kind: Service
+metadata: { name: egress, namespace: axor-egress }
+spec:
+  selector: { app: egress }
+  ports: [{ name: proxy, port: 3128, targetPort: proxy }, { name: control, port: 3129, targetPort: control }]
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata: { name: egress, namespace: axor-egress }
+spec:
+  podSelector: {}
+  policyTypes: [Ingress, Egress]
+  ingress:
+    - from: [{ namespaceSelector: { matchLabels: { kubernetes.io/metadata.name: axor-sandbox } }, podSelector: { matchLabels: { axor.dev/internet: "on" } } }]
+      ports: [{ port: 3128, protocol: TCP }]
+    - from: [{ namespaceSelector: { matchLabels: { kubernetes.io/metadata.name: axor } }, podSelector: { matchLabels: { app: web } } }]
+      ports: [{ port: 3129, protocol: TCP }]
+  egress:
+    - to: [{ namespaceSelector: { matchLabels: { kubernetes.io/metadata.name: kube-system } }, podSelector: { matchLabels: { k8s-app: kube-dns } } }]
+      ports: [{ port: 53, protocol: UDP }, { port: 53, protocol: TCP }]
+    - to:
+        - ipBlock:
+            cidr: 0.0.0.0/0
+            except: [10.0.0.0/8, 172.16.0.0/12, 192.168.0.0/16, 100.64.0.0/10, 169.254.0.0/16, 127.0.0.0/8, "${PUBLIC_IP}/32"]
+---
+# gVisor (k8s/install-gvisor.sh installs runsc on the host and labels the node axor.dev/gvisor=ready once a test pod ran under
+# it): sandbox runs with internet run under it, so code they download talks to gVisor's kernel, not the host's. Until the
+# label is there, AXoR refuses those runs (sandbox.py), and a pod that asked anyway couldn't be scheduled.
+apiVersion: node.k8s.io/v1
+kind: RuntimeClass
+metadata: { name: gvisor }
+handler: runsc
+scheduling: { nodeSelector: { axor.dev/gvisor: ready } }

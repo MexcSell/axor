@@ -1,0 +1,8 @@
+/* Competition teams, live web card on the Status sub-tab (mining-web.js) */
+.mwb-list { list-style: none; margin: .5rem 0 0; padding: 0; display: grid; gap: .5rem; }
+.mwb-row { display: flex; gap: .75rem; align-items: flex-start; justify-content: space-between; padding: .55rem .65rem; border: 1px solid var(--line, rgba(127,127,127,.25)); border-radius: 10px; }
+.mwb-main { display: flex; flex-direction: column; gap: .2rem; min-width: 0; }
+.mwb-url { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 100%; }
+.mwb-acts { flex-shrink: 0; gap: .35rem; align-items: center; }
+.mwb-every { font: inherit; font-size: .85em; padding: .2rem .35rem; border-radius: 8px; }
+@media (max-width: 640px) { .mwb-row { flex-direction: column; } }

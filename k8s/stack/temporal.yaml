@@ -1,0 +1,45 @@
+# AXoR 5.1: a Temporal server for Mission Control's durable runtime (mission_temporal.py). Not part of k8s/base: k8s/stack.sh up
+# applies it after postgres.yaml. temporalio/auto-setup creates its databases (temporal, temporal_visibility) in that Postgres
+# on first start: the spec's "initially" setup; a larger install moves to Temporal's Helm chart with the same Postgres.
+apiVersion: apps/v1
+kind: Deployment
+metadata: { name: temporal, namespace: axor, labels: { app: temporal } }
+spec:
+  replicas: 1
+  strategy: { type: Recreate }
+  selector: { matchLabels: { app: temporal } }
+  template:
+    metadata: { labels: { app: temporal } }
+    spec:
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1000
+        runAsGroup: 1000
+        seccompProfile: { type: RuntimeDefault }
+      containers:
+        - name: temporal
+          image: temporalio/auto-setup:1.29.7
+          env:
+            - { name: DB, value: postgres12 }
+            - { name: DB_PORT, value: "5432" }
+            - { name: POSTGRES_SEEDS, value: postgres.axor.svc.cluster.local }
+            - { name: POSTGRES_USER, value: axor }
+            - { name: POSTGRES_PWD, valueFrom: { secretKeyRef: { name: axor-postgres, key: password } } }
+            - { name: BIND_ON_IP, value: 0.0.0.0 }
+            - { name: TEMPORAL_BROADCAST_ADDRESS, valueFrom: { fieldRef: { fieldPath: status.podIP } } }
+            - { name: DEFAULT_NAMESPACE, value: default }
+          ports: [{ name: grpc, containerPort: 7233 }]
+          readinessProbe: { tcpSocket: { port: grpc }, periodSeconds: 10, failureThreshold: 30 }
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities: { drop: [ALL] }
+          resources:
+            requests: { cpu: 200m, memory: 512Mi }
+            limits: { cpu: "2", memory: 2Gi }
+---
+apiVersion: v1
+kind: Service
+metadata: { name: temporal-frontend, namespace: axor }
+spec:
+  selector: { app: temporal }
+  ports: [{ name: grpc, port: 7233, targetPort: grpc }]

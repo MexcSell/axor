@@ -1,0 +1,121 @@
+# AXoR 5.1 monitoring: Prometheus (scrapes AXoR's /metrics), Tempo (AXoR's OpenTelemetry traces) and Grafana (the AXoR
+# dashboard over both). Not part of k8s/base: `k8s/stack.sh monitoring` makes the ConfigMaps from k8s/stack/monitoring/ and the
+# Secrets axor-metrics (scrape token) and axor-grafana (admin password), then applies this. Grafana isn't exposed: reach it
+# with `k3s kubectl -n axor port-forward svc/grafana 3000`. Restricted Pod Security throughout.
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata: { name: prometheus-data, namespace: axor }
+spec: { accessModes: [ReadWriteOnce], resources: { requests: { storage: 10Gi } } }
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata: { name: tempo-data, namespace: axor }
+spec: { accessModes: [ReadWriteOnce], resources: { requests: { storage: 10Gi } } }
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata: { name: grafana-data, namespace: axor }
+spec: { accessModes: [ReadWriteOnce], resources: { requests: { storage: 2Gi } } }
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata: { name: prometheus, namespace: axor, labels: { app: prometheus } }
+spec:
+  replicas: 1
+  strategy: { type: Recreate }
+  selector: { matchLabels: { app: prometheus } }
+  template:
+    metadata: { labels: { app: prometheus } }
+    spec:
+      securityContext: { runAsNonRoot: true, runAsUser: 65534, runAsGroup: 65534, fsGroup: 65534, seccompProfile: { type: RuntimeDefault } }
+      containers:
+        - name: prometheus
+          image: prom/prometheus:v3.0.1
+          args: [--config.file=/etc/prometheus/prometheus.yml, --storage.tsdb.path=/prometheus, --storage.tsdb.retention.time=30d]
+          ports: [{ name: http, containerPort: 9090 }]
+          readinessProbe: { httpGet: { path: /-/ready, port: http }, periodSeconds: 10 }
+          securityContext: { allowPrivilegeEscalation: false, capabilities: { drop: [ALL] } }
+          resources: { requests: { cpu: 100m, memory: 256Mi }, limits: { cpu: "1", memory: 1Gi } }
+          volumeMounts:
+            - { name: config, mountPath: /etc/prometheus }
+            - { name: token, mountPath: /etc/axor-metrics }
+            - { name: data, mountPath: /prometheus }
+      volumes:
+        - { name: config, configMap: { name: prometheus-config } }
+        - { name: token, secret: { secretName: axor-metrics } }
+        - { name: data, persistentVolumeClaim: { claimName: prometheus-data } }
+---
+apiVersion: v1
+kind: Service
+metadata: { name: prometheus, namespace: axor }
+spec: { selector: { app: prometheus }, ports: [{ name: http, port: 9090, targetPort: http }] }
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata: { name: tempo, namespace: axor, labels: { app: tempo } }
+spec:
+  replicas: 1
+  strategy: { type: Recreate }
+  selector: { matchLabels: { app: tempo } }
+  template:
+    metadata: { labels: { app: tempo } }
+    spec:
+      securityContext: { runAsNonRoot: true, runAsUser: 10001, runAsGroup: 10001, fsGroup: 10001, seccompProfile: { type: RuntimeDefault } }
+      containers:
+        - name: tempo
+          image: grafana/tempo:2.6.1
+          args: [-config.file=/etc/tempo/tempo.yaml]
+          ports: [{ name: http, containerPort: 3200 }, { name: otlp-http, containerPort: 4318 }]
+          readinessProbe: { httpGet: { path: /ready, port: http }, periodSeconds: 10, failureThreshold: 30 }
+          securityContext: { allowPrivilegeEscalation: false, capabilities: { drop: [ALL] } }
+          resources: { requests: { cpu: 100m, memory: 256Mi }, limits: { cpu: "1", memory: 1Gi } }
+          volumeMounts:
+            - { name: config, mountPath: /etc/tempo }
+            - { name: data, mountPath: /var/tempo }
+      volumes:
+        - { name: config, configMap: { name: tempo-config } }
+        - { name: data, persistentVolumeClaim: { claimName: tempo-data } }
+---
+apiVersion: v1
+kind: Service
+metadata: { name: tempo, namespace: axor }
+spec: { selector: { app: tempo }, ports: [{ name: http, port: 3200, targetPort: http }, { name: otlp-http, port: 4318, targetPort: otlp-http }] }
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata: { name: grafana, namespace: axor, labels: { app: grafana } }
+spec:
+  replicas: 1
+  strategy: { type: Recreate }
+  selector: { matchLabels: { app: grafana } }
+  template:
+    metadata: { labels: { app: grafana } }
+    spec:
+      securityContext: { runAsNonRoot: true, runAsUser: 472, runAsGroup: 472, fsGroup: 472, seccompProfile: { type: RuntimeDefault } }
+      containers:
+        - name: grafana
+          image: grafana/grafana:11.3.1
+          env:
+            - { name: GF_SECURITY_ADMIN_PASSWORD, valueFrom: { secretKeyRef: { name: axor-grafana, key: password } } }
+            - { name: GF_AUTH_ANONYMOUS_ENABLED, value: "false" }
+            - { name: GF_ANALYTICS_REPORTING_ENABLED, value: "false" }
+            - { name: GF_ANALYTICS_CHECK_FOR_UPDATES, value: "false" }
+          ports: [{ name: http, containerPort: 3000 }]
+          readinessProbe: { httpGet: { path: /api/health, port: http }, periodSeconds: 10 }
+          securityContext: { allowPrivilegeEscalation: false, capabilities: { drop: [ALL] } }
+          resources: { requests: { cpu: 100m, memory: 128Mi }, limits: { cpu: "1", memory: 512Mi } }
+          volumeMounts:
+            - { name: data, mountPath: /var/lib/grafana }
+            - { name: datasources, mountPath: /etc/grafana/provisioning/datasources }
+            - { name: providers, mountPath: /etc/grafana/provisioning/dashboards }
+            - { name: dashboards, mountPath: /var/lib/grafana/dashboards }
+      volumes:
+        - { name: data, persistentVolumeClaim: { claimName: grafana-data } }
+        - { name: datasources, configMap: { name: grafana-datasources } }
+        - { name: providers, configMap: { name: grafana-dashboard-providers } }
+        - { name: dashboards, configMap: { name: grafana-dashboards } }
+---
+apiVersion: v1
+kind: Service
+metadata: { name: grafana, namespace: axor }
+spec: { selector: { app: grafana }, ports: [{ name: http, port: 3000, targetPort: http }] }

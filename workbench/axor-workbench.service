@@ -1,0 +1,14 @@
+[Unit]
+Description=AXoR Workbench: Mining HQ's agents on this host's folders (workbench/README.md)
+After=network-online.target k3s.service
+Wants=network-online.target
+
+[Service]
+ExecStart=/usr/bin/python3 /opt/axor-workbench/workbench.py
+Environment=HOME=/root
+Environment=PATH=/root/.local/bin:/usr/local/bin:/usr/bin:/bin
+Restart=on-failure
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target

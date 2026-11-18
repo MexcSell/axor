@@ -1,0 +1,351 @@
+# Who may do what. AXoR (service account axor/web) gets:
+#   axor-observe   read workloads, pods, logs and events in its namespaces (and kube-system, read-only)
+#   axor-operate   restart and scale deployments and recycle pods; in the system namespaces the policy
+#                  axor-system-changes below makes sure a restart or a scale is all it is (no image, command or
+#                  security change can slip through)
+#   axor-platform  create, change and delete apps and functions, only in axor-apps and axor-functions (and machines
+#                  in axor-machines, bound in 55-machines.yaml); the policy
+#                  axor-workloads holds every pod there to resource limits, no service account token and safe volumes
+#   edge settings  the edge's default certificate and its ACME settings, by name
+# The edge (axor-edge/edge) reads Ingresses, Services and their endpoints in the namespaces it routes to.
+apiVersion: v1
+kind: ServiceAccount
+metadata: { name: web, namespace: axor }
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata: { name: edge, namespace: axor-edge }
+---
+# pods in the workload namespaces get no API token unless they ask for one, and this account has no rights at all
+apiVersion: v1
+kind: ServiceAccount
+metadata: { name: default, namespace: axor-apps }
+automountServiceAccountToken: false
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata: { name: default, namespace: axor-functions }
+automountServiceAccountToken: false
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata: { name: axor-web-cluster }
+rules:
+  - apiGroups: [""]
+    resources: [nodes]
+    verbs: [get, list]
+  - apiGroups: [node.k8s.io]     # whether gVisor is installed, for sandbox runs with internet (57-egress.yaml)
+    resources: [runtimeclasses]
+    verbs: [get]
+  - apiGroups: [metrics.k8s.io]
+    resources: [nodes]
+    verbs: [get, list]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata: { name: axor-web-cluster }
+roleRef: { apiGroup: rbac.authorization.k8s.io, kind: ClusterRole, name: axor-web-cluster }
+subjects: [{ kind: ServiceAccount, name: web, namespace: axor }]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata: { name: axor-observe }
+rules:
+  - apiGroups: [""]
+    resources: [pods, pods/log, services, events, persistentvolumeclaims]
+    verbs: [get, list, watch]
+  - apiGroups: [apps]
+    resources: [deployments, replicasets, statefulsets, daemonsets]
+    verbs: [get, list, watch]
+  - apiGroups: [networking.k8s.io]
+    resources: [ingresses]
+    verbs: [get, list]
+  - apiGroups: [autoscaling]
+    resources: [horizontalpodautoscalers]
+    verbs: [get, list]
+  - apiGroups: [metrics.k8s.io]
+    resources: [pods]
+    verbs: [get, list]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata: { name: axor-operate }
+rules:
+  - apiGroups: [apps]
+    resources: [deployments]
+    verbs: [patch]
+  - apiGroups: [apps]
+    resources: [deployments/scale]
+    verbs: [get, patch, update]
+  - apiGroups: [""]
+    resources: [pods]
+    verbs: [delete]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata: { name: axor-platform }
+rules:
+  - apiGroups: [apps]
+    resources: [deployments]
+    verbs: [create, update, patch, delete]
+  - apiGroups: [""]
+    resources: [services, configmaps, secrets, persistentvolumeclaims]
+    verbs: [get, list, watch, create, update, patch, delete]
+  - apiGroups: [networking.k8s.io]
+    resources: [ingresses]
+    verbs: [get, list, watch, create, update, patch, delete]
+  - apiGroups: [autoscaling]
+    resources: [horizontalpodautoscalers]
+    verbs: [get, list, create, update, patch, delete]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata: { name: axor-observe, namespace: axor }
+roleRef: { apiGroup: rbac.authorization.k8s.io, kind: ClusterRole, name: axor-observe }
+subjects: [{ kind: ServiceAccount, name: web, namespace: axor }]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata: { name: axor-observe, namespace: axor-edge }
+roleRef: { apiGroup: rbac.authorization.k8s.io, kind: ClusterRole, name: axor-observe }
+subjects: [{ kind: ServiceAccount, name: web, namespace: axor }]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata: { name: axor-observe, namespace: axor-host }
+roleRef: { apiGroup: rbac.authorization.k8s.io, kind: ClusterRole, name: axor-observe }
+subjects: [{ kind: ServiceAccount, name: web, namespace: axor }]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata: { name: axor-observe, namespace: axor-apps }
+roleRef: { apiGroup: rbac.authorization.k8s.io, kind: ClusterRole, name: axor-observe }
+subjects: [{ kind: ServiceAccount, name: web, namespace: axor }]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata: { name: axor-observe, namespace: axor-functions }
+roleRef: { apiGroup: rbac.authorization.k8s.io, kind: ClusterRole, name: axor-observe }
+subjects: [{ kind: ServiceAccount, name: web, namespace: axor }]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata: { name: axor-observe, namespace: kube-system }
+roleRef: { apiGroup: rbac.authorization.k8s.io, kind: ClusterRole, name: axor-observe }
+subjects: [{ kind: ServiceAccount, name: web, namespace: axor }]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata: { name: axor-operate, namespace: axor }
+roleRef: { apiGroup: rbac.authorization.k8s.io, kind: ClusterRole, name: axor-operate }
+subjects: [{ kind: ServiceAccount, name: web, namespace: axor }]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata: { name: axor-operate, namespace: axor-edge }
+roleRef: { apiGroup: rbac.authorization.k8s.io, kind: ClusterRole, name: axor-operate }
+subjects: [{ kind: ServiceAccount, name: web, namespace: axor }]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata: { name: axor-operate, namespace: axor-host }
+roleRef: { apiGroup: rbac.authorization.k8s.io, kind: ClusterRole, name: axor-operate }
+subjects: [{ kind: ServiceAccount, name: web, namespace: axor }]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata: { name: axor-operate, namespace: axor-apps }
+roleRef: { apiGroup: rbac.authorization.k8s.io, kind: ClusterRole, name: axor-operate }
+subjects: [{ kind: ServiceAccount, name: web, namespace: axor }]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata: { name: axor-operate, namespace: axor-functions }
+roleRef: { apiGroup: rbac.authorization.k8s.io, kind: ClusterRole, name: axor-operate }
+subjects: [{ kind: ServiceAccount, name: web, namespace: axor }]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata: { name: axor-platform, namespace: axor-apps }
+roleRef: { apiGroup: rbac.authorization.k8s.io, kind: ClusterRole, name: axor-platform }
+subjects: [{ kind: ServiceAccount, name: web, namespace: axor }]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata: { name: axor-platform, namespace: axor-functions }
+roleRef: { apiGroup: rbac.authorization.k8s.io, kind: ClusterRole, name: axor-platform }
+subjects: [{ kind: ServiceAccount, name: web, namespace: axor }]
+---
+# AXoR's Ingress for its address on the platform domain (the catch-all one, "web", stays as deploy.sh made it), and
+# the updater on the host (k8s/auto-update.sh): AXoR reads its status and writes only requests (pause, check, update)
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata: { name: axor-self, namespace: axor }
+rules:
+  - apiGroups: [networking.k8s.io]
+    resources: [ingresses]
+    resourceNames: [web-domain]
+    verbs: [get, update, patch]
+  - apiGroups: [""]
+    resources: [configmaps]
+    resourceNames: [axor-update]
+    verbs: [get, update, patch]
+  - apiGroups: [""]
+    resources: [configmaps]
+    resourceNames: [axor-update-status]
+    verbs: [get]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata: { name: axor-self, namespace: axor }
+roleRef: { apiGroup: rbac.authorization.k8s.io, kind: Role, name: axor-self }
+subjects: [{ kind: ServiceAccount, name: web, namespace: axor }]
+---
+# the edge's default certificate (AXoR's own CA signs it) and its ACME settings
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata: { name: axor-edge-settings, namespace: axor-edge }
+rules:
+  - apiGroups: [""]
+    resources: [secrets]
+    resourceNames: [edge-tls]
+    verbs: [get, update, patch]
+  - apiGroups: [""]
+    resources: [configmaps]
+    resourceNames: [edge-config]
+    verbs: [get, update, patch]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata: { name: axor-edge-settings, namespace: axor-edge }
+roleRef: { apiGroup: rbac.authorization.k8s.io, kind: Role, name: axor-edge-settings }
+subjects: [{ kind: ServiceAccount, name: web, namespace: axor }]
+---
+# the edge: routes from Ingresses of class "axor" in the namespaces it serves
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata: { name: axor-edge-classes }
+rules:
+  - apiGroups: [networking.k8s.io]
+    resources: [ingressclasses]
+    verbs: [get, list, watch]
+  - apiGroups: [""]
+    resources: [nodes]  # Traefik's ingress provider watches them (node addresses); read-only
+    verbs: [get, list, watch]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata: { name: axor-edge-classes }
+roleRef: { apiGroup: rbac.authorization.k8s.io, kind: ClusterRole, name: axor-edge-classes }
+subjects: [{ kind: ServiceAccount, name: edge, namespace: axor-edge }]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata: { name: axor-edge-routes }
+rules:
+  - apiGroups: [""]
+    resources: [services, endpoints, secrets]
+    verbs: [get, list, watch]
+  - apiGroups: [discovery.k8s.io]
+    resources: [endpointslices]
+    verbs: [get, list, watch]
+  - apiGroups: [networking.k8s.io]
+    resources: [ingresses]
+    verbs: [get, list, watch]
+  - apiGroups: [networking.k8s.io]
+    resources: [ingresses/status]
+    verbs: [update]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata: { name: axor-edge-routes, namespace: axor }
+roleRef: { apiGroup: rbac.authorization.k8s.io, kind: ClusterRole, name: axor-edge-routes }
+subjects: [{ kind: ServiceAccount, name: edge, namespace: axor-edge }]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata: { name: axor-edge-routes, namespace: axor-apps }
+roleRef: { apiGroup: rbac.authorization.k8s.io, kind: ClusterRole, name: axor-edge-routes }
+subjects: [{ kind: ServiceAccount, name: edge, namespace: axor-edge }]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata: { name: axor-edge-routes, namespace: axor-functions }
+roleRef: { apiGroup: rbac.authorization.k8s.io, kind: ClusterRole, name: axor-edge-routes }
+subjects: [{ kind: ServiceAccount, name: edge, namespace: axor-edge }]
+---
+apiVersion: networking.k8s.io/v1
+kind: IngressClass
+metadata: { name: axor }
+spec:
+  controller: traefik.io/ingress-controller
+---
+# AXoR may restart (the restartedAt annotation) and scale its own services, and nothing else about them
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicy
+metadata: { name: axor-system-changes }
+spec:
+  failurePolicy: Fail
+  matchConstraints:
+    resourceRules:
+      - { apiGroups: [apps], apiVersions: [v1], operations: [UPDATE], resources: [deployments] }
+    namespaceSelector: { matchLabels: { axor.dev/tier: system } }
+  matchConditions:
+    - name: by-axor
+      expression: "request.userInfo.username == 'system:serviceaccount:axor:web'"
+  validations:
+    - expression: >-
+        object.spec.template.spec == oldObject.spec.template.spec &&
+        object.spec.selector == oldObject.spec.selector &&
+        object.spec.strategy == oldObject.spec.strategy &&
+        object.spec.template.metadata.labels == oldObject.spec.template.metadata.labels
+      message: "AXoR can only restart or scale its own services."
+    - expression: >-
+        (!has(object.spec.template.metadata.annotations) ||
+          object.spec.template.metadata.annotations.all(k, k == 'kubectl.kubernetes.io/restartedAt' ||
+            (has(oldObject.spec.template.metadata.annotations) && k in oldObject.spec.template.metadata.annotations &&
+             oldObject.spec.template.metadata.annotations[k] == object.spec.template.metadata.annotations[k]))) &&
+        (!has(oldObject.spec.template.metadata.annotations) ||
+          oldObject.spec.template.metadata.annotations.all(k, k == 'kubectl.kubernetes.io/restartedAt' ||
+            (has(object.spec.template.metadata.annotations) && k in object.spec.template.metadata.annotations)))
+      message: "AXoR can only restart or scale its own services."
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicyBinding
+metadata: { name: axor-system-changes }
+spec:
+  policyName: axor-system-changes
+  validationActions: [Deny]
+---
+# every app and function pod: limits on every container, no API token, no other service account, safe volumes only
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicy
+metadata: { name: axor-workloads }
+spec:
+  failurePolicy: Fail
+  matchConstraints:
+    resourceRules:
+      - { apiGroups: [apps], apiVersions: [v1], operations: [CREATE, UPDATE], resources: [deployments] }
+    namespaceSelector: { matchLabels: { axor.dev/tier: workloads } }
+  validations:
+    - expression: "has(object.spec.template.spec.automountServiceAccountToken) && object.spec.template.spec.automountServiceAccountToken == false"
+      message: "Apps and functions run without a Kubernetes API token."
+    - expression: "!has(object.spec.template.spec.serviceAccountName) || object.spec.template.spec.serviceAccountName == 'default'"
+      message: "Apps and functions run as the namespace's default service account."
+    - expression: >-
+        object.spec.template.spec.containers.all(c, has(c.resources) && has(c.resources.limits) &&
+          'memory' in c.resources.limits && 'cpu' in c.resources.limits) &&
+        (!has(object.spec.template.spec.initContainers) || object.spec.template.spec.initContainers.all(c, has(c.resources) &&
+          has(c.resources.limits) && 'memory' in c.resources.limits && 'cpu' in c.resources.limits))
+      message: "Every container needs CPU and memory limits."
+    - expression: >-
+        !has(object.spec.template.spec.volumes) || object.spec.template.spec.volumes.all(v,
+          has(v.configMap) || has(v.secret) || has(v.emptyDir) || has(v.persistentVolumeClaim))
+      message: "Apps and functions may only mount config maps, secrets, scratch space and their own volumes."
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicyBinding
+metadata: { name: axor-workloads }
+spec:
+  policyName: axor-workloads
+  validationActions: [Deny]

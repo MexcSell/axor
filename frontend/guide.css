@@ -1,0 +1,70 @@
+/* Page guide (guide.js): the Guide menu, the first-visit offer, the tour's spotlight and card, and field suggestions. */
+
+/* the menu under the Guide button */
+.gd-menu { position: fixed; z-index: 90; width: 290px; padding: 6px; border: 1px solid var(--line); border-radius: 12px; background: var(--surface); color: var(--text); box-shadow: var(--shadow); }
+.gd-menu > button, .gd-sw { display: flex; gap: 10px; align-items: flex-start; width: 100%; padding: 8px 10px; border: 0; border-radius: 8px; background: none; color: inherit; font: inherit; font-size: 13px; text-align: left; cursor: pointer; }
+.gd-menu > button:hover, .gd-menu > button:focus-visible, .gd-sw:hover { background: var(--surface-2); }
+.gd-menu > button .icon { width: 16px; height: 16px; margin-top: 1px; color: var(--text-2); flex: none; }
+.gd-menu small { display: block; margin-top: 1px; color: var(--text-3); font-size: 11.5px; }
+.gd-menu hr { margin: 4px 6px; border: 0; border-top: 1px solid var(--line); }
+.gd-sw input { margin: 2px 0 0; accent-color: var(--accent); flex: none; }
+.gd-menu.sheet { top: auto; right: 16px; bottom: calc(16px + var(--sb, 0px)); left: 16px; width: auto; }
+/* phones: the top bar has no room, so the guide lives in the slide-out sidebar */
+#guide-side { display: none; }
+@media (max-width: 520px) {
+  #guide-btn { display: none; }
+  #guide-side { display: flex; }
+}
+
+/* the card offering a page's tour */
+.gd-offer { position: fixed; right: 18px; bottom: calc(18px + var(--sb, 0px)); z-index: 58; display: flex; gap: 12px; width: min(360px, calc(100vw - 32px)); padding: 14px 40px 14px 14px;
+  border: 1px solid var(--line); border-radius: 14px; background: var(--surface); color: var(--text); box-shadow: var(--shadow); opacity: 0; transform: translateY(12px); transition: opacity .2s, transform .2s; }
+.gd-offer.show { opacity: 1; transform: none; }
+.gd-offer b { font-size: 14px; }
+.gd-offer p { margin: 3px 0 10px; color: var(--text-2); font-size: 13px; }
+.gd-ico { display: grid; place-items: center; width: 34px; height: 34px; border-radius: 50%; background: var(--accent-soft); color: var(--accent); flex: none; }
+.gd-ico .icon { width: 18px; height: 18px; }
+.gd-acts { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; }
+.gd-link { padding: 0; border: 0; background: none; color: var(--text-3); font: inherit; font-size: 12px; text-decoration: underline; cursor: pointer; }
+.gd-link:hover { color: var(--text); }
+.gd-pop .gd-link { color: var(--accent); font-size: 13px; }
+.gd-x { position: absolute; top: 8px; right: 8px; display: grid; place-items: center; width: 26px; height: 26px; padding: 0; border: 0; border-radius: 6px; background: none; color: var(--text-3); cursor: pointer; }
+.gd-x:hover { background: var(--surface-2); color: var(--text); }
+.gd-x .icon { width: 14px; height: 14px; }
+
+/* the tour: a dimmed page with a hole around the step's element, and the step's card */
+.gd-layer { position: fixed; inset: 0; z-index: 95; pointer-events: none; }
+.gd-dim { position: absolute; inset: 0; background: rgb(0 0 0 / .5); }
+.gd-spot { position: fixed; border-radius: 10px; box-shadow: 0 0 0 2px var(--accent) inset; transition: top .25s, left .25s, width .25s, height .25s; }
+.gd-spot.none { display: none; }
+.gd-pop { position: fixed; z-index: 96; width: min(360px, calc(100vw - 32px)); padding: 14px 16px 12px; border: 1px solid var(--line); border-radius: 14px; background: var(--surface); color: var(--text); box-shadow: var(--shadow); }
+.gd-pop.center { width: min(440px, calc(100vw - 32px)); }
+.gd-head { display: flex; align-items: center; min-height: 18px; }
+.gd-n { color: var(--text-3); font-size: 11.5px; font-weight: 600; letter-spacing: .04em; text-transform: uppercase; }
+.gd-pop h3 { margin: 4px 0 6px; font-size: 16px; }
+.gd-body { color: var(--text-2); font-size: 13.5px; line-height: 1.5; }
+.gd-body p { margin: 0 0 8px; }
+.gd-body ul { margin: 0 0 8px; padding-left: 18px; }
+.gd-body li { margin: 3px 0; }
+.gd-body b { color: var(--text); }
+.gd-chips { display: flex; flex-wrap: wrap; gap: 6px; margin: 2px 0 10px; }
+.gd-chips + .gd-why { margin: -4px 0 10px; font-size: 12.5px; }
+.gd-foot { display: flex; gap: 6px; align-items: center; justify-content: flex-end; margin-top: 4px; }
+.gd-dots { display: flex; gap: 4px; margin-right: auto; }
+.gd-dots i { width: 6px; height: 6px; border-radius: 50%; background: var(--line); }
+.gd-dots i.on { background: var(--accent); }
+
+/* suggestions under a field: in the top layer (popover) where the browser has it, so an open dialog can't clip it */
+.gd-hint { position: fixed; inset: auto; z-index: 97; margin: 0; padding: 8px 34px 8px 10px; overflow: visible; border: 1px solid var(--line); border-radius: 10px;
+  background: var(--surface); color: var(--text); box-shadow: var(--shadow); font-size: 12.5px; }
+.gd-row { display: flex; flex-wrap: wrap; gap: 5px; align-items: center; }
+.gd-row + .gd-row, .gd-why + .gd-row { margin-top: 6px; }
+.gd-lbl { display: inline-flex; gap: 4px; align-items: center; margin-right: 2px; color: var(--text-3); font-size: 11.5px; font-weight: 600; }
+.gd-lbl .icon { width: 13px; height: 13px; }
+.gd-hint .chip { max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.gd-hint .chip:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; }
+.gd-why { margin: 5px 0 0; color: var(--text-2); line-height: 1.4; }
+.gd-hint .gd-x { top: 5px; right: 5px; width: 22px; height: 22px; }
+.gd-hint .sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+
+@media (prefers-reduced-motion: reduce) { .gd-offer, .gd-spot { transition: none; } }

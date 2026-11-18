@@ -1,0 +1,50 @@
+/* Flexible layouts (flex.js): panels on a six-column grid, each viewer's own arrangement. Built on the app's tokens. */
+.flex { --flex-gap: 16px; display: grid; gap: 10px; }
+.flex.compact { --flex-gap: 10px; }
+.flex-bar { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; justify-content: flex-end; }
+.flex-preset { display: inline-flex; gap: 6px; align-items: center; }
+.flex-preset .icon { width: 13px; height: 13px; margin-right: 3px; vertical-align: -2px; }
+.flex-preset select, .flex-pa select { font: inherit; font-size: 12.5px; padding: 4px 8px; border-radius: 8px; border: 1px solid var(--line); background: var(--surface); color: var(--text); }
+.flex-hidden { display: inline-flex; gap: 6px; align-items: center; flex-wrap: wrap; }
+.flex-chip { display: inline-flex; gap: 4px; align-items: center; padding: 3px 9px; border-radius: 999px; border: 1px dashed var(--line); background: var(--surface);
+  color: var(--text-2); font: inherit; font-size: 12px; cursor: pointer; }
+.flex-chip:hover { border-color: var(--accent); color: var(--text); }
+.flex-chip .icon { width: 12px; height: 12px; }
+.flex-tip { flex-basis: 100%; text-align: right; }
+.flex-grid { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: var(--flex-gap); align-items: start; grid-auto-flow: row dense; }
+.flex-none { grid-column: 1 / -1; }
+.flex-p { position: relative; min-width: 0; display: grid; gap: 8px; }
+.flex-p.w-1 { grid-column: span 1; } .flex-p.w-2 { grid-column: span 2; } .flex-p.w-3 { grid-column: span 3; }
+.flex-p.w-4 { grid-column: span 4; } .flex-p.w-5 { grid-column: span 5; } .flex-p.w-6 { grid-column: span 6; }
+.flex-pb { min-width: 0; }
+.flex-pb > :first-child { margin-top: 0; } .flex-pb > :last-child { margin-bottom: 0; }
+.flex-ph { display: flex; gap: 8px; align-items: center; min-height: 30px; padding: 4px 6px 4px 10px; border-radius: 10px; background: var(--surface-2); border: 1px solid var(--line); }
+.flex-ph > b { display: inline-flex; gap: 6px; align-items: center; font-size: 13px; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; flex: 1; }
+.flex-ph > b .icon { width: 14px; height: 14px; color: var(--text-3); flex: none; }
+.flex-pa { display: inline-flex; gap: 2px; align-items: center; flex: none; }
+.flex-pa .iconbtn { width: 26px; height: 26px; }
+.flex-pa .iconbtn .icon { width: 14px; height: 14px; }
+.flex-grip { display: inline-grid; place-items: center; width: 22px; height: 26px; cursor: grab; color: var(--text-3); touch-action: none; border-radius: 6px; }
+.flex-grip:hover { background: var(--surface-3); color: var(--text); }
+.flex-grip .icon { width: 15px; height: 15px; }
+.flex-p.folded .flex-ph { background: var(--surface); }
+.flex.editing .flex-p { outline: 1px dashed color-mix(in srgb, var(--accent) 45%, var(--line)); outline-offset: 4px; border-radius: 12px; }
+.flex.editing .flex-pb { pointer-events: none; user-select: none; opacity: .92; max-height: 420px; overflow: hidden;
+  mask-image: linear-gradient(#000 75%, transparent); -webkit-mask-image: linear-gradient(#000 75%, transparent); }
+.flex-p.moving { opacity: .55; }
+.flex-p.sizing { outline: 2px solid var(--accent); }
+.flex-p.drop-b { box-shadow: -4px 0 0 0 var(--accent); }
+.flex-p.drop-a { box-shadow: 4px 0 0 0 var(--accent); }
+.flex-rs { position: absolute; right: -6px; bottom: -6px; width: 18px; height: 18px; border-radius: 6px; cursor: ew-resize; touch-action: none;
+  background: var(--accent); box-shadow: 0 0 0 3px var(--surface); }
+.flex.compact .mh-card, .flex.compact .hq-hero { padding: 12px 14px; }
+.flex.compact .hq-h { margin-bottom: 8px; }
+@media (max-width: 1180px) {
+  .flex-p.w-1, .flex-p.w-2 { grid-column: span 3; }
+  .flex-p.w-4, .flex-p.w-5 { grid-column: span 6; }
+}
+@media (max-width: 760px) {
+  .flex-p[class*="w-"] { grid-column: 1 / -1; }
+  .flex-bar { justify-content: flex-start; }
+  .flex-tip, .flex-rs { display: none; }
+}

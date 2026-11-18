@@ -1,0 +1,102 @@
+# The VM Docker runner's namespace (backend/app/runner.py; D-013, docs/architecture/stabilization/D013_VM_RUNNER_DESIGN.md §2;
+# Owner decision D-8 of 2026-11-13: D8-e two KVM devices, D8-g a namespace of its own, D8-h the web account's rights here).
+#
+# NOT APPLIED BY k8s/deploy.sh: this file is outside k8s/base on purpose. Creating these objects on a cluster needs the Owner's
+# written production authorization (G5_3_4_5_DEPENDENCY_PLAN.md §5). Until then the runner stays off: runner.ready() answers
+# no, agents aren't offered the docker_job tool, and the `docker` readiness probe doesn't pass.
+#
+# - one pod per job: QEMU with /dev/kvm (axor.dev/kvm: 1) and nothing else from the host; baseline Pod Security; no API token
+# - in: nothing. out: cluster DNS and AXoR's result endpoint (port 8091 on the web pod); jobs that asked for pulls
+#   (label axor.dev/internet=on) also reach the egress proxy, which lets them reach only the registry hosts AXoR opened the
+#   run for (egress_proxy.py: hosts). No other pod, no other namespace, no direct internet.
+# - AXoR (axor/web) may create and delete pods and ConfigMaps here, read their logs and read the quota. Nothing more.
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: axor-runner
+  labels:
+    axor.dev/tier: workloads
+    pod-security.kubernetes.io/enforce: baseline
+    pod-security.kubernetes.io/enforce-version: latest
+    pod-security.kubernetes.io/warn: restricted
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata: { name: default, namespace: axor-runner }
+automountServiceAccountToken: false
+---
+apiVersion: v1
+kind: ResourceQuota
+metadata: { name: runner, namespace: axor-runner }
+spec:
+  hard:
+    requests.axor.dev/kvm: "2"        # D8-e: the node offers 8, shared with Machines
+    limits.cpu: "12"
+    limits.memory: 20Gi
+    limits.ephemeral-storage: 80Gi
+    persistentvolumeclaims: "0"
+    pods: "4"
+    configmaps: "12"
+    services: "0"
+    services.nodeports: "0"
+    services.loadbalancers: "0"
+---
+apiVersion: v1
+kind: LimitRange
+metadata: { name: runner, namespace: axor-runner }
+spec:
+  limits:
+    - type: Container
+      default: { cpu: "2", memory: 5Gi, ephemeral-storage: 24Gi }
+      defaultRequest: { cpu: 500m, memory: 1Gi }
+      max: { cpu: "5", memory: 9Gi, ephemeral-storage: 40Gi }
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata: { name: runner, namespace: axor-runner }
+spec:
+  podSelector: {}
+  policyTypes: [Ingress, Egress]
+  ingress: []
+  egress:
+    - to: [{ namespaceSelector: { matchLabels: { kubernetes.io/metadata.name: kube-system } }, podSelector: { matchLabels: { k8s-app: kube-dns } } }]
+      ports: [{ port: 53, protocol: UDP }, { port: 53, protocol: TCP }]
+    - to: [{ namespaceSelector: { matchLabels: { kubernetes.io/metadata.name: axor } }, podSelector: { matchLabels: { app: web } } }]
+      ports: [{ port: 8091, protocol: TCP }]
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata: { name: runner-registry, namespace: axor-runner }
+spec:
+  podSelector: { matchLabels: { axor.dev/internet: "on" } }
+  policyTypes: [Egress]
+  egress:
+    - to: [{ namespaceSelector: { matchLabels: { kubernetes.io/metadata.name: axor-egress } }, podSelector: { matchLabels: { app: egress } } }]
+      ports: [{ port: 3128, protocol: TCP }]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata: { name: axor-runner, namespace: axor-runner }
+rules:
+  - apiGroups: [""]
+    resources: [pods, configmaps]
+    verbs: [get, list, watch, create, delete]
+  - apiGroups: [""]
+    resources: [pods/log]
+    verbs: [get]
+  - apiGroups: [""]                # the readiness probes read the KVM quota (mission_ops._docker, _vm); read only
+    resources: [resourcequotas]
+    verbs: [get]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata: { name: axor-runner, namespace: axor-runner }
+roleRef: { apiGroup: rbac.authorization.k8s.io, kind: Role, name: axor-runner }
+subjects: [{ kind: ServiceAccount, name: web, namespace: axor }]
+# Two existing policies must also let the runner in, or its pods can reach neither AXoR's result endpoint nor the egress proxy.
+# They live in k8s/base/30-axor.yaml (the web pod's ingress on 8091) and k8s/base/57-egress.yaml (the proxy's ingress on 3128),
+# which today name axor-sandbox only. k8s/runner/58-runner-base-ingress.candidate.yaml holds the two rules as policies of their
+# own, so the base files need no edit; it is part of the same authorized step and is applied nowhere but a throwaway test cluster.
+# Rehearsed there on 2026-11-13: without those two rules a job's VM runs and its result is never delivered.
+# The first `kubectl apply` of this file fails once on the default service account ("already exists": the cluster makes it at
+# the same moment as the namespace). Apply it a second time, or the account keeps its API token mount.

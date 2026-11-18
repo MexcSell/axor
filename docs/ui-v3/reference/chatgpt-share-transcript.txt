@@ -1,0 +1,198 @@
+Skip to content
+Chat history
+New chat
+Images
+Plugins
+Deep research
+Maps
+NEW
+See plans and pricing
+Settings
+Help
+
+Get responses tailored to you
+
+Log in to get answers based on saved chats, plus create images and upload files.
+
+Log in
+ChatGPT
+Share
+Log in
+Sign up for free
+
+This is a copy of a shared ChatGPT chat. It won't be added to memory.
+
+Report conversation
+Yesterday 7:33 PM
+Uploaded a file
+Based on this document, please further refine your content and write a more complete, well-written update with specific specifications.  Please describe the user-facing aspect of the website. When everything is completed, please download it as a document.
+We are trying to update the AXoR homepage. If there is anything else to update, please add it as other items.
+Worked for 4m 51s
+
+The UI concept image is now created. I’m translating it into a page-by-page interaction specification, including button behavior, required fields, permissions, loading/error states, and acceptance checks so the design can be implemented without relying on visual interpretation alone.
+
+I’ve created the AXoR Autonomous Company OS UI concept and a detailed, page-by-page functional specification based on your v2.0 requirements.
+
+AXoR — Complete UI Design
+
+High-resolution design concept · 9 screen views
+
+Download the full-size UI design image
+
+AXoR — UI Design & Page Function Specification
+
+Microsoft Word · 10 pages · Detailed functional requirements
+
+Download the complete UI specification (.docx)
+
+Pages and functions covered
+
+Page
+
+	
+
+Main functions
+
+
+
+
+1. Company Overview
+
+	
+
+KPIs, missions, approvals, activity, system health
+
+
+
+
+2. Missions
+
+	
+
+Mission list, filters, status, progress, lifecycle controls
+
+
+
+
+3. Add Mission
+
+	
+
+Instructions, attachments, GitHub, budgets, approval
+
+
+
+
+4. Mission Control
+
+	
+
+Agent hierarchy, task progress, conversations, decisions
+
+
+
+
+5. Versions & Preview
+
+	
+
+Release history, downloads, execution, live preview
+
+
+
+
+6. Organization
+
+	
+
+Agent hierarchy, departments, roles, performance
+
+
+
+
+7. Knowledge & News
+
+	
+
+Research, evidence, source management, learning
+
+
+
+
+8. Evolution Lab
+
+	
+
+Self-improvement proposals, benchmarking, promotion
+
+
+
+
+9. Finance
+
+	
+
+Costs, budgets, forecasts, spending alerts
+
+
+
+
+10. Governance & Models
+
+	
+
+Permissions, autonomy, model routing, self-renewal
+
+
+
+
+11. Notifications & Approvals
+
+	
+
+Decision queue, alerts, approval history
+
+
+
+
+12. Settings & Integrations
+
+	
+
+GitHub connections, provider settings, preferences
+
+The Word document specifies what each component displays, what happens when a user clicks it, what permissions apply, and how the behavior is tested.
+
+It also includes the global navigation structure, mission lifecycle, real-time updates, error handling, accessibility requirements, and release acceptance checklist.
+
+The image is a visual design concept, not a screenshot of the currently running AXoR website. The document is intended to guide implementation in a separate development branch without modifying your original source.
+
+Worked for 2m 31s
+Worked for 1m 17s
+Worked for 4m 30s
+Make a new composition and make one more in a new form.
+Create each screen with a different aspect and for each tab in each screen. Instead of creating a single image, divide it into multiple images.
+Worked for 2m 50s
+
+The new composition now has separate screens for Organization, Missions, Agents, Analytics, Notifications, and Settings. I’m filling the remaining interaction-heavy views—especially Mission Control’s individual tabs, Versions, and Evolution—so they aren’t represented only by overview cards.
+
+I’m adding dedicated tab designs for the operational workflows now, rather than leaving Conversations, Approvals, agent branching, and version control represented only by navigation labels.
+
+I’ve created a new set of separate AXoR screen concepts with a redesigned futuristic appearance: holographic AI structures, floating digital cities, luminous blue and violet controls, and role-specific agent avatars instead of human portraits.
+
+The new compositions include Missions, Agents, Organization, Settings, Analytics, Notifications, and the Company Overview. They use different panel arrangements rather than repeating the earlier single-dashboard layout.
+
+Each image is a standalone design concept; the figures and system statuses are illustrative.
+
+light mode. Make a new composition and make one more in a new form.
+Create each screen with a different aspect and for each tab in each screen. Instead of creating a single image, divide it into multiple images.
+Worked for 1m 43s
+Preview
+ChatGPT is AI and can make mistakes.
+
+We use cookies
+
+Cookies help this site function, measure usage, and support marketing. Manage your cookie preferences anytime. Learn more about our cookie policy.
+
+Reject non-essential
+Accept all

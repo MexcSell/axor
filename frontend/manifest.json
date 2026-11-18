@@ -1,0 +1,14 @@
+{
+  "name": "AXoR",
+  "short_name": "AXoR",
+  "description": "Live Bittensor subnet explorer and miner recommendations",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#0b0d12",
+  "theme_color": "#0b0d12",
+  "icons": [
+    { "src": "/static/brand/icon-192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "/static/brand/icon-512.png", "sizes": "512x512", "type": "image/png" }
+  ]
+}

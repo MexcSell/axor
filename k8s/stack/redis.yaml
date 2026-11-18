@@ -1,0 +1,31 @@
+# AXoR 5.1: Redis for the event stream (Redis Streams, axor:events) and shared sign-in limits (bus.py). Not part of k8s/base:
+# k8s/stack.sh up applies it. Events are a recent-activity stream, not a system of record: no persistence (a restart empties
+# it; AXoR's database keeps everything). Restricted Pod Security: runs as the image's redis user (999).
+apiVersion: apps/v1
+kind: Deployment
+metadata: { name: redis, namespace: axor, labels: { app: redis } }
+spec:
+  replicas: 1
+  strategy: { type: Recreate }
+  selector: { matchLabels: { app: redis } }
+  template:
+    metadata: { labels: { app: redis } }
+    spec:
+      securityContext: { runAsNonRoot: true, runAsUser: 999, runAsGroup: 1000, seccompProfile: { type: RuntimeDefault } }
+      containers:
+        - name: redis
+          image: redis:7.4.1-alpine
+          args: [redis-server, --save, "", --appendonly, "no", --maxmemory, 256mb, --maxmemory-policy, volatile-lru]
+          ports: [{ name: redis, containerPort: 6379 }]
+          readinessProbe: { exec: { command: [redis-cli, ping] }, periodSeconds: 10 }
+          securityContext: { allowPrivilegeEscalation: false, capabilities: { drop: [ALL] } }
+          resources: { requests: { cpu: 50m, memory: 64Mi }, limits: { cpu: "1", memory: 384Mi } }
+          volumeMounts: [{ name: data, mountPath: /data }]
+      volumes: [{ name: data, emptyDir: {} }]
+---
+apiVersion: v1
+kind: Service
+metadata: { name: redis, namespace: axor }
+spec:
+  selector: { app: redis }
+  ports: [{ name: redis, port: 6379, targetPort: redis }]

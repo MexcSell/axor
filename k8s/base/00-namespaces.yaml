@@ -1,0 +1,71 @@
+# AXoR on Kubernetes: one namespace per trust level. Pod Security Admission enforces what pods may do in each.
+#   axor            AXoR itself (web, drive, push): restricted
+#   axor-edge       the HTTPS edge (Traefik) and AXoR DNS: they take host ports 443 and 53 at cutover, which only
+#                   the privileged level allows, so their own pod specs carry the hardening instead
+#   axor-host       the DevOps runner and the Docker page's proxy: they mount the Docker socket (privileged)
+#   axor-apps       PaaS apps: baseline (any image, also ones that run as root, but no host access or privileges)
+#   axor-functions  FaaS functions: restricted (AXoR's own runtimes, non-root, read-only root file system)
+#   axor-machines   Linux and Windows VMs: baseline, plus /dev/kvm from the KVM device plugin (55-machines.yaml)
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: axor
+  labels:
+    axor.dev/tier: system
+    pod-security.kubernetes.io/enforce: restricted
+    pod-security.kubernetes.io/enforce-version: latest
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: axor-edge
+  labels:
+    axor.dev/tier: system
+    pod-security.kubernetes.io/enforce: privileged
+    pod-security.kubernetes.io/warn: baseline
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: axor-host
+  labels:
+    axor.dev/tier: system
+    pod-security.kubernetes.io/enforce: privileged
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: axor-apps
+  labels:
+    axor.dev/tier: workloads
+    pod-security.kubernetes.io/enforce: baseline
+    pod-security.kubernetes.io/enforce-version: latest
+    pod-security.kubernetes.io/warn: restricted
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: axor-functions
+  labels:
+    axor.dev/tier: workloads
+    pod-security.kubernetes.io/enforce: restricted
+    pod-security.kubernetes.io/enforce-version: latest
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: axor-machines
+  labels:
+    axor.dev/tier: workloads
+    pod-security.kubernetes.io/enforce: baseline
+    pod-security.kubernetes.io/enforce-version: latest
+---
+# axor-egress: the proxy that sandbox runs with internet go out through (57-egress.yaml): restricted
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: axor-egress
+  labels:
+    axor.dev/tier: system
+    pod-security.kubernetes.io/enforce: restricted
+    pod-security.kubernetes.io/enforce-version: latest

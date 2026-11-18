@@ -1,0 +1,25 @@
+# CANDIDATE, APPLIED ONLY ON A THROWAWAY TEST CLUSTER (the rehearsal of 2026-11-13): the two rules 58-runner.yaml's last note says are
+# still missing. For the Owner's step, with 58-runner.yaml.
+# Without them a runner pod can reach neither AXoR's result port nor the egress proxy (shown in the rehearsal, run A1: the VM ran
+# and the result was never delivered). Written as two policies of their own instead of edits to k8s/base/30-axor.yaml and
+# k8s/base/57-egress.yaml: NetworkPolicies add up, so the base files stay as they are and removing the runner removes these.
+# Narrower than the sandbox's rule on 8091: only the runner's own pods (label app=axor-runner), not the whole namespace.
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata: { name: runner-result, namespace: axor }
+spec:
+  podSelector: { matchLabels: { app: web } }
+  policyTypes: [Ingress]
+  ingress:
+    - from: [{ namespaceSelector: { matchLabels: { kubernetes.io/metadata.name: axor-runner } }, podSelector: { matchLabels: { app: axor-runner } } }]
+      ports: [{ port: 8091, protocol: TCP }]
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata: { name: runner-pull, namespace: axor-egress }
+spec:
+  podSelector: { matchLabels: { app: egress } }
+  policyTypes: [Ingress]
+  ingress:
+    - from: [{ namespaceSelector: { matchLabels: { kubernetes.io/metadata.name: axor-runner } }, podSelector: { matchLabels: { axor.dev/internet: "on" } } }]
+      ports: [{ port: 3128, protocol: TCP }]

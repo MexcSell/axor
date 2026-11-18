@@ -1,0 +1,61 @@
+# AXoR Host files (backend/app/hostfiles_server.py): chosen host folders, read only, for My Knowledge's linked folders
+# (knowledge_linked.py). It mounts host paths, which the axor namespace ("restricted") doesn't allow, so it lives in
+# axor-host, where the axor-only NetworkPolicy (40-host.yaml) lets only the AXoR web pod reach it, and every call carries
+# the shared secret (secret "hostfiles", made by deploy.sh). It runs from AXoR's web image (see below for its user). It never
+# serves .env files, keys, credential stores, .git, virtual environments, caches, tool settings, logins or wallets.
+#
+# A root = one host folder mounted read-only at /roots/<name>. "home" (/home/thomas) lets the page browse and link any folder
+# under it by its path; "bit" stays for the links made before (a path goes to the longest root that holds it). To reach a
+# folder outside /home/thomas: k8s/host-folders.sh add <path> [--deploy] (it edits the three entries below and checks the path).
+# It runs as nobody in thomas's group (1000): it can enter /home/thomas (drwxr-x---) and read what's group- or world-readable,
+# but never thomas's private files (.claude.json, .codex, history: mode 600/700); the server's deny list covers the rest.
+apiVersion: apps/v1
+kind: Deployment
+metadata: { name: hostfiles, namespace: axor-host, labels: { app: hostfiles } }
+spec:
+  replicas: 1
+  strategy: { type: Recreate }
+  selector: { matchLabels: { app: hostfiles } }
+  template:
+    metadata: { labels: { app: hostfiles } }
+    spec:
+      automountServiceAccountToken: false
+      enableServiceLinks: false   # else Kubernetes sets HOSTFILES_PORT=tcp://… (from the Service named hostfiles), which the server reads as its port
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 65534
+        runAsGroup: 1000
+        seccompProfile: { type: RuntimeDefault }
+      containers:
+        - name: hostfiles
+          image: axor/web:${TAG}
+          imagePullPolicy: Never
+          command: ["python", "/app/backend/app/hostfiles_server.py"]
+          env:
+            - { name: HOSTFILES_ROOTS, value: /roots }
+            - { name: HOSTFILES_LABELS, value: '{"home": "/home/thomas", "bit": "/home/thomas/bit", "data": "/srv/data"}' }
+            - { name: HOSTFILES_SECRET, valueFrom: { secretKeyRef: { name: hostfiles, key: secret } } }
+          ports: [{ name: http, containerPort: 8500 }]
+          readinessProbe: { httpGet: { path: /health, port: http }, periodSeconds: 15 }
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            capabilities: { drop: [ALL] }
+          resources:
+            requests: { cpu: 10m, memory: 32Mi }
+            limits: { cpu: "1", memory: 256Mi }
+          volumeMounts:
+            - { name: home, mountPath: /roots/home, readOnly: true }
+            - { name: bit, mountPath: /roots/bit, readOnly: true }
+            - { name: data, mountPath: /roots/data, readOnly: true }
+      volumes:
+        - { name: home, hostPath: { path: /home/thomas, type: Directory } }
+        - { name: bit, hostPath: { path: /home/thomas/bit, type: Directory } }
+        - { name: data, hostPath: { path: /srv/data, type: Directory } }
+---
+apiVersion: v1
+kind: Service
+metadata: { name: hostfiles, namespace: axor-host }
+spec:
+  selector: { app: hostfiles }
+  ports: [{ name: http, port: 8500, targetPort: http }]

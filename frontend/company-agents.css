@@ -1,0 +1,115 @@
+/* Agent workspaces (company-agents.js): Company → Agents: the directory and one agent's workspace */
+.caw-tools { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+.caw-tools .in { margin: 0; }
+.caw-search { display: flex; gap: 6px; align-items: center; padding: 0 10px; border: 1px solid var(--line); border-radius: 9px; background: var(--surface); flex: 1 1 220px; min-width: 0; }
+.caw-search .icon { width: 15px; height: 15px; color: var(--text-3); flex: none; }
+.caw-search input { border: 0; background: none; padding: 7px 0; width: 100%; min-width: 0; font: inherit; color: var(--text); outline: none; }
+.caw-search:focus-within { border-color: var(--accent); }
+.caw-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 240px), 1fr)); gap: 10px; }
+.caw-mission { color: var(--text-2); display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+.co-agent.st-archived { opacity: .55; }
+.caw-compare td { white-space: nowrap; }
+.caw-compare .icon { width: 12px; height: 12px; }
+/* the workspace */
+.caw-back { margin-bottom: -4px; }
+.caw-head { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 12px 20px; align-items: center; }
+.caw-id { display: flex; gap: 14px; align-items: center; min-width: 0; }
+.caw-id h2 { margin: 0; font-size: 20px; letter-spacing: -.01em; overflow-wrap: anywhere; }
+.caw-id p { margin: 2px 0 6px; }
+.caw-avatar { position: relative; flex: none; display: grid; place-items: center; width: 52px; height: 52px; border-radius: 16px;
+  background: linear-gradient(135deg, color-mix(in srgb, var(--accent) 22%, var(--surface)), var(--surface-2)); border: 1px solid var(--line); }
+.caw-avatar .icon { width: 24px; height: 24px; color: var(--accent); }
+.caw-avatar::after { content: ""; position: absolute; right: -2px; bottom: -2px; width: 12px; height: 12px; border-radius: 50%; background: var(--text-3); border: 2px solid var(--surface); }
+.caw-avatar.on::after { background: var(--ok, #2e9e6a); }
+.caw-chips { display: flex; gap: 6px; flex-wrap: wrap; }
+.caw-kpis { grid-column: 1 / -1; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 10px; }
+.caw-kpis .stat, .caw-perf .stat { margin: 0; }
+.caw-kpis .stat.t-warn { border-color: color-mix(in srgb, var(--warn) 55%, var(--line)); }
+.caw-life { grid-column: 2; grid-row: 1; margin: 0; justify-content: flex-end; }
+.caw-tabs .co-tab { flex: none; }
+.caw-body { display: grid; gap: 14px; min-width: 0; }
+.caw-h { display: flex; gap: 8px; align-items: center; margin: 0 0 8px; font-size: 15px; text-transform: none; letter-spacing: normal; }
+.caw-h .icon { color: var(--accent); }
+.caw-perf { grid-template-columns: repeat(4, minmax(0, 1fr)); margin: 0; }
+/* chat */
+.caw-chat { display: grid; grid-template-columns: 240px minmax(0, 1fr); gap: 14px; align-items: start; }
+.caw-convs { display: grid; gap: 8px; position: sticky; top: 12px; max-height: calc(100vh - 140px); overflow: auto; }
+.caw-convs ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 4px; }
+.caw-conv { display: grid; gap: 2px; width: 100%; text-align: left; padding: 7px 9px; border-radius: 9px; border: 1px solid transparent; background: none; font: inherit; color: var(--text); cursor: pointer; }
+.caw-conv b { font-size: 13px; font-weight: 600; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.caw-conv:hover { background: var(--surface-2); }
+.caw-conv.on { background: var(--accent-soft); border-color: color-mix(in srgb, var(--accent) 40%, var(--line)); }
+.caw-room { display: grid; grid-template-rows: auto minmax(0, 1fr) auto; gap: 10px; min-height: min(72vh, 760px); min-width: 0; }
+.caw-room-h { display: flex; gap: 8px 12px; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; padding-bottom: 8px; border-bottom: 1px solid var(--line); }
+.caw-room-h p { margin: 3px 0 0; }
+.caw-ctx select { margin-left: 4px; }
+.caw-msgs { display: flex; flex-direction: column; gap: 14px; overflow-y: auto; max-height: 62vh; padding: 4px 2px; min-width: 0; }
+.caw-empty { margin: auto; text-align: center; max-width: 46ch; padding: 30px 10px; }
+.caw-empty p { margin: 4px 0; } .caw-empty .icon { color: var(--accent); margin-right: 6px; vertical-align: -3px; }
+.caw-msg { display: grid; gap: 4px; max-width: min(100%, 860px); min-width: 0; }
+.caw-msg.me { align-self: flex-end; justify-items: end; max-width: min(85%, 640px); }
+.caw-bub { padding: 10px 13px; border-radius: 14px; background: var(--surface-2); border: 1px solid var(--line); min-width: 0; overflow-wrap: anywhere; font-size: 14px; line-height: 1.55; }
+.caw-msg.me .caw-bub { background: var(--accent-soft); border-color: color-mix(in srgb, var(--accent) 35%, var(--line)); border-bottom-right-radius: 4px; }
+.caw-msg.ag .caw-bub { background: var(--surface); border-bottom-left-radius: 4px; }
+.caw-msg.hand .caw-bub { border-style: dashed; }
+.caw-bub .md > :first-child { margin-top: 0; } .caw-bub .md > :last-child { margin-bottom: 0; }
+.caw-bub .md pre { max-height: 320px; overflow: auto; }
+.caw-plan { margin-top: 8px; padding: 8px 10px; border-radius: 10px; background: var(--surface-2); }
+.caw-plan ol { margin: 4px 0 0; padding-left: 20px; font-size: 13px; }
+.caw-prop { margin-top: 8px; padding: 8px 10px; border-radius: 10px; border: 1px solid color-mix(in srgb, var(--warn) 45%, var(--line)); background: color-mix(in srgb, var(--warn-soft, var(--surface-2)) 50%, var(--surface)); }
+.caw-prop p { margin: 0 0 6px; }
+.caw-read { margin-top: 6px; } .caw-read p { margin: 4px 0 0; }
+.caw-sugg { gap: 6px; flex-wrap: wrap; align-items: center; margin-top: 10px; padding-top: 8px; border-top: 1px solid var(--line); }
+.caw-sugg .btn { max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.caw-send { display: inline-flex; gap: 6px; align-items: center; flex-wrap: wrap; }
+.caw-send .in { margin: 0; } .caw-send select { max-width: 220px; }
+.caw-meta { display: flex; gap: 6px; align-items: center; }
+.caw-rate { display: inline-grid; place-items: center; width: 26px; height: 24px; border-radius: 7px; border: 1px solid transparent; background: none; color: var(--text-3); cursor: pointer; padding: 0; }
+.caw-rate .icon { width: 14px; height: 14px; }
+.caw-rate:hover { background: var(--surface-2); color: var(--text); }
+.caw-rate.on { color: var(--accent); border-color: color-mix(in srgb, var(--accent) 40%, var(--line)); }
+.caw-compose { display: grid; gap: 8px; border-top: 1px solid var(--line); padding-top: 10px; }
+.caw-compose .in { margin: 0; }
+.caw-compose textarea { width: 100%; resize: vertical; min-height: 64px; }
+.caw-compose p { margin: 0; }
+.caw-compose-act { gap: 8px; flex-wrap: wrap; align-items: center; }
+.caw-compose-act select { max-width: 240px; }
+.caw-grow { flex: 1 1 auto; }
+.caw-attach { cursor: pointer; }
+.caw-refs { display: flex; flex-wrap: wrap; gap: 4px; }
+.caw-refs .co-skill { display: inline-flex; gap: 4px; align-items: center; }
+.caw-refs .icon { width: 12px; height: 12px; }
+/* skills, tools, settings */
+.caw-skills { list-style: none; margin: 0; padding: 0; display: grid; gap: 4px; }
+.caw-skills li { display: grid; grid-template-columns: minmax(0, 1fr) auto auto; gap: 12px; align-items: center; padding: 6px 0; border-top: 1px solid var(--line); font-size: 13.5px; }
+.caw-skills li:first-child { border-top: 0; }
+.caw-dots { display: inline-flex; gap: 3px; }
+.caw-dots i { width: 9px; height: 9px; border-radius: 50%; background: var(--surface-2); border: 1px solid var(--line); }
+.caw-dots i.on { background: var(--accent); border-color: var(--accent); }
+.caw-toolgrid { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 280px), 1fr)); gap: 8px; }
+.caw-tool { padding: 8px 10px; border: 1px solid var(--line); border-radius: 10px; }
+.caw-tool:has(input:checked) { border-color: color-mix(in srgb, var(--accent) 45%, var(--line)); background: color-mix(in srgb, var(--accent-soft) 50%, var(--surface)); }
+.caw-opts { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 200px), 1fr)); gap: 8px; }
+.caw-opt { display: flex; gap: 8px; align-items: flex-start; padding: 8px 10px; border: 1px solid var(--line); border-radius: 10px; cursor: pointer; font-size: 13.5px; }
+.caw-opt > span { display: grid; gap: 2px; }
+.caw-opt input { margin-top: 3px; }
+.caw-opt:has(input:checked) { border-color: var(--accent); background: color-mix(in srgb, var(--accent-soft) 50%, var(--surface)); }
+.caw-assign { margin-top: 10px; }
+/* files, performance */
+.caw-file { padding: 4px 0; border-top: 1px solid var(--line); } .caw-file:first-child { border-top: 0; }
+.caw-file .co-md { margin: 6px 0; max-height: 480px; overflow: auto; padding: 8px 12px; border-radius: 10px; background: var(--surface-2); }
+.caw-bars { display: grid; grid-template-columns: repeat(8, minmax(0, 1fr)); gap: 6px; align-items: end; height: 120px; margin: 6px 0 4px; }
+.caw-bars > div { display: grid; grid-template-rows: minmax(0, 1fr) auto; height: 100%; gap: 4px; text-align: center; min-width: 0; }
+.caw-bars i { align-self: end; display: block; min-height: 2px; border-radius: 5px 5px 2px 2px; background: var(--accent); }
+.caw-bars span { font-size: 10.5px; white-space: nowrap; overflow: hidden; }
+.caw-scores { list-style: none; margin: 0; padding: 0; display: grid; gap: 6px; }
+.caw-scores li { display: grid; grid-template-columns: minmax(0, 1.4fr) minmax(60px, 1fr) 30px; gap: 8px; align-items: center; }
+.caw-scores li > span:first-child { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+@media (max-width: 1100px) { .caw-chat { grid-template-columns: minmax(0, 1fr); } .caw-convs { position: static; max-height: 220px; } }
+@media (max-width: 760px) {
+  .caw-tabs { overflow-x: auto; flex-wrap: nowrap; scrollbar-width: thin; }
+  .caw-head { grid-template-columns: minmax(0, 1fr); } .caw-life { grid-column: 1; grid-row: auto; justify-content: flex-start; }
+  .caw-kpis, .caw-perf { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .caw-room { min-height: 0; } .caw-msgs { max-height: 60vh; } .caw-msg.me { max-width: 92%; }
+  .caw-skills li { grid-template-columns: minmax(0, 1fr) auto; } .caw-skills li .btn { grid-column: 1 / -1; justify-self: start; }
+}

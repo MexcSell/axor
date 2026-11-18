@@ -1,0 +1,117 @@
+/* AXoR design layer (prefix axd-, loaded after shell.css): one component look for every page, the agent systems included, after
+   AgentForge's primitives. styles.css, platform.css (platform pages only) and each module's stylesheet keep their layouts; this
+   file only settles what has to read the same everywhere:
+   - the page header: one title size, one lead, quiet eyebrows; hero titles (Agents, Help) brought down to a page title
+   - cards and panels: one radius, flat (a hairline border, no lift), sentence-case titles in the text color
+   - KPI tiles (.stats), page tabs (a segmented control: a sunken track, the current tab raised), in-panel tabs (underline)
+   - buttons, filters, table headings, empty states, dialogs, side rails
+   Selectors start at #app so they win over platform.css's .plt-zone rules and the modules' own, and they go for structural
+   positions (a card's own title, a tab bar's own buttons) so a module's special cases inside them keep their look.
+   Tech Daily (#view-tech) is a magazine on purpose and keeps its own type. */
+
+#app { --axd-r: 10px; --axd-r-sm: 8px; --axd-line-strong: color-mix(in srgb, var(--text) 16%, var(--line)); --axd-sunken: var(--surface-2); }
+
+/* ---------- page header ---------- */
+#app main h1.page { font-size: 22px; font-weight: 650; letter-spacing: -.018em; line-height: 1.25; margin: 2px 0 4px; }
+#app main p.lead { font-size: 13.5px; line-height: 1.55; color: var(--text-2); max-width: 92ch; }
+#app main .occ-kicker { font-size: 10.5px; font-weight: 650; letter-spacing: .1em; color: var(--accent); }
+#app main .occ-kicker .icon { width: 13px; height: 13px; }
+#app main .aos-head h1, #app main .co-head h1, #app main .pf-head h1, #app main .mxs-head h1 { font-size: 22px; font-weight: 650; letter-spacing: -.018em; }
+#app main .hub-hero h1 { font-size: 24px; font-weight: 650; letter-spacing: -.02em; }
+#app main .hub-hero h1 .grad { background: none; -webkit-text-fill-color: currentColor; color: var(--accent); }
+#app main .describe { border-radius: 12px; padding: 1px; background: var(--line); box-shadow: none; }
+#app main .describe:focus-within { background: var(--accent); box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 20%, transparent); }
+#app main .describe textarea { border-radius: 11px 11px 0 0; }
+#app main .describe-foot { border-radius: 0 0 11px 11px; }
+#app main .hp-hero { border-radius: 14px; padding: clamp(24px, 4vw, 40px) 16px clamp(20px, 3vw, 30px); }
+#app main .hp-hero h1 { font: 650 clamp(24px, 2.6vw, 30px)/1.15 Inter, system-ui, sans-serif; letter-spacing: -.02em; }
+
+/* the page head shell.js adds to pages whose module draws no title of its own (Wallets, Slack, Drive, Source control…) */
+.axd-ph { display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: 8px 16px; margin: 0 0 16px; }
+.axd-ph[hidden] { display: none; }
+.axd-ph p.lead { margin: 0; }
+.axd-ph-k { display: flex; align-items: center; gap: 6px; margin: 0 0 4px; font-size: 10.5px; font-weight: 650; letter-spacing: .1em; text-transform: uppercase; color: var(--accent); }
+.axd-ph-k .icon { width: 13px; height: 13px; }
+
+/* ---------- cards and panels ---------- */
+#app main :is(.card, .mh-card, .wf-card, .ia-card, .occ-card, .scard) { border-radius: var(--axd-r); box-shadow: none; }
+#app main :is(.mh-card, .wf-card, .ia-card) { padding: 14px 16px; }
+#app main .aos-card { border-radius: var(--axd-r); }
+#app main :is(.card, .wf-card, .ia-card, .mh-card) > h3,
+#app main :is(.card, .wf-card, .ia-card, .mh-card) > header h3,
+#app main .card > :is(.ws-card-head, .co-h) > h3,
+#app main .occ-ch h3, #app main .aos-card h3 {
+  text-transform: none; letter-spacing: -.005em; font-size: 14px; font-weight: 600; color: var(--text); }
+#app main :is(.card, .wf-card, .ia-card, .mh-card) > h3 > .icon, #app main .occ-ch h3 > .icon, #app main .card > .ws-card-head > h3 > .icon { width: 15px; height: 15px; color: var(--text-3); }
+#app main :is(.wf-h, .ia-h, .hq-h) { font-size: 14px; font-weight: 600; letter-spacing: -.005em; }
+#app main :is(.wf-h, .ia-h, .hq-h) > .icon { color: var(--text-3); }
+#app main h2.section-title { font-size: 14px; font-weight: 600; letter-spacing: -.005em; text-transform: none; color: var(--text); }
+
+/* ---------- KPI tiles ---------- */
+#app main .stats { gap: 10px; }
+#app main .stats > .stat { position: relative; padding: 12px 14px; border-radius: var(--axd-r); box-shadow: none; background: var(--surface); }
+#app main .stats > .stat::before { display: none; }  /* platform.css's decorative accent line */
+#app main .stats > .stat.occ-kpi:is(.t-crit, .t-warn)::before { display: block; }  /* …but a severity mark (Approval Center) stays */
+#app main .stats > .stat .label { font-size: 12px; font-weight: 500; color: var(--text-3); }
+#app main .stats > .stat .label .icon { width: 14px; height: 14px; }
+#app main .stats > .stat .value { font-family: inherit; font-size: 22px; font-weight: 650; letter-spacing: -.02em; font-variant-numeric: tabular-nums; margin-top: 4px; }
+#app main .stats > .stat .sub { font-size: 12px; color: var(--text-3); margin-top: 1px; }
+
+/* ---------- page tabs: a segmented control ---------- */
+#app main :is(.axh-tabs, .co-tabs, .pf-tabs, .mb-tabs, .mh-subtabs, .seg[role="tablist"]) {
+  display: inline-flex; flex-wrap: wrap; gap: 2px; width: fit-content; max-width: 100%; box-sizing: border-box;
+  padding: 3px; border: 1px solid var(--line); border-radius: var(--axd-r); background: var(--axd-sunken); }
+#app main :is(.axh-tabs, .co-tabs, .pf-tabs, .mb-tabs, .mh-subtabs, .seg[role="tablist"])::-webkit-scrollbar { display: none; }
+#app main :is(.axh-tabs, .co-tabs, .pf-tabs, .mb-tabs, .mh-subtabs, .seg[role="tablist"]) > :is(button, a, details > summary) {
+  display: inline-flex; align-items: center; gap: 6px; flex: none; padding: 5px 11px; border: 1px solid transparent; border-radius: 7px;
+  background: none; box-shadow: none; color: var(--text-2); font: inherit; font-size: 13px; font-weight: 500; white-space: nowrap; cursor: pointer; }
+#app main :is(.axh-tabs, .co-tabs, .pf-tabs, .mb-tabs, .mh-subtabs, .seg[role="tablist"]) > :is(button, a):hover { color: var(--text); background: color-mix(in srgb, var(--text) 5%, transparent); }
+#app main :is(.axh-tabs, .co-tabs, .pf-tabs, .mb-tabs, .mh-subtabs, .seg[role="tablist"]) > :is([aria-selected="true"], [aria-pressed="true"], .on) {
+  background: var(--surface); border-color: var(--line); color: var(--text); font-weight: 600; box-shadow: 0 1px 2px rgb(0 0 0 / .18); }
+#app main :is(.axh-tabs, .co-tabs, .pf-tabs, .mb-tabs, .mh-subtabs, .seg[role="tablist"]) > * .icon { width: 14px; height: 14px; color: var(--text-3); }
+#app main :is(.axh-tabs, .co-tabs, .pf-tabs, .mb-tabs, .mh-subtabs, .seg[role="tablist"]) > :is([aria-selected="true"], [aria-pressed="true"], .on) .icon { color: var(--accent); }
+#app main :is(.co-tabs, .pf-tabs, .mb-tabs, .mh-subtabs) { margin-bottom: 12px; }
+/* a tab bar inside a card scrolls sideways rather than wrapping onto a second row */
+#app main :is(.card, .wf-card, .ia-card, .mh-card, .occ-card, .aos-card) .seg[role="tablist"] { flex-wrap: nowrap; overflow-x: auto; scrollbar-width: none; }
+#app main .mb-tabs > details { flex: none; }
+/* a full-width segmented control (Drive's Details | Activity) keeps its equal halves */
+#app main .seg.full[role="tablist"] { display: flex; width: 100%; }
+#app main .seg.full[role="tablist"] > button { flex: 1; justify-content: center; }
+#app main .mb-tabs > details > summary { list-style: none; }
+
+/* in-panel tabs: an underline under the current one */
+#app main :is(.hub-tabs, .src-tabs, .aos-tabs, .aos-sec) > button { font-size: 13px; }
+#app main :is(.hub-tabs, .src-tabs, .aos-tabs, .aos-sec) > button[aria-selected="true"] { border-bottom-color: var(--accent); color: var(--text); }
+
+/* ---------- buttons, chips, filters ---------- */
+:is(#app main, body > dialog) .btn { border-radius: var(--axd-r-sm); font-weight: 500; transition: background .15s, border-color .15s, color .15s; }
+:is(#app main, body > dialog) .btn:not(.primary):not(.ghost):hover { border-color: var(--axd-line-strong); background: var(--surface-2); }
+:is(#app main, body > dialog) .btn.primary { background: var(--accent); border-color: var(--accent); color: #fff; }
+:is(#app main, body > dialog) .btn.primary:hover { background: color-mix(in srgb, var(--accent) 86%, white); border-color: transparent; }
+:is(#app main, body > dialog) .btn:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+#app main .chip { border-radius: 999px; }
+#app main .chip[aria-pressed="true"] { background: color-mix(in srgb, var(--accent) 14%, var(--surface)); border-color: color-mix(in srgb, var(--accent) 60%, var(--line)); color: var(--text); }
+#app main .search input, #app main .toolbar select { border-radius: var(--axd-r-sm); background: var(--axd-sunken); border-color: var(--line); }
+#app main .search input:focus, #app main .toolbar select:focus { background: var(--surface); }
+
+/* ---------- tables ---------- */
+#app main :is(.tablewrap, .co-tablewrap, .cin-tablewrap, .ml-table-wrap) { border-radius: var(--axd-r); box-shadow: none; }
+#app main :is(.grid, .wf-table, .aos-table, .co-table, .ml-table, .hq-table, .mh-table, .hp-table) thead th {
+  font-size: 10.5px; font-weight: 600; letter-spacing: .06em; text-transform: uppercase; color: var(--text-3); }
+#app main :is(.grid, .wf-table, .aos-table, .co-table, .ml-table, .hq-table, .mh-table) tbody tr:hover > td { background: color-mix(in srgb, var(--accent) 5%, transparent); }
+
+/* ---------- empty states, notices ---------- */
+#app main .stats ~ div.empty, #app main section.view > div.empty, #app main .card-grid > div.empty {
+  border: 1px dashed var(--line); border-radius: var(--axd-r); background: color-mix(in srgb, var(--surface) 55%, transparent); }
+#app main .notice { border-radius: var(--axd-r); }
+
+/* ---------- side rails inside pages: the sidebar's row style ---------- */
+#app main :is(.hub-side, .ws-side) > button, #app main .drv-navlist button { border-radius: 7px; font-size: 13px; }
+#app main .hub-title { font-size: 10.5px; font-weight: 650; letter-spacing: .1em; text-transform: uppercase; color: var(--text-3); }
+#app main .mxs-rail { border-radius: var(--axd-r); }
+#app main .mxs-head { border-radius: var(--axd-r); }
+#app main .mxs-head::after { display: none; }
+
+/* ---------- dialogs ---------- */
+dialog.modal { border-radius: 12px; box-shadow: var(--shadow-lg); }
+dialog.modal h3 { font-size: 15px; font-weight: 650; letter-spacing: -.01em; }

@@ -1,0 +1,15 @@
+# AXoR 5.1 Prometheus: scrapes AXoR's /metrics with the bearer token mounted from the Secret axor-metrics.
+global:
+  scrape_interval: 30s
+  evaluation_interval: 30s
+scrape_configs:
+  - job_name: axor
+    metrics_path: /metrics
+    authorization:
+      type: Bearer
+      credentials_file: /etc/axor-metrics/token
+    static_configs:
+      - targets: ["web.axor.svc.cluster.local:8000"]
+  - job_name: prometheus
+    static_configs:
+      - targets: ["127.0.0.1:9090"]

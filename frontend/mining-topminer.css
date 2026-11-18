@@ -1,0 +1,99 @@
+/* Competition teams, Top miner (mining-topminer.js) */
+.tpm { display: grid; gap: 12px; container-type: inline-size; }
+.tpm-card { padding: 14px 16px; min-width: 0; }
+.tpm-card h3 { display: flex; align-items: center; gap: 6px; margin: 0 0 4px; font-size: 15px; }
+.tpm-card > p.faint { margin: 0 0 10px; max-width: 90ch; }
+.tpm-lbl { display: flex; align-items: center; gap: 4px; font-size: 11px; font-weight: 600; letter-spacing: .03em; text-transform: uppercase; color: var(--text-3); }
+.tpm-warn { color: var(--warn); }
+.tpm-grid { display: grid; grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr); gap: 12px; align-items: start; }
+@container (max-width: 980px) { .tpm-grid { grid-template-columns: minmax(0, 1fr); } }
+
+/* roadmap */
+.tpm-road { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 8px; }
+.tpm-ms { display: grid; grid-template-rows: auto auto 1fr auto; gap: 6px; padding: 10px; min-width: 0; border: 1px solid var(--line); border-radius: 10px; background: var(--surface); }
+.tpm-ms p { margin: 0; overflow-wrap: anywhere; }
+.tpm-ms-top { display: grid; grid-template-columns: auto minmax(0, 1fr); column-gap: 8px; align-items: center; }
+.tpm-ms-top b { font-size: 13px; }
+.tpm-ms-top .small { grid-column: 2; }
+.tpm-ms-ic { grid-row: 1 / 3; display: grid; place-items: center; width: 28px; height: 28px; border-radius: 8px; background: var(--surface-2); color: var(--text-3); }
+.tpm-ms.s-done { border-color: color-mix(in srgb, var(--good) 45%, var(--line)); }
+.tpm-ms.s-done .tpm-ms-ic { background: var(--good-soft); color: var(--good); }
+.tpm-ms.s-doing { border-color: color-mix(in srgb, var(--accent) 45%, var(--line)); }
+.tpm-ms.s-doing .tpm-ms-ic { background: var(--accent-soft); color: var(--accent); }
+.tpm-ev { color: var(--text-2); padding: 6px 8px; border-radius: 6px; background: var(--surface-2); }
+.tpm-ev svg { vertical-align: -2px; margin-right: 4px; color: var(--text-3); }
+.tpm-ms-foot { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; }
+.tpm-ms-foot select { flex: 1; min-width: 0; font-size: 12px; }
+@container (max-width: 1100px) { .tpm-road { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+@container (max-width: 640px) { .tpm-road { grid-template-columns: minmax(0, 1fr); } }
+
+/* scorecard */
+.tpm-tiles { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; }
+.tpm-tile { display: grid; gap: 2px; align-content: start; padding: 10px 12px; min-width: 0; border-radius: 8px; background: var(--surface-2); }
+.tpm-tile b { font: 600 22px/1.2 var(--mono); font-variant-numeric: tabular-nums; }
+.tpm-tile em { font-style: normal; font-size: 11.5px; font-weight: 600; }
+.tpm-tile em.up { color: var(--good); } .tpm-tile em.down { color: var(--crit); }
+.tpm-tile .small { overflow-wrap: anywhere; }
+.tpm-first { box-shadow: inset 3px 0 0 var(--accent); }
+.tpm-official { grid-column: span 3; border: 1px dashed var(--line); background: transparent; }
+.tpm-sep { color: var(--text-3); }
+@container (max-width: 560px) { .tpm-tiles { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); } .tpm-official { grid-column: 1 / -1; } }
+.tpm-cats, .tpm-tbl { width: 100%; border-collapse: collapse; font-size: 13px; }
+.tpm-cats { margin-top: 12px; }
+.tpm-cats th, .tpm-tbl th { text-align: left; font-size: 11px; font-weight: 600; letter-spacing: .03em; text-transform: uppercase; color: var(--text-3); padding: 4px 6px; border-bottom: 1px solid var(--line); }
+.tpm-cats td, .tpm-tbl td { padding: 5px 6px; border-bottom: 1px solid var(--line); }
+.tpm-cats td.num, .tpm-cats th:nth-child(n+2) { text-align: right; font-variant-numeric: tabular-nums; }
+.tpm-trend { display: flex; align-items: flex-end; gap: 6px; height: 90px; margin-top: 12px; }
+.tpm-trend span { flex: 1; display: grid; grid-template-rows: 1fr auto; height: 100%; min-width: 0; }
+.tpm-trend i { align-self: end; height: var(--h); border-radius: 4px 4px 0 0; background: var(--accent); opacity: .8; }
+.tpm-trend em { font-style: normal; font-size: 10.5px; color: var(--text-3); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; text-align: center; }
+
+/* validation set */
+.tpm-cov { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 8px; }
+.tpm-cv { display: grid; gap: 4px; min-width: 0; padding: 8px 10px; border-radius: 8px; background: var(--surface-2); }
+.tpm-cv > .small:first-child { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.tpm-bar { height: 6px; border-radius: 3px; background: var(--surface); overflow: hidden; }
+.tpm-bar i { display: block; height: 100%; width: var(--w); background: var(--accent); }
+@container (max-width: 760px) { .tpm-cov { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); } }
+.tpm-edges { margin: 10px 0; line-height: 2; }
+.tpm-acts { align-items: flex-start; gap: 8px; flex-wrap: wrap; margin-bottom: 10px; }
+.tpm-paste { flex: 1 1 100%; }
+.tpm-paste > summary { list-style: none; display: inline-flex; }
+.tpm-paste > summary::-webkit-details-marker { display: none; }
+.tpm-paste[open] > summary { margin-bottom: 8px; }
+.tpm-form { display: grid; grid-template-columns: minmax(0, 2fr) repeat(3, minmax(0, 1fr)) auto; gap: 6px; margin-bottom: 6px; }
+.tpm-form[data-tpmform="many"] { grid-template-columns: minmax(0, 1fr) auto; align-items: end; }
+.tpm-form input, .tpm-form select, .tpm-form textarea { width: 100%; min-width: 0; }
+@container (max-width: 700px) { .tpm-form { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); } .tpm-form input, .tpm-form textarea { grid-column: 1 / -1; } }
+.tpm-tablewrap { overflow-x: auto; }
+.tpm-tbl { min-width: 620px; }
+.tpm-tbl select { font-size: 12px; max-width: 100%; }
+.tpm-nm { font-family: var(--mono); font-size: 12px; max-width: 260px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+/* elite team */
+.tpm-roles { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 8px; }
+.tpm-role { display: grid; gap: 4px; align-content: start; padding: 10px; min-width: 0; border-radius: 8px; background: var(--surface-2); }
+.tpm-role > b { font-size: 13px; }
+.tpm-ags { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 4px; }
+@container (max-width: 1000px) { .tpm-roles { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@container (max-width: 520px) { .tpm-roles { grid-template-columns: minmax(0, 1fr); } }
+
+/* the first mission */
+.tpm-plan { margin: 0 0 10px; padding-left: 20px; display: grid; gap: 2px; }
+.tpm-mhead { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin-bottom: 8px; }
+.tpm-mt { list-style: none; margin: 0; padding: 0; display: grid; gap: 4px; }
+.tpm-mt li { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; align-items: center; gap: 8px; padding: 6px 8px; border-radius: 8px; background: var(--surface-2); }
+.tpm-mt li .linkbtn { text-align: left; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.tpm-mt li.st-done .linkbtn { color: var(--text-2); }
+
+/* evaluation redesign (11-07): milestone numbers, readiness gaps, official results, the mission contract */
+.tpm-num { display: inline-block; min-width: 2.4em; margin-right: 6px; padding: 1px 6px; border-radius: 6px; background: var(--surface-2); color: var(--text-2); font: 600 11px/1.5 var(--mono); text-align: center; }
+.tpm-gaps { list-style: none; margin: 8px 0; padding: 8px 10px; display: grid; gap: 4px; border-radius: 8px; background: var(--surface-2); }
+.tpm-gaps li { display: flex; gap: 6px; align-items: flex-start; }
+.tpm-gaps li svg { flex: none; width: 14px; height: 14px; margin-top: 2px; color: var(--warn, #c98a12); }
+.tpm-dl { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 170px), 1fr)); gap: 6px; margin: 8px 0; }
+.tpm-dl > div { min-width: 0; padding: 7px 10px; border-radius: 8px; background: var(--surface-2); }
+.tpm-dl dt { font-size: 11.5px; color: var(--text-3); }
+.tpm-dl dd { margin: 2px 0 0; font-weight: 600; font-variant-numeric: tabular-nums; overflow-wrap: anywhere; }
+.tpm-off .tpm-warn { display: flex; gap: 6px; align-items: flex-start; }
+.tpm-contract { margin-top: 0; }

@@ -1,0 +1,30 @@
+/* Competition teams, the five stages of a team's workspace (mining-stages.js): a row of five numbered stages, then the
+   current stage's tools (the .mb-tabs row design.css already styles). App tokens only, so both themes follow. */
+.mst { margin: 4px 0 8px; container-type: inline-size; }
+.mst-row { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 6px; }
+.mst-stage { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; align-items: center; gap: 8px; min-width: 0; padding: 8px 10px;
+  border: 1px solid var(--line); border-radius: 10px; background: var(--surface); color: var(--text-2); text-align: left; cursor: pointer; font: inherit; }
+.mst-stage:hover { border-color: color-mix(in srgb, var(--accent) 40%, var(--line)); color: var(--text); }
+.mst-stage:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.mst-stage[aria-selected="true"] { border-color: var(--accent); background: var(--accent-soft); color: var(--text); }
+.mst-n { display: grid; place-items: center; width: 22px; height: 22px; border-radius: 50%; background: var(--surface-2); color: var(--text-3); font: 600 12px/1 var(--mono, monospace); }
+.mst-stage[aria-selected="true"] .mst-n { background: var(--accent); color: var(--accent-ink, #fff); }
+.mst-t { display: grid; min-width: 0; }
+.mst-t b { font-size: 13px; }
+.mst-t small { font-size: 11.5px; color: var(--text-3); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.mst-tools { margin-top: 0; }
+@container (max-width: 860px) { .mst-t small { display: none; } .mst-stage { padding: 7px 8px; gap: 6px; } }
+@container (max-width: 560px) {
+  .mst-row { display: flex; overflow-x: auto; scrollbar-width: none; }
+  .mst-row::-webkit-scrollbar { display: none; }
+  .mst-stage { flex: none; }
+}
+
+/* the team header: Start mission is the one main action, the earlier controls fold under Advanced (mining-work.js) */
+.mw-adv { position: relative; }
+.mw-adv > summary { list-style: none; cursor: pointer; }
+.mw-adv > summary::-webkit-details-marker { display: none; }
+.mw-adv-menu { position: absolute; right: 0; top: calc(100% + 4px); z-index: 20; display: grid; gap: 2px; min-width: 240px; padding: 6px;
+  border: 1px solid var(--line); border-radius: 10px; background: var(--surface); box-shadow: 0 8px 24px rgba(0, 0, 0, .18); }
+.mw-adv-menu > .btn { justify-content: flex-start; width: 100%; }
+.mw-adv-menu > p { margin: 2px 4px 4px; }

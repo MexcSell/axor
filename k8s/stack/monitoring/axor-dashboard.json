@@ -1,0 +1,348 @@
+{
+ "uid": "axor-overview",
+ "title": "AXoR",
+ "schemaVersion": 39,
+ "time": {
+  "from": "now-6h",
+  "to": "now"
+ },
+ "refresh": "30s",
+ "tags": [
+  "axor"
+ ],
+ "panels": [
+  {
+   "type": "stat",
+   "title": "Busy (model calls in flight)",
+   "datasource": {
+    "type": "prometheus",
+    "uid": "axor-prometheus"
+   },
+   "gridPos": {
+    "x": 0,
+    "y": 0,
+    "w": 6,
+    "h": 4
+   },
+   "targets": [
+    {
+     "refId": "A",
+     "expr": "axor_busy",
+     "legendFormat": "",
+     "datasource": {
+      "type": "prometheus",
+      "uid": "axor-prometheus"
+     }
+    }
+   ],
+   "options": {
+    "reduceOptions": {
+     "calcs": [
+      "lastNotNull"
+     ]
+    },
+    "textMode": "value"
+   }
+  },
+  {
+   "type": "stat",
+   "title": "Agent runs open",
+   "datasource": {
+    "type": "prometheus",
+    "uid": "axor-prometheus"
+   },
+   "gridPos": {
+    "x": 6,
+    "y": 0,
+    "w": 6,
+    "h": 4
+   },
+   "targets": [
+    {
+     "refId": "A",
+     "expr": "axor_agent_runs_running",
+     "legendFormat": "",
+     "datasource": {
+      "type": "prometheus",
+      "uid": "axor-prometheus"
+     }
+    }
+   ],
+   "options": {
+    "reduceOptions": {
+     "calcs": [
+      "lastNotNull"
+     ]
+    },
+    "textMode": "value"
+   }
+  },
+  {
+   "type": "stat",
+   "title": "Temporal ready",
+   "datasource": {
+    "type": "prometheus",
+    "uid": "axor-prometheus"
+   },
+   "gridPos": {
+    "x": 12,
+    "y": 0,
+    "w": 6,
+    "h": 4
+   },
+   "targets": [
+    {
+     "refId": "A",
+     "expr": "axor_temporal_ready",
+     "legendFormat": "",
+     "datasource": {
+      "type": "prometheus",
+      "uid": "axor-prometheus"
+     }
+    }
+   ],
+   "options": {
+    "reduceOptions": {
+     "calcs": [
+      "lastNotNull"
+     ]
+    },
+    "textMode": "value"
+   }
+  },
+  {
+   "type": "stat",
+   "title": "Redis ready",
+   "datasource": {
+    "type": "prometheus",
+    "uid": "axor-prometheus"
+   },
+   "gridPos": {
+    "x": 18,
+    "y": 0,
+    "w": 6,
+    "h": 4
+   },
+   "targets": [
+    {
+     "refId": "A",
+     "expr": "axor_redis_ready",
+     "legendFormat": "",
+     "datasource": {
+      "type": "prometheus",
+      "uid": "axor-prometheus"
+     }
+    }
+   ],
+   "options": {
+    "reduceOptions": {
+     "calcs": [
+      "lastNotNull"
+     ]
+    },
+    "textMode": "value"
+   }
+  },
+  {
+   "type": "timeseries",
+   "title": "Requests per second by status",
+   "datasource": {
+    "type": "prometheus",
+    "uid": "axor-prometheus"
+   },
+   "gridPos": {
+    "x": 0,
+    "y": 4,
+    "w": 12,
+    "h": 8
+   },
+   "targets": [
+    {
+     "refId": "A",
+     "expr": "sum by (status) (rate(axor_http_requests_total[5m]))",
+     "legendFormat": "{{status}}",
+     "datasource": {
+      "type": "prometheus",
+      "uid": "axor-prometheus"
+     }
+    }
+   ],
+   "fieldConfig": {
+    "defaults": {
+     "unit": "reqps"
+    },
+    "overrides": []
+   }
+  },
+  {
+   "type": "timeseries",
+   "title": "Request latency p95 by route (top 8)",
+   "datasource": {
+    "type": "prometheus",
+    "uid": "axor-prometheus"
+   },
+   "gridPos": {
+    "x": 12,
+    "y": 4,
+    "w": 12,
+    "h": 8
+   },
+   "targets": [
+    {
+     "refId": "A",
+     "expr": "topk(8, histogram_quantile(0.95, sum by (le, route) (rate(axor_http_request_seconds_bucket[5m]))))",
+     "legendFormat": "{{route}}",
+     "datasource": {
+      "type": "prometheus",
+      "uid": "axor-prometheus"
+     }
+    }
+   ],
+   "fieldConfig": {
+    "defaults": {
+     "unit": "s"
+    },
+    "overrides": []
+   }
+  },
+  {
+   "type": "timeseries",
+   "title": "Agent runs started by system",
+   "datasource": {
+    "type": "prometheus",
+    "uid": "axor-prometheus"
+   },
+   "gridPos": {
+    "x": 0,
+    "y": 12,
+    "w": 12,
+    "h": 8
+   },
+   "targets": [
+    {
+     "refId": "A",
+     "expr": "sum by (system) (rate(axor_agent_runs_started_total[15m])) * 60",
+     "legendFormat": "{{system}}",
+     "datasource": {
+      "type": "prometheus",
+      "uid": "axor-prometheus"
+     }
+    }
+   ],
+   "fieldConfig": {
+    "defaults": {
+     "unit": "short"
+    },
+    "overrides": []
+   }
+  },
+  {
+   "type": "timeseries",
+   "title": "Agent runs finished by status",
+   "datasource": {
+    "type": "prometheus",
+    "uid": "axor-prometheus"
+   },
+   "gridPos": {
+    "x": 12,
+    "y": 12,
+    "w": 12,
+    "h": 8
+   },
+   "targets": [
+    {
+     "refId": "A",
+     "expr": "sum by (status) (rate(axor_agent_runs_finished_total[15m])) * 60",
+     "legendFormat": "{{status}}",
+     "datasource": {
+      "type": "prometheus",
+      "uid": "axor-prometheus"
+     }
+    }
+   ],
+   "fieldConfig": {
+    "defaults": {
+     "unit": "short"
+    },
+    "overrides": []
+   }
+  },
+  {
+   "type": "timeseries",
+   "title": "Missions by status",
+   "datasource": {
+    "type": "prometheus",
+    "uid": "axor-prometheus"
+   },
+   "gridPos": {
+    "x": 0,
+    "y": 20,
+    "w": 12,
+    "h": 8
+   },
+   "targets": [
+    {
+     "refId": "A",
+     "expr": "axor_missions",
+     "legendFormat": "{{status}}",
+     "datasource": {
+      "type": "prometheus",
+      "uid": "axor-prometheus"
+     }
+    }
+   ]
+  },
+  {
+   "type": "table",
+   "title": "Stack",
+   "datasource": {
+    "type": "prometheus",
+    "uid": "axor-prometheus"
+   },
+   "gridPos": {
+    "x": 12,
+    "y": 20,
+    "w": 12,
+    "h": 8
+   },
+   "targets": [
+    {
+     "refId": "A",
+     "expr": "axor_stack_info",
+     "format": "table",
+     "instant": true,
+     "datasource": {
+      "type": "prometheus",
+      "uid": "axor-prometheus"
+     }
+    }
+   ]
+  },
+  {
+   "type": "traces",
+   "title": "Recent traces (Tempo)",
+   "datasource": {
+    "type": "tempo",
+    "uid": "axor-tempo"
+   },
+   "gridPos": {
+    "x": 0,
+    "y": 28,
+    "w": 24,
+    "h": 10
+   },
+   "targets": [
+    {
+     "refId": "A",
+     "queryType": "traceqlSearch",
+     "query": "{resource.service.name=\"axor\"}",
+     "limit": 20,
+     "datasource": {
+      "type": "tempo",
+      "uid": "axor-tempo"
+     }
+    }
+   ]
+  }
+ ]
+}

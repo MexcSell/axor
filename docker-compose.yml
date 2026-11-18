@@ -1,0 +1,162 @@
+services:
+  subnet-scout:
+    build: .
+    image: subnet-scout:latest
+    container_name: subnet-scout
+    ports:
+      - "${PORT:-8000}:8000"
+    environment:
+      SUBTENSOR_NETWORK: ${SUBTENSOR_NETWORK:-finney}    # live node: finney | ws(s)://your-node:9944
+      ARCHIVE_NETWORK: ${ARCHIVE_NETWORK:-archive}       # archive node used once for the 7-day trend backfill
+      REFRESH_SECONDS: ${REFRESH_SECONDS:-180}           # how often to re-read the chain
+      REQUIRE_LOGIN: ${REQUIRE_LOGIN:-1}                 # accounts with mandatory two-factor auth
+      ALLOW_REGISTRATION: ${ALLOW_REGISTRATION:-1}       # initial sign-up state; admins can toggle it in the app
+      ADMIN_EMAILS: ${ADMIN_EMAILS:-}                    # comma-separated existing accounts made admin at start-up
+      AUTH_METHOD: ${AUTH_METHOD:-2fa}                   # starting sign-in method: basic | 2fa (admins can change it in the app)
+      ANTHROPIC_API_KEY: ${ANTHROPIC_API_KEY:-}          # agents on Claude (or connect it in Agents → Settings)
+      OPENAI_API_KEY: ${OPENAI_API_KEY:-}                # agents on OpenAI models
+      OPENROUTER_API_KEY: ${OPENROUTER_API_KEY:-}        # agents on OpenRouter models
+      LOCAL_LLM_URL: ${LOCAL_LLM_URL:-}                  # local OpenAI-compatible server, e.g. http://host.docker.internal:11434/v1
+      CLAUDE_CODE_OAUTH_TOKEN: ${CLAUDE_CODE_OAUTH_TOKEN:-}  # Terminal provider: Claude Code login from `claude setup-token` (not an API key)
+      CLAUDE_CODE_OAUTH_TOKEN1: ${CLAUDE_CODE_OAUTH_TOKEN1:-}  # a second Claude Code login, offered as the Terminal model "Claude-37"
+      CLAUDE_CLI_ENABLED: ${CLAUDE_CLI_ENABLED:-}        # 1 = Terminal on without connecting it in Agents → Settings
+      CODEX_CLI_ENABLED: ${CODEX_CLI_ENABLED:-}          # 1 = Codex on without connecting it (sign in first: docker compose exec subnet-scout codex login --device-auth)
+      AGENT_MODEL: ${AGENT_MODEL:-claude-opus-5-5}
+      INIT_ADMIN_USERNAME: ${INIT_ADMIN_USERNAME:-}      # create this admin at start-up if no admin exists
+      INIT_ADMIN_EMAIL: ${INIT_ADMIN_EMAIL:-}            # same, by email
+      INIT_ADMIN_PASSWORD: ${INIT_ADMIN_PASSWORD:-}      # optional; otherwise a one-time password is printed in the logs
+      HIBP_CHECK: ${HIBP_CHECK:-1}                       # reject passwords found in known breaches
+      DRIVE_URL: http://drive:8100                       # Scout Drive, the file server below (internal network only)
+      DRIVE_SECRET_FILE: /drive-secret/drive.key         # written by the drive on first start
+      DRIVE_FILE_MB: ${DRIVE_FILE_MB:-200}               # largest upload Scout passes on
+      PUSH_URL: http://push:8300                         # AXoR Push, the Web Push server below
+      PUSH_SECRET_FILE: /push-secret/push.key            # written by the push server on first start
+      GITHUB_TOKEN: ${GITHUB_TOKEN:-}                    # optional: higher GitHub rate limit for subnet news
+      NEWS_REFRESH_HOURS: ${NEWS_REFRESH_HOURS:-6}       # how often subnet news is fetched (0 = off)
+      SLACK_BOT_TOKEN: ${SLACK_BOT_TOKEN:-}              # optional: Slack app bot token (or connect Slack in the app)
+      SLACK_CHANNEL: ${SLACK_CHANNEL:-}                  # optional: #channel or C… ID to show in the sidebar
+      SOURCE_GITHUB_TOKEN: ${SOURCE_GITHUB_TOKEN:-}      # optional: Source hub token (or connect GitHub in the app)
+      SOURCE_REPOS: ${SOURCE_REPOS:-}                    # optional: owner/name,owner/name shown until repos are picked in the app
+      DOCKER_URL: http://docker-proxy:2375               # Docker page (admins); needs the "docker" profile below
+      RUNNER_URL: http://runner:8200                     # DevOps pipelines (admins); needs the "devops" profile below
+      RUNNER_SECRET_FILE: /runner-secret/runner.key      # written by the runner on first start
+    extra_hosts:
+      - "host.docker.internal:host-gateway"              # lets a local model server on this machine be reached
+    volumes:
+      - scout-data:/data                                 # SQLite history survives restarts
+      - drive-secret:/drive-secret:ro                    # the drive's shared secret
+      - push-secret:/push-secret:ro                      # the push server's shared secret
+      - runner-secret:/runner-secret:ro                  # the runner's shared secret
+    labels:
+      scout.protected: "1"                               # the Docker page won't stop or remove it
+    networks: [default, docker, devops]
+    depends_on:
+      drive:
+        condition: service_healthy
+      push:
+        condition: service_healthy
+      runner:
+        condition: service_healthy
+        required: false                                  # only with the "devops" profile
+    restart: unless-stopped
+
+  drive:                                                 # Scout Drive: files, folders, versions, share links
+    build: ./drive
+    image: scout-drive:latest
+    container_name: scout-drive
+    environment:
+      DRIVE_FILE_MB: ${DRIVE_FILE_MB:-200}               # largest file
+      DRIVE_QUOTA_MB: ${DRIVE_QUOTA_MB:-2048}            # storage per user, counting every kept version
+      DRIVE_VERSIONS: ${DRIVE_VERSIONS:-10}              # versions kept per file
+      DRIVE_TRASH_DAYS: ${DRIVE_TRASH_DAYS:-30}          # days before the trash is emptied
+    volumes:
+      - drive-data:/data                                 # files and the drive's database
+      - drive-secret:/secret                             # shared secret, read by Scout
+    labels:
+      scout.protected: "1"
+    restart: unless-stopped                              # no ports: only Scout talks to it
+
+  push:                                                  # AXoR Push: this server's own Web Push server (devices, VAPID keys, delivery)
+    build: ./push
+    image: scout-push:latest
+    container_name: scout-push
+    cap_drop: [ALL]
+    security_opt: [no-new-privileges]
+    mem_limit: 256M
+    environment:
+      PUSH_SUBJECT: ${PUSH_SUBJECT:-}                    # mailto: or https: contact the push services see (Apple requires a real one)
+      PUSH_HOSTS: ${PUSH_HOSTS:-}                        # push services allowed (default: Google, Mozilla, Microsoft, Apple)
+      PUSH_KEEP_DAYS: ${PUSH_KEEP_DAYS:-30}              # days of delivery history
+    volumes:
+      - push-data:/data                                  # VAPID key pair, devices, delivery log
+      - push-secret:/secret                              # shared secret, read by Scout
+    labels:
+      scout.protected: "1"
+    restart: unless-stopped                              # no ports: only Scout talks to it; it reaches the push services
+
+  runner:                                                # AXoR Runner: builds, tests and deploys the DevOps pipelines' apps
+    build: ./runner
+    image: scout-runner:latest
+    container_name: scout-runner
+    profiles: [devops]                                   # opt-in: docker compose --profile devops up -d
+    group_add: ["${DOCKER_GID:-999}"]                    # group that owns the socket: stat -c %g /var/run/docker.sock
+    cap_drop: [ALL]
+    security_opt: [no-new-privileges]
+    environment:
+      RUNNER_BIND: ${RUNNER_BIND:-0.0.0.0}               # host address deployed apps are published on
+      RUNNER_PORTS: ${RUNNER_PORTS:-9200-9299}           # host ports deployed apps may use
+      RUNNER_MAX_MEMORY_MB: ${RUNNER_MAX_MEMORY_MB:-4096}  # most memory a build or app may get
+      RUNNER_MAX_CPUS: ${RUNNER_MAX_CPUS:-4}             # most CPUs an app may get
+      RUNNER_BUILDS: ${RUNNER_BUILDS:-2}                 # builds at once
+      RUNNER_BUILD_MINUTES: ${RUNNER_BUILD_MINUTES:-30}  # longest build
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock        # read-write: the only service that builds and creates containers
+      - runner-secret:/secret                            # shared secret, read by AXoR
+    labels:
+      scout.protected: "1"
+    networks: [devops]                                   # never publish a port for it
+    restart: unless-stopped                              # the apps it deployed keep running while it restarts
+
+  docker-proxy:                                          # Docker page: a filter in front of the Docker socket
+    image: wollomatic/socket-proxy:1.13.1
+    container_name: scout-docker-proxy
+    profiles: [docker]                                   # opt-in: docker compose --profile docker up -d
+    user: "65534:${DOCKER_GID:-999}"                     # group that owns the socket: stat -c %g /var/run/docker.sock
+    read_only: true
+    cap_drop: [ALL]
+    security_opt: [no-new-privileges]
+    mem_limit: 64M
+    command:
+      - '-listenip=0.0.0.0'
+      - '-allowfrom=subnet-scout'                        # only Scout may connect
+      - '-allowhealthcheck'
+      - '-watchdoginterval=600'
+      - '-stoponwatchdog'                                # socket gone (engine update): exit and let Docker restart it
+      # Only what the Docker page uses; the proxy anchors each pattern. No create, exec, build, volumes, networks…
+      - '-allowGET=(/_ping|/version|/v1\.[0-9]+/(version|info|containers/json|images/json|containers/[a-zA-Z0-9][a-zA-Z0-9_.-]*/(json|logs|stats)))'
+      - '-allowPOST=/v1\.[0-9]+/(containers/[a-zA-Z0-9][a-zA-Z0-9_.-]*/(start|stop|restart)|images/create|images/prune)'
+      - '-allowDELETE=/v1\.[0-9]+/(containers/[a-zA-Z0-9][a-zA-Z0-9_.-]*|images/[a-zA-Z0-9][a-zA-Z0-9._/:@-]*)'
+    healthcheck:
+      test: ["CMD", "./healthcheck"]
+      interval: 30s
+      timeout: 5s
+    labels:
+      scout.protected: "1"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    networks: [docker]                                   # never publish a port for it
+    restart: unless-stopped
+
+networks:
+  docker:
+    internal: true                                       # Scout ↔ proxy only: no host, internet or other containers
+  devops:
+    internal: true                                       # Scout ↔ runner only
+
+volumes:
+  scout-data:
+  drive-data:
+  drive-secret:
+  push-data:
+  push-secret:
+  runner-secret:

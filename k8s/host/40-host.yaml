@@ -1,0 +1,104 @@
+# The two AXoR services that need this host's Docker engine (deploy.sh --host; the cutover adds them):
+# - the AXoR Runner, which builds, tests and deploys the DevOps page's pipelines (Docker socket read-write)
+# - the Docker page's proxy (wollomatic/socket-proxy), which passes on only what that page uses (socket read-only)
+# They mount the socket, so they live in axor-host (privileged) and only AXoR may reach them. Each keeps the
+# hardening it has in docker-compose.yml: no privileges, no capabilities, its own user plus the socket's group.
+apiVersion: apps/v1
+kind: Deployment
+metadata: { name: runner, namespace: axor-host, labels: { app: runner } }
+spec:
+  replicas: 1
+  strategy: { type: Recreate }
+  selector: { matchLabels: { app: runner } }
+  template:
+    metadata: { labels: { app: runner } }
+    spec:
+      automountServiceAccountToken: false
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1000
+        runAsGroup: 1000
+        supplementalGroups: [${DOCKER_GID}]  # the group that owns /var/run/docker.sock
+        seccompProfile: { type: RuntimeDefault }
+      containers:
+        - name: runner
+          image: axor/runner:${TAG}
+          imagePullPolicy: Never
+          envFrom: [{ configMapRef: { name: axor-runner-env, optional: true } }]
+          env: [{ name: RUNNER_SECRET, valueFrom: { secretKeyRef: { name: runner-secret, key: runner } } }]
+          ports: [{ name: http, containerPort: 8200 }]
+          readinessProbe: { httpGet: { path: /health, port: http }, periodSeconds: 10 }
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities: { drop: [ALL] }
+          resources:
+            requests: { cpu: 50m, memory: 64Mi }
+            limits: { cpu: "2", memory: 1Gi }
+          volumeMounts: [{ name: docker, mountPath: /var/run/docker.sock }]
+      volumes: [{ name: docker, hostPath: { path: /var/run/docker.sock, type: Socket } }]
+---
+apiVersion: v1
+kind: Service
+metadata: { name: runner, namespace: axor-host }
+spec:
+  selector: { app: runner }
+  ports: [{ name: http, port: 8200, targetPort: http }]
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata: { name: docker-proxy, namespace: axor-host, labels: { app: docker-proxy } }
+spec:
+  replicas: 1
+  strategy: { type: Recreate }
+  selector: { matchLabels: { app: docker-proxy } }
+  template:
+    metadata: { labels: { app: docker-proxy } }
+    spec:
+      automountServiceAccountToken: false
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 65534
+        runAsGroup: ${DOCKER_GID}
+        seccompProfile: { type: RuntimeDefault }
+      containers:
+        - name: proxy
+          image: wollomatic/socket-proxy:1.13.1
+          args:
+            - '-listenip=0.0.0.0'
+            - '-allowfrom=10.42.0.0/16'  # pods; the NetworkPolicy below narrows it to AXoR
+            - '-allowhealthcheck'
+            - '-watchdoginterval=600'
+            - '-stoponwatchdog'
+            # Only what the Docker page uses; the proxy anchors each pattern. No create, exec, build, volumes, networks…
+            - '-allowGET=(/_ping|/version|/v1\.[0-9]+/(version|info|containers/json|images/json|containers/[a-zA-Z0-9][a-zA-Z0-9_.-]*/(json|logs|stats)))'
+            - '-allowPOST=/v1\.[0-9]+/(containers/[a-zA-Z0-9][a-zA-Z0-9_.-]*/(start|stop|restart)|images/create|images/prune)'
+            - '-allowDELETE=/v1\.[0-9]+/(containers/[a-zA-Z0-9][a-zA-Z0-9_.-]*|images/[a-zA-Z0-9][a-zA-Z0-9._/:@-]*)'
+          ports: [{ name: http, containerPort: 2375 }]
+          readinessProbe: { exec: { command: ["./healthcheck"] }, periodSeconds: 30, timeoutSeconds: 5 }
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            capabilities: { drop: [ALL] }
+          resources:
+            requests: { cpu: 10m, memory: 16Mi }
+            limits: { cpu: 500m, memory: 64Mi }
+          volumeMounts: [{ name: docker, mountPath: /var/run/docker.sock, readOnly: true }]
+      volumes: [{ name: docker, hostPath: { path: /var/run/docker.sock, type: Socket } }]
+---
+apiVersion: v1
+kind: Service
+metadata: { name: docker-proxy, namespace: axor-host }
+spec:
+  selector: { app: docker-proxy }
+  ports: [{ name: http, port: 2375, targetPort: http }]
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata: { name: axor-only, namespace: axor-host }
+spec:
+  podSelector: {}
+  policyTypes: [Ingress]
+  ingress:
+    - from:
+        - namespaceSelector: { matchLabels: { kubernetes.io/metadata.name: axor } }
+          podSelector: { matchLabels: { app: web } }

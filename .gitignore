@@ -1,0 +1,10 @@
+__pycache__/
+*.pyc
+backend/var/
+.venv/
+venv/
+.env
+.env*
+*.lock
+scripts/
+drive/var/

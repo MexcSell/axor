@@ -1,0 +1,1 @@
+import{bI as a,H as r,a$ as s,cx as i}from"./index-w1x3CFwC.js";import{A as x}from"./Area-DRX5RX6j.js";var o=a({chartName:"AreaChart",GraphicalChild:x,axisComponents:[{axisType:"xAxis",AxisComp:r},{axisType:"yAxis",AxisComp:s}],formatAxisMap:i});export{o as A};

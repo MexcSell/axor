@@ -1,0 +1,38 @@
+/* Learning (hub-learning.js; prefix axl-): the Knowledge → Intelligence → Learning strip and the lesson list. */
+.axl-loop { display: grid; grid-template-columns: 1fr auto 1fr auto 1fr; align-items: stretch; gap: 10px; margin: 0 0 14px; }
+.axl-step { display: grid; align-content: start; gap: 6px; padding: 12px 14px; border-radius: 10px; background: var(--surface-2); min-width: 0; }
+.axl-step h3 { margin: 0; font-size: 15px; color: var(--text); }
+.axl-cap { margin: 0; display: flex; align-items: center; gap: 6px; font-size: 11px; font-weight: 600; letter-spacing: .06em; text-transform: uppercase; color: var(--accent); }
+.axl-cap svg { width: 14px; height: 14px; }
+.axl-step ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 3px; font-size: 13px; color: var(--text-2); }
+.axl-step ul b { color: var(--text); }
+.axl-step .linkbtn { justify-self: start; display: inline-flex; align-items: center; gap: 4px; font-size: 13px; }
+.axl-step .linkbtn svg { width: 13px; height: 13px; }
+.axl-arrow { display: grid; place-items: center; color: var(--text-3); }
+.axl-arrow svg { width: 18px; height: 18px; }
+.axl-tab { margin-top: 12px; }
+.axl-lessons li > span { display: flex; flex-wrap: wrap; align-items: baseline; gap: 6px; color: var(--text); }
+.axl-lessons small { display: flex; flex-wrap: wrap; align-items: center; gap: 4px; }
+.axl-forget { margin-left: auto; display: inline-flex; align-items: center; gap: 3px; font-size: 12px; color: var(--text-3); }
+.axl-forget:hover { color: var(--crit); }
+.axl-forget svg { width: 12px; height: 12px; }
+.axl-imp td { vertical-align: top; }
+.axl-imp td:nth-child(3), .axl-imp td:nth-child(4), .axl-imp td:nth-child(5) { min-width: 120px; max-width: 260px; }
+.axl-imp td:nth-child(6), .axl-imp td:nth-child(7) { white-space: nowrap; }
+@media (max-width: 760px) {
+  .axl-loop { grid-template-columns: 1fr; }
+  .axl-arrow { transform: rotate(90deg); height: 14px; }
+}
+.axl-tools { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 8px; margin: 0 0 10px; }
+.axl-tools .occ-q { margin-left: auto; min-width: 200px; }
+.axl-loop .axl-step h3 { margin: 0; font-size: 15px; font-weight: 600; letter-spacing: 0; text-transform: none; color: var(--text); }
+/* Experience recall tab (experience.py) */
+.axl-exp-head { display: grid; gap: 6px; margin: 0 0 12px; }
+.axl-exp-head p { margin: 0; display: flex; flex-wrap: wrap; align-items: center; gap: 6px; }
+.axl-exp-head svg { width: 14px; height: 14px; flex: none; }
+.axl-exp-try { display: flex; gap: 8px; margin: 0 0 10px; }
+.axl-exp-try input { flex: 1; min-width: 0; }
+.axl-exp-hits li > span, .axl-exp-log li > span { display: flex; flex-wrap: wrap; align-items: baseline; gap: 6px; color: var(--text); }
+.axl-exp-log small { display: flex; flex-wrap: wrap; align-items: center; gap: 4px; }
+.axl-exp-head p:first-child { display: block; }
+.axl-exp-head p:first-child svg { vertical-align: -2px; margin-right: 4px; }

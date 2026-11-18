@@ -1,0 +1,90 @@
+/* Competition teams, the Lab (mining-lab.js), and the Workflow's score, evidence and approval lines (mining-bench.js) */
+.lab-root { display: grid; gap: 14px; min-width: 0; }
+.lab-top-h { display: flex; gap: 14px; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; }
+.lab-top-h p { margin: 4px 0 0; max-width: 720px; line-height: 1.5; }
+.lab-acts { flex-wrap: wrap; gap: 8px; align-items: flex-end; }
+.lab-pick { min-width: 180px; margin: 0; }
+.lab-hint { margin: 10px 0 0; padding: 9px 11px; border-radius: 10px; background: var(--surface-2); color: var(--text-2); line-height: 1.5; font-size: 13px; }
+.lab-hint .icon { width: 14px; height: 14px; vertical-align: -2px; margin-right: 4px; }
+.lab-running { list-style: none; margin: 10px 0 0; padding: 0; display: grid; gap: 4px; font-size: 13px; color: var(--text-2); }
+.lab-running li { display: flex; gap: 8px; align-items: center; }
+
+.lab-import .row { gap: 8px; align-items: flex-end; flex-wrap: wrap; }
+.lab-path { flex: 1 1 260px; margin: 0; }
+.lab-labels { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 230px), 1fr)); gap: 4px 12px; margin: 10px 0; max-height: 280px; overflow: auto; }
+.lab-label { display: flex; gap: 6px; align-items: center; font-size: 13px; min-width: 0; }
+.lab-label span { font-family: var(--mono); font-size: 12px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.lab-label small { color: var(--text-3); font-size: 11px; white-space: nowrap; }
+.lab-label.done { color: var(--text-3); }
+
+.lab-legend { display: flex; flex-wrap: wrap; gap: 4px 14px; align-items: center; font-size: 12px; color: var(--text-2); margin: 2px 0 6px; }
+.lab-legend > span { display: inline-flex; gap: 5px; align-items: center; }
+.lab-legend svg { width: 12px; height: 12px; }
+.lab-chart { position: relative; }
+.lab-chart svg { display: block; overflow: visible; max-width: 100%; height: auto; }
+.lab-grid { stroke: var(--line); stroke-width: 1; }
+.lab-ax { fill: var(--text-3); font-size: 11px; font-variant-numeric: tabular-nums; }
+.lab-m { fill: var(--series-1); stroke: var(--surface); stroke-width: 2; }
+.lab-m.ring { fill: var(--surface); stroke: var(--series-1); stroke-width: 2.5; }
+.lab-halo { fill: none; stroke: var(--text-2); stroke-width: 1.5; stroke-dasharray: 2 2; }
+.lab-hit { fill: transparent; cursor: pointer; }
+.lab-pt:hover .lab-m { filter: brightness(1.12); }
+
+.lab-ab { display: grid; grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr); gap: 8px; align-items: end; margin-bottom: 12px; }
+.lab-ab .in { margin: 0; min-width: 0; }
+.lab-ab select { width: 100%; }
+.lab-tiles { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 8px; margin-bottom: 12px; }
+.lab-tile { display: grid; gap: 2px; padding: 9px 11px; border-radius: 10px; background: var(--surface-2); min-width: 0; }
+.lab-tile > span { font-size: 11px; color: var(--text-3); text-transform: uppercase; letter-spacing: .04em; }
+.lab-tile b { font-size: 20px; font-variant-numeric: tabular-nums; color: var(--text); }
+.lab-tile b small { font-size: 13px; font-weight: 600; color: var(--text-2); }
+.lab-tile small { font-size: 12px; color: var(--text-2); }
+.lab-tile b.up small, .mb-score .up { color: var(--good); }
+.lab-tile b.down small, .mb-score .down { color: var(--crit); }
+
+.lab-scroll { overflow-x: auto; max-width: 100%; }
+.lab-tbl { width: 100%; min-width: 520px; border-collapse: collapse; font-size: 13px; }
+.lab-tbl.lab-all { min-width: 980px; }
+.lab-tbl th { text-align: left; font-size: 11px; color: var(--text-3); text-transform: uppercase; letter-spacing: .04em; font-weight: 600; padding: 6px 8px; border-bottom: 1px solid var(--line); white-space: nowrap; }
+.lab-tbl td { padding: 7px 8px; border-bottom: 1px solid var(--line); vertical-align: top; font-variant-numeric: tabular-nums; }
+.lab-tbl tr:last-child td { border-bottom: 0; }
+.lab-tbl .nowrap { white-space: nowrap; }
+.lab-err { max-width: 420px; overflow-wrap: anywhere; }
+.lab-tbl tr.is-a td:first-child { box-shadow: inset 3px 0 0 var(--series-1); }
+.lab-tbl tr.is-b td:first-child { box-shadow: inset 3px 0 0 var(--text-3); }
+.lab-kind { display: inline-flex; gap: 4px; align-items: center; font-size: 11px; color: var(--text-2); font-weight: 600; text-transform: uppercase; letter-spacing: .03em; margin-right: 4px; }
+.lab-kind .icon { width: 12px; height: 12px; }
+.lab-runs { font-weight: 600; }
+.lab-runs.all { color: var(--good); } .lab-runs.none { color: var(--crit); } .lab-runs.some { color: var(--warn); }
+
+/* the Workflow: a scored check's line, the reviewer's confidence and evidence, a merge's approval */
+.mb-score { display: inline-flex; gap: 4px; align-items: baseline; flex-wrap: wrap; padding: 2px 9px; border-radius: 999px; border: 1px solid var(--line); background: var(--surface-2);
+  color: var(--text-2); font: inherit; font-size: 12px; cursor: pointer; }
+.mb-score b { color: var(--text); font-variant-numeric: tabular-nums; }
+.mb-score:hover { border-color: var(--series-1); }
+.mb-conf { display: inline-block; margin: 4px 8px 0 0; padding: 1px 8px; border-radius: 999px; font-size: 11px; font-weight: 600; background: var(--surface-2); color: var(--text-2); }
+.mb-conf.c-high { background: var(--good-soft); color: var(--good); }
+.mb-conf.c-low { background: var(--warn-soft); color: var(--warn); }
+.mb-ev { margin-top: 6px; font-size: 13px; }
+.mb-ev summary { cursor: pointer; color: var(--text-2); }
+.mb-ev ul { margin: 4px 0 0; padding-left: 18px; line-height: 1.5; }
+.mb-ev code { font-size: 12px; }
+.mb-over { display: inline-flex; gap: 3px; align-items: center; font-size: 12px; color: var(--warn); margin-left: 4px; }
+.mb-over .icon { width: 12px; height: 12px; }
+
+@media (max-width: 720px) {
+  .lab-tiles { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .lab-ab { grid-template-columns: minmax(0, 1fr) auto; }
+  .lab-ab .in:last-child { grid-column: 1 / -1; }
+  .lab-acts { width: 100%; }
+}
+
+/* Competition teams' task panel (mining-work.js): what a result rests on */
+.mw-ev { margin: 4px 0 8px; padding: 7px 10px; border-radius: 10px; border: 1px solid var(--line); font-size: 13px; }
+.mw-ev.weak { border-color: color-mix(in srgb, var(--warn) 45%, var(--line)); background: color-mix(in srgb, var(--warn) 5%, var(--surface)); }
+.mw-ev summary { cursor: pointer; color: var(--text-2); }
+.mw-ev summary .mb-conf { margin: 0 6px 0 0; }
+.mw-ev ul { margin: 6px 0 0; padding-left: 18px; line-height: 1.5; }
+.mw-ev code, .mb-ev code { display: inline; padding: 1px 5px; margin: 0; border-radius: 5px; background: var(--surface-2); font-size: 12px; overflow-wrap: anywhere; white-space: normal; }
+.mw-nosrc { display: inline-flex; gap: 3px; align-items: center; color: var(--warn); font-size: 12px; font-weight: 600; }
+.mw-nosrc .icon { width: 12px; height: 12px; }
